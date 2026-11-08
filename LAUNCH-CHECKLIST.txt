@@ -1,0 +1,15 @@
+PUBLIC LAUNCH GATE – DO NOT SKIP
+=================================
+[ ] Create a managed backend project (e.g. Supabase) and configure secrets outside source control.
+[ ] Implement verified email sign-in, password reset, rate limits and safe redirects.
+[ ] Create family/workspace tenancy: every row belongs to a family_id.
+[ ] Add server-side roles: owner, guardian, adult, child; never trust client role flags.
+[ ] Enforce Row Level Security on every table and test cross-family access denial.
+[ ] Implement guardian consent and child-safe defaults; collect minimum data.
+[ ] Implement secure, expiring, single-use invitation codes (OPM); hash tokens at rest.
+[ ] Move points, achievements and audit history to server-authoritative transactions.
+[ ] Add admin actions with audit log, abuse reporting, account deletion and retention policy.
+[ ] Configure backups, monitoring, error reporting and recovery tests.
+[ ] Test on iOS Safari, Android Chrome, desktop browsers, slow networks and accessibility.
+[ ] Complete privacy notice, terms, support contact and security review.
+[ ] Only then invite real families and describe the service as production-ready.
