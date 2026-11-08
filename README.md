@@ -1,22 +1,23 @@
-# Family World – Thimar OSMAR 🌱
-تطبيق ويب عربي RTL كبداية عملية لعالم الأسرة.
+# OFW – Our Family World
 
-## تشغيل النسخة
-1. ثبّت Node.js 20+.
-2. فك ضغط الملف وافتح مجلد المشروع في Terminal.
-3. نفّذ `npm install` ثم `npm run dev`.
-4. افتح العنوان المحلي الذي يظهر في الطرفية.
+A lightweight multilingual Progressive Web App starter.
 
-## تفعيل الحسابات
-1. أنشئ مشروعًا في Supabase.
-2. نفّذ `supabase/schema.sql` في SQL Editor.
-3. انسخ `.env.example` إلى `.env` وأدخل `VITE_SUPABASE_URL` و`VITE_SUPABASE_ANON_KEY`.
-4. فعّل Email provider واضبط Site URL وRedirect URLs.
-5. أنشئ حسابك من التطبيق ثم نفّذ استعلام ترقية حسابك إلى admin الموجود آخر ملف SQL.
+## Quick start on Windows
+1. Install Python 3 from https://www.python.org/downloads/ (enable "Add Python to PATH").
+2. Double-click `OFW-Start.bat`.
+3. Your browser opens `http://localhost:8787`.
+4. Use the browser menu to choose **Install app** / **Add to Home Screen**.
 
-ممنوع وضع service_role key أو أي سر في الواجهة أو GitHub. استخدم anon/public key فقط مع RLS.
+The PWA can be installed on supported browsers when served from HTTPS or localhost. For family members on other devices, publish the folder to an HTTPS static host (for example GitHub Pages) and share that public URL.
 
-## حدود النسخة الحالية
-الواجهة والأقسام والألعاب والنقاط والأعضاء في هذه الدفعة تجريبية ومحلية؛ لا تعتبر نظام مكافآت حقيقيًا ولا تحفظ بيانات الأعضاء. المصادقة الحقيقية تعمل بعد إعداد Supabase. ما زال مطلوبًا بناء أكواد OPM، تحرير الخريطة، حفظ بيانات العائلة، نظام نقاط آمن عبر Edge Functions، واختبارات الصلاحيات ومراجعة خصوصية الأطفال قبل الإطلاق العام.
+## Languages
+- Egyptian Arabic
+- Gulf Arabic
+- Simple English
+- Simplified Chinese (普通话书面简体中文)
 
-الأساس القيمي: بسم الله أوله وآخره؛ الرحمة والأمانة والتعاون والعدل واحترام الكبير والرفق بالصغير، مع توثيق المحتوى الديني من مصادر صحيحة.
+## Current scope
+This is a working front-end prototype with language switching, responsive home screen, sample family map, sample family question, install prompt and offline shell caching.
+
+## Not yet production-ready
+No real authentication, cloud database, family invite/OPM code issuance, editable admin family graph, secure roles, persistent points, moderation, parental consent flow, backup or production security review is included. Do not enter real personal data or children's information. Those features require a backend and security testing before public family use.
