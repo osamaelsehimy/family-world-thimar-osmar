@@ -2,3 +2,16 @@ node_modules
 dist
 .env
 .env.local
+.env.*
+!.env.example
+.vite/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+tmp/
+output/pdf/
+output/package/
+output/START-HERE-AR-EN.txt
+output/Family-World-Game-Share-Package.zip

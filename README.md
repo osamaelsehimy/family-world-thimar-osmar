@@ -18,11 +18,15 @@ The site is an installable web app (PWA), not an APK or `.exe`.
 
 The app icon is included in the site manifest. After installation, it opens like an app; an internet connection is needed for the online site and Supabase sign-in.
 
+## Game guide and concept art
+
+The **Characters & cards** area displays the selected characters, mascot, concept map, and skill-card ideas supplied for the project. These visuals are previews: card levels, powers, and collectible rewards are not active features. The **Game guide** area opens the English-Arabic guide, also available at `OG01-Game-Guide-AR-EN.pdf`.
+
 ## Accounts and privacy
 
 Email and password accounts use Supabase Auth and require an adult parent or guardian affirmation. Email confirmation is enabled. Account sign-in currently does not save game progress. The public guest demo remains available without signing in.
 
-The app uses a public Supabase publishable key, which is intended for browser applications. The private `profiles` table has row-level security; each account can read only its own profile. Never put a service-role key in browser code.
+The app uses a public Supabase publishable key, which is intended for browser applications. The private `profiles` table has row-level security; each account can read only its own profile. Supabase currently flags leaked-password protection as disabled; enable it in Supabase Auth password settings to block known compromised passwords. Never put a service-role key in browser code.
 
 Do not enter children's full names, contact details, photos, or sensitive information.
 
