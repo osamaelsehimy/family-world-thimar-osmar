@@ -1,26 +1,99 @@
-import {useEffect,useState} from 'react';
-import {supabase,configured} from './lib/supabase';
-import {Home,Users,Map,Gamepad2,Trophy,LogOut,Menu,X,Sprout,Star,Heart,Sparkles,ChevronLeft,Plus,ShieldCheck} from 'lucide-react';
-const starter=[{id:'a',name:'الجد',role:'قائد العائلة',emoji:'👴',points:120},{id:'b',name:'الجدة',role:'روح البيت',emoji:'👵',points:145},{id:'c',name:'الأب',role:'ولي أمر',emoji:'👨',points:95},{id:'d',name:'الأم',role:'ولي أمر',emoji:'👩',points:110},{id:'e',name:'الأطفال',role:'أبطال العائلة',emoji:'🧒',points:80}];
-const games=[{id:1,icon:'🧠',title:'فزورة العيلة',desc:'شغّلوا التفكير وحلّوا اللغز سوا',tag:'ذكاء',points:10},{id:2,icon:'🌙',title:'معلومة ونور',desc:'أسئلة خفيفة عن القيم والمعرفة',tag:'معرفة',points:15},{id:3,icon:'🤝',title:'تحدي التعاون',desc:'مهمة صغيرة محتاجة كل أفراد الفريق',tag:'تعاون',points:20}];
-export default function App(){
- const [session,setSession]=useState(null),[mode,setMode]=useState('login'),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[name,setName]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false);
- const [tab,setTab]=useState('home'),[members,setMembers]=useState(starter),[points,setPoints]=useState(120),[menu,setMenu]=useState(false),[add,setAdd]=useState(false),[newName,setNewName]=useState('');
- useEffect(()=>{if(!supabase)return;supabase.auth.getSession().then(({data})=>setSession(data.session));const{data:{subscription}}=supabase.auth.onAuthStateChange((_,s)=>setSession(s));return()=>subscription.unsubscribe()},[]);
- async function auth(e){e.preventDefault();setBusy(true);setNotice('');try{if(!configured){setNotice('دي نسخة معاينة. فعّل Supabase لتشغيل الحسابات الحقيقية.');return}if(mode==='signup'){const{error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name}}});if(error)throw error;setNotice('راجع بريدك الإلكتروني لتأكيد الحساب.')}else{const{error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error}}catch(e){setNotice(e.message||'حصلت مشكلة.')}finally{setBusy(false)}}
- async function logout(){if(supabase)await supabase.auth.signOut();setSession(null)}
- function addMember(e){e.preventDefault();if(newName.trim()){setMembers([...members,{id:String(Date.now()),name:newName,role:'فرد من العائلة',emoji:'😊',points:0}]);setNewName('');setAdd(false)}}
- function play(g){setPoints(p=>p+g.points);setNotice(`عاش! كسبت ${g.points} نقطة. النقاط تجريبية في نسخة المعاينة.`)}
- const nav=[['home','الرئيسية',Home],['map','خريطة العيلة',Map],['members','أفراد العيلة',Users],['games','الألعاب والتحديات',Gamepad2],['rewards','النقاط والإنجازات',Trophy]];
- if(!session&&configured)return <div className="auth"><form className="authbox" onSubmit={auth}><div className="logo"><Sprout/></div><small>THIMAR OSMAR PRESENTS</small><h1>Family World</h1><p>مكان يجمع العيلة على المحبة والتعلّم واللعب.</p><div className="tabs"><button type="button" className={mode==='login'?'on':''} onClick={()=>setMode('login')}>دخول</button><button type="button" className={mode==='signup'?'on':''} onClick={()=>setMode('signup')}>حساب جديد</button></div>{mode==='signup'&&<label>الاسم<input value={name} onChange={e=>setName(e.target.value)} required/></label>}<label>البريد الإلكتروني<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label>كلمة المرور<input type="password" minLength="8" value={password} onChange={e=>setPassword(e.target.value)} required/></label><button className="primary" disabled={busy}>{busy?'لحظة...':mode==='login'?'تسجيل الدخول':'إنشاء الحساب'}</button>{notice&&<p className="notice">{notice}</p>}<small className="secure"><ShieldCheck size={15}/> تسجيل آمن عبر Supabase Auth</small></form></div>;
- return <div className="layout"><aside className={menu?'sidebar show':'sidebar'}><div className="brand"><span className="logo"><Sprout/></span><div><b>Family World</b><small>THIMAR OSMAR</small></div><button className="mobile close" onClick={()=>setMenu(false)}><X/></button></div><div className="family">🌿 <span><b>عيلتنا الجميلة</b><small>كلنا لبعض</small></span></div><nav>{nav.map(([id,label,Icon])=><button className={tab===id?'active':''} key={id} onClick={()=>{setTab(id);setMenu(false)}}><Icon size={19}/>{label}<ChevronLeft size={15}/></button>)}</nav><div className="bottom"><p>﴿ وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَى ﴾<small>المائدة: ٢</small></p>{session&&<button onClick={logout}><LogOut size={17}/> تسجيل الخروج</button>}</div></aside><main><header><button className="mobile menu" onClick={()=>setMenu(true)}><Menu/></button><div><small>بسم الله نبدأ</small><h2>{nav.find(n=>n[0]===tab)?.[1]}</h2></div><span className="points"><Star size={15}/> {points} نقطة</span></header>{notice&&<div className="notice" onClick={()=>setNotice('')}>{notice}　×</div>}
- {tab==='home'&&<><section className="hero"><div><span className="tag"><Sparkles size={14}/> عالمنا.. لمتنا.. ثمارنا</span><h1>أهلاً بيكم في<br/><em>عالم الأسرة!</em></h1><p>مساحة آمنة تجمع أجيال العيلة على المحبة، المعرفة، التعاون والمرح.</p><button className="light" onClick={()=>setTab('games')}>يلا نلعب <ChevronLeft size={16}/></button></div><div className="art">☀️<strong>🏡</strong><span>🌳</span><span>👨‍👩‍👧‍👦</span></div></section><Section title="لمّة العيلة" sub="FAMILY OVERVIEW"/><div className="stats"><Stat icon={<Users/>} value={members.length} label="أفراد العيلة"/><Stat icon={<Trophy/>} value={points} label="نقاطك الحالية"/><Stat icon={<Heart/>} value="100%" label="روح الفريق"/></div><Section title="اختاروا مغامرتكم" sub="PLAY & LEARN"/><div className="games">{games.slice(0,2).map(g=><Game key={g.id} g={g} play={()=>play(g)}/>)}</div></>}
- {tab==='map'&&<><Section title="كلنا متصلين ببعض 💚" sub="OUR FAMILY NETWORK"/><p className="muted">خريطة توضيحية مبدئية لشبكة العيلة.</p><div className="network"><div className="tree">🌳<b>عيلتنا</b><small>جذورنا واحدة</small></div><div className="nodes">{members.map(m=><div className="node" key={m.id}><span>{m.emoji}</span><b>{m.name}</b><small>{m.role}</small></div>)}</div></div></>}
- {tab==='members'&&<><div className="row"><Section title="أفراد العيلة" sub="OUR PEOPLE"/><button className="primary add" onClick={()=>setAdd(true)}><Plus size={16}/> إضافة فرد</button></div><div className="people">{members.map(m=><div className="person" key={m.id}><span>{m.emoji}</span><h3>{m.name}</h3><small>{m.role}</small><b>⭐ {m.points} نقطة</b></div>)}</div>{add&&<div className="overlay"><form className="dialog" onSubmit={addMember}><button type="button" className="x" onClick={()=>setAdd(false)}>×</button><h3>إضافة فرد للعيلة</h3><input autoFocus value={newName} onChange={e=>setNewName(e.target.value)} placeholder="اسم الفرد"/><button className="primary">إضافة</button></form></div>}</>}
- {tab==='games'&&<><Section title="اللعب أحلى وإحنا مع بعض 🎮" sub="FAMILY FUN"/><p className="muted">تحديات بسيطة تشجعنا نتعلم ونتعاون.</p><div className="games">{games.map(g=><Game key={g.id} g={g} play={()=>play(g)}/>)}</div></>}
- {tab==='rewards'&&<><Section title="كل خطوة حلوة وليها ثمرة 🌟" sub="YOUR ACHIEVEMENTS"/><div className="reward"><Trophy size={40}/><strong>{points}</strong><b>نقطة</b><p>استمر في المشاركة، وخلي الخير عادة يومية.</p><small>نظام النقاط تجريبي في هذه النسخة.</small></div></>}
- <footer>بسم الله أوله وآخره <span>Family World – Thimar OSMAR © 2026</span></footer></main></div>
+import { useEffect, useMemo, useState } from 'react';
+import { supabase, configured } from './src/lib/supabase';
+import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft } from 'lucide-react';
+
+const worlds = [
+  { id: 'home', icon: '🏡', ar: 'البيت والمعيشة', en: 'Home & Daily Life', zh: '家庭与日常', desc: 'نشارك المسؤولية ونعتني ببيتنا.', enDesc: 'Share responsibilities and care for home.', zhDesc: '分担责任，一起照顾家。' },
+  { id: 'family', icon: '💚', ar: 'الأسرة والعلاقات', en: 'Family & Relationships', zh: '家庭与关系', desc: 'كلمة طيبة ووقت جميل يجمعنا.', enDesc: 'Kind words and good time bring us closer.', zhDesc: '善意的话语与陪伴让我们更亲近。' },
+  { id: 'learning', icon: '📚', ar: 'التعليم والمهارات', en: 'Learning & Skills', zh: '学习与技能', desc: 'نتعلم شيئًا جديدًا خطوة بخطوة.', enDesc: 'Learn something new, one step at a time.', zhDesc: '一步一步学习新知识。' },
+  { id: 'nature', icon: '🌿', ar: 'الطبيعة والاستدامة', en: 'Nature & Sustainability', zh: '自然与可持续', desc: 'نحافظ على النعمة والبيئة.', enDesc: 'Care for the gifts around us.', zhDesc: '珍惜恩典，爱护环境。' },
+  { id: 'work', icon: '💼', ar: 'الأعمال والتجارة', en: 'Work & Enterprise', zh: '工作与事业', desc: 'نتعاون ونخطط ونتقن العمل.', enDesc: 'Plan together and do good work.', zhDesc: '一起计划，认真做好每件事。' },
+  { id: 'health', icon: '⚽', ar: 'الصحة والرياضة', en: 'Health & Movement', zh: '健康与运动', desc: 'حركة وراحة وعادات صحية.', enDesc: 'Build healthy habits with movement and rest.', zhDesc: '通过运动与休息养成健康习惯。' },
+  { id: 'community', icon: '🤲', ar: 'المجتمع والعمل النافع', en: 'Community & Service', zh: '社区与公益', desc: 'نساعد وننشر الخير من حولنا.', enDesc: 'Help others and spread good nearby.', zhDesc: '帮助他人，把善意带给身边的人。' },
+];
+const games = [
+  { id: 'treasure', icon: '🗝️', ar: 'صيد الكنز العائلي', en: 'Family Treasure Hunt', zh: '家庭寻宝', desc: 'اخفوا غرضًا آمنًا واكتبوا ثلاث تلميحات.', enDesc: 'Hide a safe object and write three clues.', zhDesc: '藏好安全的小物件，写下三个提示。', points: 15 },
+  { id: 'guess', icon: '🤔', ar: 'مين أنا؟', en: 'Who Am I?', zh: '我是谁？', desc: 'خمنوا شخصية أو حيوانًا بأسئلة نعم أو لا.', enDesc: 'Guess a person or animal with yes-or-no questions.', zhDesc: '用是非题猜人物或动物。', points: 10 },
+  { id: 'story', icon: '📖', ar: 'حكاية على الدور', en: 'A Story in Turns', zh: '接龙故事', desc: 'كل واحد يضيف جملة ونبني حكاية معًا.', enDesc: 'Each person adds a line to a shared story.', zhDesc: '每个人接着讲一句，共同编故事。', points: 10 },
+];
+const copy = {
+  ar: { dir: 'rtl', tagline: 'عالمنا.. لمتنا.. ثمارنا', welcome: 'أهلاً بيكم في عالم الأسرة!', intro: 'مساحة عائلية آمنة تجمعنا على التعلم واللعب والعمل النافع.', login: 'دخول', signup: 'حساب جديد', email: 'البريد الإلكتروني', password: 'كلمة المرور', guardian: 'أقرّ أنني ولي أمر بالغ وسأشرف على استخدام الأطفال.', submitLogin: 'تسجيل الدخول', submitSignup: 'إنشاء الحساب والبدء', checkEmail: 'راجع بريدك لتأكيد الحساب، ثم سجّل الدخول.', logout: 'تسجيل الخروج', home: 'الرئيسية', worlds: 'العوالم السبعة', play: 'الألعاب', characters: 'الشخصيات', points: 'نقاط تجريبية', explore: 'استكشف عالمًا', playNow: 'ابدأ اللعب', start: 'يلا نبدأ', name: 'Family World – Thimar OSMAR', privacy: 'لا تدخل أسماء الأطفال أو بياناتهم الشخصية. هذه النسخة لا تعرض بيانات الأسرة للآخرين.', noBackend: 'التسجيل غير متاح بعد. يلزم ربط مشروع Supabase من إعدادات الاستضافة.', charactersIntro: 'دليل أسامة، تميمة ثيمي، ومحللة البيانات شخصيات إرشادية للرحلة.', char1: 'أسامة · قائد الرحلة', char2: 'ثيمي · تميمة البهجة', char3: 'محللة البيانات · دليل التعلم', completed: 'أحسنت! أضيفت نقاط تجريبية لهذه الجلسة.' },
+  en: { dir: 'ltr', tagline: 'Our world. Our family. Our growth.', welcome: 'Welcome to Family World!', intro: 'A safe family space to learn, play, and do good together.', login: 'Log in', signup: 'Create account', email: 'Email', password: 'Password', guardian: 'I am an adult parent or guardian and will supervise children.', submitLogin: 'Log in', submitSignup: 'Create account and start', checkEmail: 'Check your email to confirm your account, then log in.', logout: 'Log out', home: 'Home', worlds: 'Seven worlds', play: 'Games', characters: 'Characters', points: 'Demo points', explore: 'Explore a world', playNow: 'Start playing', start: 'Let’s begin', name: 'Family World – Thimar OSMAR', privacy: 'Do not enter children’s names or personal details. This version does not share family data with others.', noBackend: 'Sign-up is not available yet. Connect Supabase in your hosting settings.', charactersIntro: 'Osama guides the journey, Thimmy brings cheer, and the Analyst supports learning.', char1: 'Osama · Journey guide', char2: 'Thimmy · Cheerful mascot', char3: 'Data Analyst · Learning guide', completed: 'Nice work! Demo points were added for this session.' },
+  zh: { dir: 'ltr', tagline: '我们的世界，我们的家庭，共同成长。', welcome: '欢迎来到 Family World！', intro: '一个安全的家庭空间，一起学习、游戏、行善。', login: '登录', signup: '创建账户', email: '电子邮箱', password: '密码', guardian: '我是成年家长或监护人，并会监督儿童使用。', submitLogin: '登录', submitSignup: '创建账户并开始', checkEmail: '请先查看邮箱并确认账户，然后登录。', logout: '退出登录', home: '首页', worlds: '七大世界', play: '游戏', characters: '角色', points: '体验积分', explore: '探索世界', playNow: '开始游戏', start: '开始吧', name: 'Family World – Thimar OSMAR', privacy: '请勿输入儿童姓名或个人资料。本版本不会向他人公开家庭数据。', noBackend: '注册暂不可用。请先在托管设置中连接 Supabase。', charactersIntro: 'Osama 指引旅程，Thimmy 带来欢乐，数据分析师陪伴学习。', char1: 'Osama · 旅程向导', char2: 'Thimmy · 快乐吉祥物', char3: '数据分析师 · 学习向导', completed: '做得好！本次体验已增加演示积分。' },
+};
+
+function translated(item, key, lang) {
+  if (!key) return item[lang] || item.ar;
+  if (key === 'Desc') return lang === 'en' ? item.enDesc : lang === 'zh' ? item.zhDesc : item.desc;
+  return item[lang + key] || item[key];
 }
-function Section({title,sub}){return <div className="section"><small>{sub}</small><h2>{title}</h2></div>}
-function Stat({icon,value,label}){return <div className="stat"><span>{icon}</span><div><b>{value}</b><small>{label}</small></div></div>}
-function Game({g,play}){return <article className="game"><span className="emoji">{g.icon}</span><small className="tag2">{g.tag}</small><h3>{g.title}</h3><p>{g.desc}</p><button onClick={play}>ابدأ التحدي <b>+{g.points} نقطة</b></button></article>}
+export default function App() {
+  const [lang, setLang] = useState('ar');
+  const t = copy[lang];
+  const [session, setSession] = useState(null);
+  const [mode, setMode] = useState('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [guardian, setGuardian] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState('');
+  const [tab, setTab] = useState('home');
+  const [points, setPoints] = useState(0);
+  const [done, setDone] = useState([]);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeWorld, setActiveWorld] = useState(null);
+  useEffect(() => {
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+    document.documentElement.dir = t.dir;
+  }, [lang, t.dir]);
+  useEffect(() => {
+    if (!supabase) return undefined;
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, value) => setSession(value));
+    return () => subscription.unsubscribe();
+  }, []);
+  async function auth(event) {
+    event.preventDefault(); setBusy(true); setNotice('');
+    try {
+      if (!configured) { setNotice(t.noBackend); return; }
+      if (mode === 'signup') {
+        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password });
+        if (error) throw error;
+        if (!data.session) setNotice(t.checkEmail);
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        if (error) throw error;
+      }
+    } catch (error) { setNotice(error.message || 'Please try again.'); }
+    finally { setBusy(false); }
+  }
+  async function logout() { await supabase?.auth.signOut(); setSession(null); setPoints(0); setDone([]); }
+  function completeGame(game) { setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
+  const nav = useMemo(() => [['home', t.home, Home], ['worlds', t.worlds, Globe2], ['play', t.play, Gamepad2], ['characters', t.characters, Users]], [t]);
+  if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><form className="auth-card" onSubmit={auth}>
+    <span className="mark">🌱</span><p className="eyebrow">THIMAR OSMAR PRESENTS</p><h1>{t.welcome}</h1><p>{t.intro}</p>
+    <div className="auth-tabs"><button type="button" className={mode === 'login' ? 'selected' : ''} onClick={() => setMode('login')}>{t.login}</button><button type="button" className={mode === 'signup' ? 'selected' : ''} onClick={() => setMode('signup')}>{t.signup}</button></div>
+    <label>{t.email}<input type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} /></label>
+    <label>{t.password}<input type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength="8" required value={password} onChange={e => setPassword(e.target.value)} /></label>
+    {mode === 'signup' && <label className="guardian-check"><input type="checkbox" required checked={guardian} onChange={e => setGuardian(e.target.checked)} />{t.guardian}</label>}
+    <button className="primary wide" disabled={busy}>{busy ? '…' : mode === 'login' ? t.submitLogin : t.submitSignup}</button>
+    {!configured && <p className="notice">{t.noBackend}</p>}{notice && <p className="notice" role="status">{notice}</p>}
+    <p className="privacy"><ShieldCheck size={16} />{t.privacy}</p>
+  </form><footer>{t.name} © 2026</footer></div>;
+  return <div className={`layout ${t.dir}`}><aside className={`sidebar ${mobileOpen ? 'show' : ''}`}><div className="brand-row"><Brand /><button className="icon-btn close-btn" onClick={() => setMobileOpen(false)} aria-label="Close"><X /></button></div><div className="family-badge">🌿 <span><b>{lang === 'en' ? 'Your family space' : lang === 'zh' ? '你的家庭空间' : 'مساحة أسرتكم'}</b><small>{lang === 'en' ? 'Private to your account' : lang === 'zh' ? '仅你的账户可见' : 'خاصة بحسابك'}</small></span></div><nav>{nav.map(([id, label, Icon]) => <button key={id} className={tab === id ? 'active' : ''} onClick={() => { setTab(id); setActiveWorld(null); setMobileOpen(false); }}><Icon size={19} />{label}<ChevronLeft size={16} /></button>)}</nav><div className="sidebar-bottom"><p>﴿ وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَى ﴾<small>المائدة: ٢</small></p><button className="logout" onClick={logout}><LogOut size={16} />{t.logout}</button></div></aside>
+    {mobileOpen && <button className="scrim" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
+    <main><header className="topbar"><button className="icon-btn menu-btn" onClick={() => setMobileOpen(true)} aria-label="Menu"><Menu /></button><div className="page-title"><small>{t.tagline}</small><h2>{nav.find(item => item[0] === tab)?.[1]}</h2></div><span className="points"><Star size={16} />{points} {t.points}</span><Language lang={lang} setLang={setLang} /></header>
+      {notice && <button className="notice" onClick={() => setNotice('')} role="status">{notice}　×</button>}
+      {tab === 'home' && <><section className="hero"><div><span className="hero-tag">✨ {t.tagline}</span><h1>{t.welcome}</h1><p>{t.intro}</p><button className="light" onClick={() => setTab('worlds')}>{t.explore} <ChevronLeft size={16} /></button></div><div className="hero-art" aria-hidden="true"><span>☀️</span><b>🏡</b><span>🌳</span><i>👨‍👩‍👧‍👦</i></div></section><section className="section"><small>SEVEN WORLDS</small><h2>{t.worlds}</h2></section><WorldGrid lang={lang} worlds={worlds.slice(0, 3)} onSelect={id => { setTab('worlds'); setActiveWorld(id); }} /><section className="section"><small>PLAY & LEARN</small><h2>{t.play}</h2></section><GameGrid lang={lang} items={games.slice(0, 2)} done={done} onPlay={completeGame} /><p className="notice">{t.privacy}</p></>}
+      {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
+      {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
+      {tab === 'characters' && <><section className="section"><small>OUR GUIDES</small><h2>{t.characters}</h2><p className="muted">{t.charactersIntro}</p></section><div className="characters"><Character emoji="🧑🏻‍💼" title={t.char1} color="mint" /><Character emoji="🐥" title={t.char2} color="gold" /><Character emoji="👩🏻‍💻" title={t.char3} color="rose" /></div><p className="notice">Character concepts follow the project reference. Portrait artwork is not embedded because third-party image rights could not be confirmed.</p></>}
+      <footer>{t.name} © 2026</footer></main></div>;
+}
+
+function Brand() { return <div className="brand"><span className="brand-mark"><Sprout size={22} /></span><span><b>Family World</b><small>THIMAR OSMAR</small></span></div>; }
+function Language({ lang, setLang }) { return <select className="language" value={lang} onChange={event => setLang(event.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="en">English</option><option value="zh">简体中文</option></select>; }
+function WorldGrid({ lang, worlds: list, onSelect }) { return <div className="world-grid">{list.map(world => <button className="world-card" key={world.id} onClick={() => onSelect(world.id)}><span>{world.icon}</span><h3>{translated(world, '', lang)}</h3><p>{translated(world, 'Desc', lang)}</p><b>{copy[lang].explore} <ChevronLeft size={14} /></b></button>)}</div>; }
+function GameGrid({ lang, items, done, onPlay }) { return <div className="game-grid">{items.map(game => <article className="game-card" key={game.id}><span className="game-icon">{game.icon}</span><span className="score">+{game.points} ⭐</span><h3>{translated(game, '', lang)}</h3><p>{translated(game, 'Desc', lang)}</p><button onClick={() => onPlay(game)}>{done.includes(game.id) ? copy[lang].completed : copy[lang].playNow}</button></article>)}</div>; }
+function Character({ emoji, title, color }) { return <article className={`character ${color}`}><span>{emoji}</span><h3>{title}</h3><small>Family World · Thimar OSMAR</small></article>; }
+function WorldDetail({ lang, world, onPlay }) { return <section className="world-detail"><span>{world.icon}</span><h1>{translated(world, '', lang)}</h1><p>{translated(world, 'Desc', lang)}</p><button className="primary" onClick={onPlay}>{copy[lang].playNow}</button></section>; }

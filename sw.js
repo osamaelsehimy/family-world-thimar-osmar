@@ -1,1 +1,9 @@
-const CACHE='family-world-og01-v1';const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE))));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(res=>{const copy=res.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return res}).catch(()=>caches.match('./index.html'))))});
+// Retire the prototype's cache-first worker so updated authenticated screens load.
+self.addEventListener('install', (event) => event.waitUntil(self.skipWaiting()));
+self.addEventListener('activate', (event) => event.waitUntil((async () => {
+  const keys = await caches.keys();
+  await Promise.all(keys.filter((key) => key.startsWith('family-world-og01-')).map((key) => caches.delete(key)));
+  await self.registration.unregister();
+  const clients = await self.clients.matchAll({ type: 'window' });
+  for (const client of clients) client.navigate(client.url);
+})()));

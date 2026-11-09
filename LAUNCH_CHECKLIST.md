@@ -1,10 +1,11 @@
 # Launch checklist
-- [ ] Create Supabase project and run schema.sql.
-- [ ] Configure .env and hosting environment variables.
-- [ ] Enable email confirmation and configure SMTP / redirect URLs.
-- [ ] Promote verified owner account to admin using SQL comment in schema.sql.
-- [ ] Test signup, confirmation, login, refresh, logout and password recovery.
-- [ ] Test member cannot change role or modify family records.
-- [ ] Implement persistent family members, OPM invitations, editable map, real quiz content and server-side points.
-- [ ] Review child privacy, parental consent, retention, deletion, terms and privacy policy.
-- [ ] Run npm run build and deploy dist.
+
+- [ ] Create a new Supabase project and run `schema.sql`.
+- [ ] Add Supabase URL and anon key to the hosting build environment.
+- [ ] Set email confirmation behavior and allowed redirect URLs.
+- [ ] Deploy the registration notification function and configure the Resend sender and database webhook.
+- [ ] Build and publish `dist/` to GitHub Pages or another HTTPS host.
+- [ ] Test signup, sign-in, sign-out, and one owner notification with test accounts.
+- [ ] Confirm two accounts cannot read each other's family records.
+- [ ] Keep child names, contact details, photos, and sensitive information out of the MVP.
+- [ ] Add family invitations and server-side persistent game progress only after their privacy and authorization rules are designed.
