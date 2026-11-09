@@ -16,7 +16,7 @@ Without Supabase settings, visitors can enter the no-account demo; account creat
 1. Create a Supabase project and run `schema.sql` in its SQL editor. The SQL isolates existing prototype accounts into separate family spaces; back up and review any existing database before applying it.
 2. In Authentication → Providers, enable Email. Disable email confirmation only if instant play is required; otherwise users must confirm their address before signing in.
 3. Add the deployed site URL and local development URL to Authentication → URL Configuration.
-4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local` and the hosting provider's build settings.
+4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local` for local testing. For GitHub Pages, add them as Actions secrets with those exact names under repository Settings → Secrets and variables → Actions.
 5. Verify sign-up, sign-in, and sign-out in the deployed app.
 
 Each account gets a private family space. Signup is limited by a parent/guardian affirmation. This MVP does not support family invitations or cross-account family sharing. Display profiles can use nicknames and emoji; do not enter children's full names, contact details, photos, or sensitive information. Demo points reset when the session ends and have no cash value.
@@ -36,6 +36,6 @@ No SMS, WhatsApp, Google sign-in, or third-party tracking is enabled.
 
 Run `npm run build`; the deployable static files are in `dist/`. Vite uses relative asset paths for GitHub Pages project sites. The main branch workflow builds and deploys `dist/` to GitHub Pages. In repository Settings → Pages, set the source to **GitHub Actions**. Supabase credentials are account-level settings and are not stored in this repository.
 
-The public demo can be shared without accounts. Email registration and owner notifications remain off until Supabase and Resend are configured as described above.
+The public demo can be shared without accounts. Email registration and owner notifications remain off until Supabase and Resend are configured as described above. After saving the GitHub Actions secrets, run **Build MVP** from Actions to rebuild and publish with account support.
 
 The character concepts (Osama, Thimmy, and the Analyst) are represented with native emoji and interface styling. The attached concept PDF also includes mixed-source image artwork; those portraits are not redistributed because separate image-use rights were not confirmed.

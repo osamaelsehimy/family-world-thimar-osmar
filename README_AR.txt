@@ -10,7 +10,8 @@ Family World – Thimar OSMAR
 4. لنسخة النشر استخدم npm run build وارفع مجلد dist إلى استضافة HTTPS.
 
 بدون Supabase يقدر الزائر يدخل تجربة اللعبة بدون حساب، لكن التقدم لا يُحفظ والتسجيل بالبريد لا يعمل.
-إعداد Supabase والبريد والتنبيهات موضح باختصار في README.md.
+بعد إنشاء المشروع، أضف VITE_SUPABASE_URL وVITE_SUPABASE_ANON_KEY في GitHub Settings ثم Secrets and variables ثم Actions، وشغّل Build MVP من صفحة Actions.
+إعداد Supabase والبريد والتنبيهات موضح بالتفصيل في README.md.
 إشعار التسجيل يذهب فقط إلى Eng.osama.elsehimy@gmail.com بعد إعداد Resend وSupabase واختباره.
 
 النشر إلى GitHub Pages يتم تلقائيًا من فرع main بعد اختيار GitHub Actions في Settings ثم Pages.
