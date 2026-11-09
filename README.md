@@ -13,13 +13,13 @@ Without Supabase settings, the interface is available for preview, but account c
 
 ## Prepare Supabase
 
-1. Create a Supabase project and run `schema.sql` in its SQL editor. The SQL is intended for a **new project**; back up and review any existing database before applying it.
+1. Create a Supabase project and run `schema.sql` in its SQL editor. The SQL isolates existing prototype accounts into separate family spaces; back up and review any existing database before applying it.
 2. In Authentication → Providers, enable Email. Disable email confirmation only if instant play is required; otherwise users must confirm their address before signing in.
 3. Add the deployed site URL and local development URL to Authentication → URL Configuration.
 4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local` and the hosting provider's build settings.
 5. Verify sign-up, sign-in, and sign-out in the deployed app.
 
-Each account gets a private family space. This MVP does not support family invitations or cross-account family sharing. Display profiles can use nicknames and emoji; do not enter children's full names, contact details, photos, or sensitive information. Demo points reset when the session ends and have no cash value.
+Each account gets a private family space. Signup is limited by a parent/guardian affirmation. This MVP does not support family invitations or cross-account family sharing. Display profiles can use nicknames and emoji; do not enter children's full names, contact details, photos, or sensitive information. Demo points reset when the session ends and have no cash value.
 
 ## Owner email notification
 

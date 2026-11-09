@@ -13,6 +13,7 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now(),
   unique (id, family_id)
 );
+alter table public.profiles add column if not exists family_id uuid references public.families(id) on delete cascade;
 
 create table if not exists public.family_memberships (
   family_id uuid not null references public.families(id) on delete cascade,
@@ -21,6 +22,21 @@ create table if not exists public.family_memberships (
   created_at timestamptz not null default now(),
   primary key (family_id, user_id)
 );
+
+-- Migrate existing prototype accounts to separate private families before access is granted.
+do $$
+declare
+  old_profile record;
+  new_family_id uuid;
+begin
+  for old_profile in select id from public.profiles where family_id is null loop
+    insert into public.families default values returning id into new_family_id;
+    update public.profiles set family_id = new_family_id where id = old_profile.id;
+    insert into public.family_memberships(family_id, user_id, role)
+      values (new_family_id, old_profile.id, 'parent') on conflict do nothing;
+  end loop;
+end;
+$$;
 
 -- Optional family display profiles use nicknames and emoji, never child contact details.
 create table if not exists public.family_world_members (
@@ -44,6 +60,7 @@ drop policy if exists "admin manages profiles" on public.profiles;
 drop policy if exists "family can read members" on public.family_members;
 drop policy if exists "admins manage members" on public.family_members;
 revoke all on public.family_members from anon, authenticated;
+revoke all on public.families, public.profiles, public.family_memberships, public.family_world_members from public, anon, authenticated;
 
 create or replace function public.is_family_member(target_family uuid)
 returns boolean language sql stable security definer set search_path = '' as $$
