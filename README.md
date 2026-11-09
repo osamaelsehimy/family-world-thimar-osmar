@@ -1,41 +1,38 @@
 # Family World – Thimar OSMAR
 
-A lightweight family game MVP by OSMAR Ecosystems. The first release has seven worlds, simple email/password accounts, and play available after account creation. Arabic, English, and Simplified Chinese are included.
+A family game by OSMAR Ecosystems, available in Arabic, English, and Simplified Chinese.
 
-## Run locally
+## Play now
 
-1. Install Node.js 20 or later.
-2. Copy `.env.example` to `.env.local` and add the Supabase project URL and public anon key.
-3. Run `npm install`, then `npm run dev`.
-4. Open the local URL shown by Vite.
+Open the public game at [Family World](https://osamaelsehimy.github.io/family-world-thimar-osmar/) and choose **Play the demo**. No account or installation is required. You can share that link with anyone.
 
-Without Supabase settings, visitors can enter the no-account demo; account creation and sign-in stay disabled, and demo progress is not saved. Never put a Supabase service-role key in browser settings.
+Demo points and activity are temporary. The current MVP does not save game progress or family member profiles; accounts have a private sign-in profile.
 
-## Prepare Supabase
+## Install on a phone or PC
 
-1. Create a Supabase project and run `schema.sql` in its SQL editor. The SQL isolates existing prototype accounts into separate family spaces; back up and review any existing database before applying it.
-2. In Authentication → Providers, enable Email. Disable email confirmation only if instant play is required; otherwise users must confirm their address before signing in.
-3. Add the deployed site URL and local development URL to Authentication → URL Configuration.
-4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local` for local testing. For GitHub Pages, add them as Actions secrets with those exact names under repository Settings → Secrets and variables → Actions.
-5. Verify sign-up, sign-in, and sign-out in the deployed app.
+The site is an installable web app (PWA), not an APK or `.exe`.
 
-Each account gets a private family space. Signup is limited by a parent/guardian affirmation. This MVP does not support family invitations or cross-account family sharing. Display profiles can use nicknames and emoji; do not enter children's full names, contact details, photos, or sensitive information. Demo points reset when the session ends and have no cash value.
+- On Windows, open the HTTPS site in Chrome or Edge and choose **Install Family World** in the address bar or browser menu. Windows adds an app icon and launches it in its own window.
+- On Android, open the site in Chrome and choose **Install app** or **Add to Home screen**.
+- On iPhone or iPad, open the site in Safari and choose **Share → Add to Home Screen**.
 
-## Owner email notification
+The app icon is included in the site manifest. After installation, it opens like an app; an internet connection is needed for the online site and Supabase sign-in.
 
-Notifications go only to `Eng.osama.elsehimy@gmail.com`. They contain no player's email or name. Delivery needs a Resend account with a verified sender domain and Supabase Edge Function secrets; it is not active until configured and tested.
+## Accounts and privacy
 
-1. Deploy `supabase/functions/registration-notify` to the Supabase project (`supabase functions deploy registration-notify --no-verify-jwt`).
-2. Set Edge Function secrets: `RESEND_API_KEY`, `REGISTRATION_EMAIL_FROM` (a verified sender such as `Family World <notify@example.com>`), and a long random `REGISTRATION_WEBHOOK_SECRET`.
-3. In Database → Webhooks, create an `INSERT` webhook for `public.profiles`, pointing to `https://PROJECT_REF.supabase.co/functions/v1/registration-notify`; add header `x-webhook-secret` with the same secret.
-4. Create a test account and confirm that the owner inbox receives one notification. Check Supabase function and webhook logs if delivery fails.
+Email and password accounts use Supabase Auth and require an adult parent or guardian affirmation. Email confirmation is enabled. Account sign-in currently does not save game progress. The public guest demo remains available without signing in.
 
-No SMS, WhatsApp, Google sign-in, or third-party tracking is enabled.
+The app uses a public Supabase publishable key, which is intended for browser applications. The private `profiles` table has row-level security; each account can read only its own profile. Never put a service-role key in browser code.
 
-## Build and deploy
+Do not enter children's full names, contact details, photos, or sensitive information.
 
-Run `npm run build`; the deployable static files are in `dist/`. Vite uses relative asset paths for GitHub Pages project sites. The main branch workflow builds and deploys `dist/` to GitHub Pages. In repository Settings → Pages, set the source to **GitHub Actions**. Supabase credentials are account-level settings and are not stored in this repository.
+## Run or publish the source
 
-The public demo can be shared without accounts. Email registration and owner notifications remain off until Supabase and Resend are configured as described above. After saving the GitHub Actions secrets, run **Build MVP** from Actions to rebuild and publish with account support.
+For local development, install Node.js 20 or later, then run:
 
-The character concepts (Osama, Thimmy, and the Analyst) are represented with native emoji and interface styling. The attached concept PDF also includes mixed-source image artwork; those portraits are not redistributed because separate image-use rights were not confirmed.
+```sh
+npm install
+npm run dev
+```
+
+To build the static site, run `npm run build`; the output is in `dist/`. A push to `main` runs the GitHub Pages workflow. In repository settings, Pages must use **GitHub Actions**.
