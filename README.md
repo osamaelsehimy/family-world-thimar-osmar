@@ -9,7 +9,7 @@ A lightweight family game MVP by OSMAR Ecosystems. The first release has seven w
 3. Run `npm install`, then `npm run dev`.
 4. Open the local URL shown by Vite.
 
-Without Supabase settings, the interface is available for preview, but account creation and sign-in are disabled. Never put a Supabase service-role key in browser settings.
+Without Supabase settings, visitors can enter the no-account demo; account creation and sign-in stay disabled, and demo progress is not saved. Never put a Supabase service-role key in browser settings.
 
 ## Prepare Supabase
 
@@ -34,6 +34,8 @@ No SMS, WhatsApp, Google sign-in, or third-party tracking is enabled.
 
 ## Build and deploy
 
-Run `npm run build`; the deployable static files are in `dist/`. Vite uses relative asset paths for GitHub Pages project sites. GitHub Pages must deploy the generated `dist` folder, not the source files. Hosting and Supabase credentials are account-level settings and are not stored in this repository.
+Run `npm run build`; the deployable static files are in `dist/`. Vite uses relative asset paths for GitHub Pages project sites. The main branch workflow builds and deploys `dist/` to GitHub Pages. In repository Settings → Pages, set the source to **GitHub Actions**. Supabase credentials are account-level settings and are not stored in this repository.
+
+The public demo can be shared without accounts. Email registration and owner notifications remain off until Supabase and Resend are configured as described above.
 
 The character concepts (Osama, Thimmy, and the Analyst) are represented with native emoji and interface styling. The attached concept PDF also includes mixed-source image artwork; those portraits are not redistributed because separate image-use rights were not confirmed.
