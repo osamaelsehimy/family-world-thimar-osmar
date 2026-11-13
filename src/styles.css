@@ -159,8 +159,8 @@
 .domino-chain-controls button.selected{background:#f3d78e;border-color:#f3d78e;color:#294b38}
 .domino-chain-wrap{width:100%;max-height:clamp(230px,48vw,520px);overflow:auto;padding:7px 8px 20px;scrollbar-width:thin;overscroll-behavior:contain;direction:ltr}
 .domino-chain{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:20px;min-width:100%;width:max-content;min-height:110px;padding:12px 18px 18px;overflow:visible}
-.domino-chain-row{position:relative;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:max-content;min-width:100%;padding:8px 0}
-.domino-chain-row.reverse{flex-direction:row-reverse}
+.domino-chain-row{position:relative;display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:0;width:max-content;min-width:100%;padding:8px 0}
+.domino-chain-row.reverse{flex-direction:row-reverse;justify-content:flex-start}
 .domino-chain-row .board-tile{position:relative;z-index:1;margin:0 2px;transform:scale(var(--chain-scale,1));transform-origin:center}
 .domino-chain-row .board-tile:not(:last-child)::after{content:"";position:absolute;top:50%;inset-inline-end:-5px;width:6px;height:3px;background:#f3d78e;box-shadow:0 0 5px #f3d78e;z-index:2}
 .domino-chain-row.reverse .board-tile:not(:last-child)::after{inset-inline-end:auto;inset-inline-start:-5px}
@@ -183,7 +183,7 @@
 @media(max-width:680px){
  .domino-chain-wrap{max-height:420px;padding-inline:5px}
  .domino-chain{align-items:flex-start;padding-inline:16px}
- .domino-chain-row{justify-content:flex-start;min-height:75px}
+ .domino-chain-row{justify-content:flex-end;min-height:75px}
  .domino-chain-row.reverse{justify-content:flex-start}
  .domino-chain-wrap.zoom-3 .domino-chain-row{min-height:120px}
  .domino-chain-controls{position:sticky;top:0}
