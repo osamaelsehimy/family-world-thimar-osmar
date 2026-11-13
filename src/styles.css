@@ -220,3 +220,9 @@
  .domino-chain-wrap.zoom-3 .domino-chain-row{min-height:154px}
  .domino-open-pin{font-size:8px;top:-23px;padding:3px 5px}
 }
+
+
+/* Gold spine visually links every tile across each horizontal run */
+.domino-chain-row::before{content:"";position:absolute;z-index:0;top:50%;left:calc(100% / var(--chain-columns) / 2);right:calc(100% / var(--chain-columns) / 2);height:3px;border-radius:3px;background:linear-gradient(90deg,#d7a83e,#fff0b2,#d7a83e);box-shadow:0 0 7px #f3d78e;transform:translateY(-50%)}
+.domino-chain-row .board-tile{z-index:2}
+.domino-chain-row:not(:last-child)::after{z-index:1}
