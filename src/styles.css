@@ -14,3 +14,32 @@
 /* Dominoes game */
 .domino-game{margin:18px 0 34px;color:#20372e}.domino-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.domino-head h1{font-size:28px;margin:5px 0;color:#164b3b}.domino-head p{margin:0;color:#7b8c80;font-size:12px}.domino-kicker{font-size:9px;letter-spacing:1.5px;color:#8aa18f;font-weight:800}.domino-back{background:#edf5e9;color:#245c43;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:700}.domino-rules{padding:12px 15px;border-radius:12px;background:#fff;border:1px solid #e6eee3;color:#6f8175;font-size:12px;line-height:1.8}.domino-score{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.domino-score>div{background:#fff;border:1px solid #e6eee3;border-radius:13px;padding:12px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px}.domino-score b{font-size:12px}.domino-score strong{grid-column:2;grid-row:1/3;font-size:24px;color:#245c43}.domino-score small{font-size:10px;color:#8a998f}.domino-table{background:radial-gradient(ellipse at center,#276c4e,#164b3b);border:7px solid #d8c49a;border-radius:20px;min-height:245px;padding:15px;display:flex;flex-direction:column;justify-content:space-between;gap:14px;box-shadow:inset 0 0 0 2px #ffffff22,0 8px 22px #173c2415}.domino-opponent{display:flex;justify-content:center;gap:4px;min-height:26px;flex-wrap:wrap}.domino-backtile{width:18px;height:27px;border:1px solid #e5d6ad;border-radius:4px;background:repeating-linear-gradient(45deg,#d7c18f,#d7c18f 3px,#b69d68 3px,#b69d68 5px);color:#fff;font-size:11px;text-align:center}.domino-chain{display:flex;align-items:center;justify-content:center;gap:4px;overflow-x:auto;max-width:100%;min-height:74px;padding:6px 2px}.domino-empty{color:#d9e8dd;font-size:12px;text-align:center}.domino-tile{display:inline-flex;align-items:center;justify-content:center;gap:2px;flex:none;width:64px;height:34px;padding:3px;border:1px solid #d8d2c4;border-radius:6px;background:linear-gradient(145deg,#fff,#eae7df);box-shadow:0 2px 3px #061b1244;color:#183d2b}.domino-face{width:27px;height:27px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:3px;border-radius:3px;background:#fff;gap:1px}.domino-face i{width:5px;height:5px;border-radius:50%;background:#244b38;align-self:center;justify-self:center}.domino-ends{text-align:center;color:#e5efe7;font-size:11px}.domino-ends b{color:#fff;font-size:14px}.domino-status{text-align:center;font-size:13px;font-weight:800;color:#2c6548;padding:13px 0 5px}.domino-hand-title{font-size:14px;margin:8px 0;color:#294b38}.domino-hand{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:12px;background:#e7efe4;border-radius:14px;min-height:76px}.hand-tile{height:47px;width:84px;cursor:pointer;transition:transform .15s,border-color .15s}.hand-tile .domino-face{width:36px;height:36px}.hand-tile .domino-face i{width:6px;height:6px}.hand-tile.is-playable{border:2px solid #4b9564}.hand-tile:hover:not(:disabled){transform:translateY(-4px)}.hand-tile.chosen{outline:3px solid #e8b957}.hand-tile:disabled{cursor:not-allowed;opacity:.6}.domino-actions,.domino-choice{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:13px 0}.domino-actions button,.domino-choice button,.domino-result button{border-radius:9px;padding:10px 15px;background:#245c43;color:#fff;font-size:12px;font-weight:700}.domino-actions button:disabled{opacity:.38;cursor:not-allowed}.domino-actions button:last-child,.domino-result button{background:#eaf2e7;color:#245c43}.domino-choice{align-items:center;padding:12px;background:#fff8e8;border:1px solid #f0dfb8;border-radius:12px}.domino-choice b{width:100%;text-align:center;font-size:12px}.domino-message{text-align:center;color:#8a6424;font-size:12px}.domino-result{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0;padding:14px;border-radius:12px;background:#e6f2e4;color:#245c43;font-weight:800;font-size:14px}
 @media(max-width:600px){.domino-head h1{font-size:22px}.domino-score{gap:6px}.domino-score>div{padding:9px 7px}.domino-score b{font-size:10px}.domino-score small{font-size:8px}.domino-score strong{font-size:19px}.domino-table{min-height:210px;padding:10px;border-width:5px}.domino-tile{width:56px}.domino-chain{justify-content:flex-start}.domino-actions button{flex:1;min-width:100px}}
+
+
+/* Domino responsive table and fully visible hand */
+.domino-game{width:100%;max-width:1100px;margin-inline:auto}
+.domino-table{min-height:clamp(220px,34vw,340px);gap:18px;padding:clamp(12px,2.5vw,24px)}
+.domino-chain{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;scroll-snap-type:x proximity;padding:12px 8px;min-height:90px}
+.domino-chain .board-tile{scroll-snap-align:center}
+.domino-hand{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:9px;align-items:center;justify-items:center;padding:14px;overflow:visible}
+.domino-hand .hand-tile{width:min(100%,88px);min-width:0}
+.domino-actions{position:relative;z-index:1}
+@media(max-width:720px){
+  .domino-game{margin:10px 0 24px}
+  .domino-head{align-items:flex-start}
+  .domino-head h1{font-size:21px}
+  .domino-rules{font-size:11px;padding:10px 12px}
+  .domino-table{min-height:230px;border-width:5px;border-radius:16px;padding:12px}
+  .domino-chain{justify-content:flex-start;min-height:82px}
+  .domino-hand{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px}
+  .domino-hand .hand-tile{width:100%;height:44px}
+  .domino-hand .hand-tile .domino-face{width:31px;height:31px}
+}
+@media(max-width:390px){
+  .domino-score{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .domino-score>div{min-width:0}
+  .domino-score small{line-height:1.4}
+  .domino-hand{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .domino-hand .hand-tile{max-width:88px}
+  .domino-actions button{min-width:0;padding:9px 8px;font-size:11px}
+}
