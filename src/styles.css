@@ -60,3 +60,67 @@
 .domino-online-note{padding:10px 13px;border-radius:10px;background:#fff8e8;color:#80652c;font-size:11px;line-height:1.7;text-align:center}
 @media(max-width:720px){.domino-score{grid-template-columns:repeat(2,minmax(0,1fr))}.domino-setup{gap:9px;margin:16px auto}.domino-setup>button{padding:14px 9px;font-size:12px}.domino-seat{font-size:9px;padding:5px 7px}}
 @media(max-width:390px){.domino-score{grid-template-columns:repeat(2,minmax(0,1fr))}.domino-setup{grid-template-columns:1fr}.domino-setup h3,.domino-setup>button.domino-start{grid-column:1}}
+
+
+/* Domino PMO edition: configurable match room and responsive wraparound chain */
+.domino-setup-pro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;max-width:900px;padding:clamp(18px,3vw,30px);background:linear-gradient(145deg,#fff,#f7faf5);border-radius:22px}
+.domino-setup-intro{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:15px;border-radius:15px;background:#edf5e9}
+.domino-setup-intro>span{font-size:32px}.domino-setup-intro h3{margin:0 0 4px}.domino-setup-intro p{margin:0;color:#74847b;font-size:11px;line-height:1.7}
+.domino-setting{min-width:0;padding:13px;border:1px solid #e6eee3;border-radius:14px;background:#fff}
+.domino-setting>label{display:block;margin-bottom:9px;color:#294b38;font-size:12px;font-weight:800}
+.domino-setting>small{display:block;margin-top:8px;color:#849287;font-size:10px;line-height:1.6}
+.domino-player-picker,.domino-option-row,.domino-swatch-row,.domino-targets{display:flex;gap:7px;flex-wrap:wrap}
+.domino-player-picker button,.domino-option-row button,.domino-swatch-row button,.domino-targets button{flex:1;min-width:38px;padding:9px 8px;border:1px solid #e0e9dd;border-radius:9px;background:#f8faf6;color:#40584a;font-size:11px;font-weight:700}
+.domino-player-picker button.selected,.domino-option-row button.selected,.domino-swatch-row button.selected,.domino-targets button.selected{border:2px solid #36724c;background:#eaf4e7;color:#245c43}
+.domino-option-row button:disabled{opacity:.35;cursor:not-allowed}
+.domino-targets{margin-top:8px}.domino-targets button{min-width:55px}
+.domino-start-pro{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 18px;border-radius:12px;background:linear-gradient(110deg,#164b3b,#36724c);color:white;font-size:14px;font-weight:800;box-shadow:0 8px 20px #164b3b22}
+.domino-start-pro span{font-size:18px}
+.domino-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 0;padding:12px 15px;border:1px solid #e5ece2;border-radius:13px;background:#fff}
+.domino-toolbar b,.domino-toolbar small{display:block}.domino-toolbar b{font-size:13px;color:#245c43}.domino-toolbar small{margin-top:3px;color:#839187;font-size:10px}
+.domino-toolbar button{padding:8px 12px;border-radius:9px;background:#edf5e9;color:#245c43;font-size:11px;font-weight:700}
+.domino-scoreboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:9px;margin:12px 0}
+.domino-score-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px;padding:10px 12px;border:1px solid #e5ece2;border-radius:12px;background:#fff}
+.domino-score-card small{font-size:10px;color:#78887e}.domino-score-card strong{grid-column:2;grid-row:1/3;font-size:24px;color:#245c43;font-variant-numeric:tabular-nums}.domino-score-card span{font-size:9px;color:#a18a5d}
+.domino-table{transition:background .2s}
+.domino-table.theme-classic{background:radial-gradient(ellipse at center,#9a7046,#65442c);border-color:#c9a978}
+.domino-table.theme-emerald{background:radial-gradient(ellipse at center,#287654,#123f31);border-color:#d8c49a}
+.domino-table.theme-midnight{background:radial-gradient(ellipse at center,#35446d,#141c36);border-color:#9eabc9}
+.domino-seats{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.domino-chain-wrap{width:100%;max-height:clamp(190px,34vw,340px);overflow:auto;padding:8px 4px;scrollbar-width:thin;overscroll-behavior:contain}
+.domino-chain{display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:7px;min-height:110px;overflow:visible;padding:8px}
+.domino-chain .board-tile{scroll-snap-align:none}
+.domino-tile.tile-ivory{background:linear-gradient(145deg,#fffef8,#e9e4d6);border-color:#d7d0bd}
+.domino-tile.tile-blue{background:linear-gradient(145deg,#e7f4ff,#a9cde9);border-color:#77a9ce}
+.domino-tile.tile-wood{background:repeating-linear-gradient(0deg,#e7c99a,#e7c99a 5px,#d7b27c 6px,#e7c99a 9px);border-color:#b58b55}
+.domino-tile.is-double{flex-direction:column;width:42px;height:76px;gap:2px;padding:4px}
+.domino-tile.is-double .domino-face{width:31px;height:31px}
+.domino-livebar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 13px;margin:10px 0;border-radius:11px;background:#edf5e9;color:#315d43;font-size:11px}
+.domino-livebar span{color:#718276;font-variant-numeric:tabular-nums}
+.domino-hand-panel{margin-top:13px;padding:13px;border:1px solid #e5ece2;border-radius:15px;background:#fff}
+.domino-hand-panel h3{display:flex;justify-content:space-between;margin:0 0 10px;color:#294b38;font-size:13px}
+.domino-hand-panel h3 span{display:grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:20px;background:#edf5e9;color:#245c43}
+.domino-hand{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;padding:10px;background:#f2f6ef;border-radius:12px}
+.domino-hand .hand-tile{width:82px;height:47px}
+.domino-hand .hand-tile.is-double{width:48px;height:78px}
+.domino-hand .hand-tile.is-double .domino-face{width:34px;height:34px}
+.domino-actions button{min-width:120px}
+.domino-round-result{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:14px 0;padding:15px 17px;border:1px solid #cfe3d0;border-radius:14px;background:#f0f8ed;color:#245c43}
+.domino-round-result small{font-size:10px;color:#7d8e80}.domino-round-result h3{margin:3px 0;font-size:16px}.domino-round-result p{margin:3px 0;font-size:11px;color:#718276}
+.domino-round-result h2{font-size:16px}.domino-round-result button{padding:10px 13px;border-radius:9px;background:#245c43;color:#fff;font-size:11px;font-weight:700}.domino-round-result button.secondary{background:#e2eee0;color:#245c43}
+@media(max-width:680px){
+ .domino-setup-pro{grid-template-columns:1fr;gap:10px;padding:13px}
+ .domino-setup-intro,.domino-start-pro{grid-column:1}
+ .domino-player-picker{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+ .domino-player-picker button{padding:9px 2px}
+ .domino-option-row button,.domino-swatch-row button{min-width:0}
+ .domino-chain-wrap{max-height:260px}
+ .domino-chain{justify-content:flex-start;gap:6px}
+ .domino-table{min-height:220px}
+ .domino-round-result{align-items:flex-start}
+}
+@media(max-width:390px){
+ .domino-scoreboard{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .domino-toolbar small{max-width:190px;line-height:1.5}
+ .domino-hand .hand-tile{width:72px}
+}
