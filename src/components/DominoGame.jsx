@@ -80,7 +80,7 @@ export default function DominoGame({ lang='ar', onBack }) {
     else placeTile(tile,options[0]);
   }
   function drawTile() {
-    if (!pile.length || drawnThisTurn || turn!=='player' || winner) return;
+    if (!pile.length || turn!=='player' || winner) return;
     const [next,...rest]=pile;
     setPile(rest); setPlayer(old=>[...old,next]); setDrawnThisTurn(true); setMessage(t.drawNeeded);
   }
@@ -131,7 +131,7 @@ export default function DominoGame({ lang='ar', onBack }) {
     {choice && <div className="domino-choice"><b>{t.choose}</b><button onClick={()=>placeTile(choice.tile,'left')}>{t.chooseLeft}</button><button onClick={()=>placeTile(choice.tile,'right')}>{t.chooseRight}</button></div>}
     <h3 className="domino-hand-title">{t.hand}</h3>
     <div className="domino-hand">{player.map(tile=><button key={tile.id} className={`domino-tile hand-tile ${selected===tile.id?'chosen':''} ${playable(tile)?'is-playable':''}`} onClick={()=>playSelected(tile)} disabled={turn!=='player'||!!winner}><PipFace value={tile.a}/><PipFace value={tile.b}/></button>)}</div>
-    <div className="domino-actions"><button onClick={drawTile} disabled={turn!=='player'||!!winner||!pile.length||drawnThisTurn}>{t.draw}</button><button onClick={passTurn} disabled={turn!=='player'||!!winner||player.some(playable)||pile.length>0}>{t.pass}</button><button onClick={startRound}>{t.restart}</button></div>
+    <div className="domino-actions"><button onClick={drawTile} disabled={turn!=='player'||!!winner||!pile.length}>{t.draw}</button><button onClick={passTurn} disabled={turn!=='player'||!!winner||player.some(playable)||pile.length>0}>{t.pass}</button><button onClick={startRound}>{t.restart}</button></div>
     {message && <p className="domino-message" role="status">{message}</p>}
   </section>;
 }
