@@ -43,3 +43,20 @@
   .domino-hand .hand-tile{max-width:88px}
   .domino-actions button{min-width:0;padding:9px 8px;font-size:11px}
 }
+
+
+/* Four-seat domino setup and table */
+.domino-setup{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:720px;margin:26px auto;padding:clamp(18px,4vw,30px);background:#fff;border:1px solid #e4ece1;border-radius:20px;box-shadow:0 10px 30px #173c240b}
+.domino-setup h3{grid-column:1/-1;margin:0;color:#245c43;font-size:18px}
+.domino-setup>button{padding:18px 12px;border:1px solid #dfe8dc;border-radius:13px;background:#f8faf6;color:#294b38;font-weight:700;line-height:1.6}
+.domino-setup>button.selected{border:2px solid #36724c;background:#eaf4e7;box-shadow:0 0 0 3px #36724c12}
+.domino-setup>button.domino-start{grid-column:1/-1;background:#245c43;color:#fff}
+.domino-setup>button:disabled{opacity:.4;cursor:not-allowed}
+.domino-score{grid-template-columns:repeat(4,minmax(0,1fr))}
+.domino-score>div.active-seat{border:2px solid #4b9564;background:#f3faf0}
+.domino-seat{display:inline-flex;align-items:center;gap:5px;border:1px solid #ffffff38;background:#ffffff14;color:#fff;padding:5px 9px;border-radius:20px;font-size:10px;white-space:nowrap}
+.domino-seat.current{background:#f3d78e;color:#294b38;border-color:#f3d78e}
+.domino-opponent{display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
+.domino-online-note{padding:10px 13px;border-radius:10px;background:#fff8e8;color:#80652c;font-size:11px;line-height:1.7;text-align:center}
+@media(max-width:720px){.domino-score{grid-template-columns:repeat(2,minmax(0,1fr))}.domino-setup{gap:9px;margin:16px auto}.domino-setup>button{padding:14px 9px;font-size:12px}.domino-seat{font-size:9px;padding:5px 7px}}
+@media(max-width:390px){.domino-score{grid-template-columns:repeat(2,minmax(0,1fr))}.domino-setup{grid-template-columns:1fr}.domino-setup h3,.domino-setup>button.domino-start{grid-column:1}}
