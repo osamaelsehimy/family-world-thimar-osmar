@@ -34,6 +34,9 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
  const [totals,setTotals]=useState([]);
  const [matchWinner,setMatchWinner]=useState(null);
  const [showSetup,setShowSetup]=useState(true);
+ const [chainZoom,setChainZoom]=useState(1);
+ const chainColumns=chainZoom===3?4:chainZoom===2?7:12;
+ const chainRows=useMemo(()=>{const tiles=game?.board||[];const rows=[];for(let i=0;i<tiles.length;i+=chainColumns)rows.push(tiles.slice(i,i+chainColumns));return rows;},[game?.board,chainColumns]);
  const openEnds=useMemo(()=>ends(game?.board||[]),[game?.board]);
  const current=game?.turn??0;
  const target=scoring==='one'?null:Number(scoring);
@@ -139,7 +142,7 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
    <div className="domino-scoreboard">{totals.map((v,i)=><div key={i} className="domino-score-card"><small>{scoreLabel(i)}</small><strong>{v||0}</strong>{target&&<span>{t.targetScore} {target}</span>}</div>)}</div>
    <div className={boardClass}>
     <div className="domino-seats">{game.hands.map((h,i)=><span key={i} className={'domino-seat '+(i===current?'current':'')}>{i===0?'🧑':'🤖'} {nameOf(i)} · {h.length}</span>)}</div>
-    <div className="domino-chain-wrap"><div className="domino-chain" aria-label="Domino chain">{game.board.length?game.board.map(tile=><div key={tile.id} className={tileClass+' board-tile '+(tile.a===tile.b?'is-double':'')}><PipFace value={tile.a}/><PipFace value={tile.b}/></div>):<span className="domino-empty">{t.start}</span>}</div></div>
+    <div className={"domino-chain-wrap zoom-"+chainZoom}><div className="domino-chain-controls" aria-label="Board zoom"><span>{lang==='ar'?'تكبير السلسلة':lang==='zh'?'牌链缩放':'Chain zoom'}</span>{[3,2,1].map(z=><button key={z} className={chainZoom===z?'selected':''} onClick={()=>setChainZoom(z)}>{z}x</button>)}</div><div className="domino-chain" aria-label="Domino chain">{game.board.length?chainRows.map((row,index)=><div key={index} className={"domino-chain-row "+(index%2?'reverse':'')} dir="ltr">{(index%2?[...row].reverse():row).map(tile=><div key={tile.id} className={tileClass+' board-tile '+(tile.a===tile.b?'is-double':'')}><PipFace value={tile.a}/><PipFace value={tile.b}/></div>)}</div>):<span className="domino-empty">{t.start}</span>}</div></div>
     <div className="domino-ends">{openEnds?<span>{t.left}: <b>{openEnds[0]}</b>　·　{t.right}: <b>{openEnds[1]}</b></span>:<span>{t.start}</span>}</div>
    </div>
    <div className="domino-livebar"><b>{game.winner?result:current===0?t.yourTurn:t.botTurn}</b><span>{t.pile}: {game.pile.length}</span></div>
