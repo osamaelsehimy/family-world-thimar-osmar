@@ -1,0 +1,1 @@
+drop function if exists public.start_domino_room(uuid);
