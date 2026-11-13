@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import DominoGame from './src/components/DominoGame.jsx';
 import { supabase, configured } from './src/lib/supabase';
 import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy } from 'lucide-react';
 
@@ -12,6 +13,7 @@ const worlds = [
   { id: 'community', icon: '🤲', ar: 'المجتمع والعمل النافع', en: 'Community & Service', zh: '社区与公益', desc: 'نساعد وننشر الخير من حولنا.', enDesc: 'Help others and spread good nearby.', zhDesc: '帮助他人，把善意带给身边的人。' },
 ];
 const games = [
+  { id: 'domino', icon: '🁣', ar: 'الدومينو', en: 'Dominoes', zh: '多米诺骨牌', desc: 'العب الدومينو الحقيقي ضد الكمبيوتر.', enDesc: 'Play a real domino round against the computer.', zhDesc: '与电脑进行真正的多米诺对局。', points: 0 },
   { id: 'treasure', icon: '🗝️', ar: 'صيد الكنز العائلي', en: 'Family Treasure Hunt', zh: '家庭寻宝', desc: 'اخفوا غرضًا آمنًا واكتبوا ثلاث تلميحات.', enDesc: 'Hide a safe object and write three clues.', zhDesc: '藏好安全的小物件，写下三个提示。', points: 15 },
   { id: 'guess', icon: '🤔', ar: 'مين أنا؟', en: 'Who Am I?', zh: '我是谁？', desc: 'خمنوا شخصية أو حيوانًا بأسئلة نعم أو لا.', enDesc: 'Guess a person or animal with yes-or-no questions.', zhDesc: '用是非题猜人物或动物。', points: 10 },
   { id: 'story', icon: '📖', ar: 'حكاية على الدور', en: 'A Story in Turns', zh: '接龙故事', desc: 'كل واحد يضيف جملة ونبني حكاية معًا.', enDesc: 'Each person adds a line to a shared story.', zhDesc: '每个人接着讲一句，共同编故事。', points: 10 },
@@ -95,7 +97,7 @@ export default function App() {
     finally { setBusy(false); }
   }
   async function logout() { await supabase?.auth.signOut(); setSession(null); setPoints(0); setDone([]); }
-  function completeGame(game) { setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
+  function completeGame(game) { if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
   const nav = useMemo(() => [['home', t.home, Home], ['worlds', t.worlds, Globe2], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
   if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><div className="auth-actions">{installPrompt && <button className="install-button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></div></header><form className="auth-card" onSubmit={auth}>
@@ -116,6 +118,7 @@ export default function App() {
     {tab === 'home' && <>{session.user.id === 'demo' && <p className="notice">{t.demoInfo}</p>}<section className="hero"><div><span className="hero-tag">✨ {t.tagline}</span><h1>{t.welcome}</h1><p>{t.intro}</p><button className="light" onClick={() => setTab('worlds')}>{t.explore} <ChevronLeft size={16} /></button></div><div className="hero-art" aria-hidden="true"><span>☀️</span><b>🏡</b><span>🌳</span><i>👨‍👩‍👧‍👦</i></div></section><section className="section"><small>SEVEN WORLDS</small><h2>{t.worlds}</h2></section><WorldGrid lang={lang} worlds={worlds.slice(0, 3)} onSelect={id => { setTab('worlds'); setActiveWorld(id); }} /><section className="section"><small>PLAY & LEARN</small><h2>{t.play}</h2></section><GameGrid lang={lang} items={games.slice(0, 2)} done={done} onPlay={completeGame} /><p className="notice">{t.privacy}</p></>}
       {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><figure className="concept-map"><img src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.mapCaption} /><figcaption>{t.mapCaption}</figcaption></figure><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
       {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
+      {tab === 'domino' && <DominoGame lang={lang} onBack={() => setTab('play')} />}
       {tab === 'characters' && <><section className="section"><small>CHARACTER & CARD GALLERY</small><h2>{t.characters}</h2><p className="muted">{t.charactersIntro}</p></section><div className="card-gallery">{gallery.map(card => <article className="art-card" key={card.file}><img src={`${import.meta.env.BASE_URL}assets/ideas/${card.file}`} alt={card.title[lang]} /><div><h3>{card.title[lang]}</h3><small>{card.kind[lang]}</small></div></article>)}</div><p className="notice">{t.artNote}</p></>}
       {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
       {tab === 'guide' && <section className="guide-download"><BookOpen size={38} /><h1>{t.guide}</h1><p className="muted">{t.guideHint}</p><a className="primary guide-link" href={`${import.meta.env.BASE_URL}OG01-Game-Guide-AR-EN.pdf`} target="_blank" rel="noreferrer">{lang === 'ar' ? 'فتح دليل اللعبة PDF' : lang === 'zh' ? '打开 PDF 游戏指南' : 'Open the PDF game guide'}</a></section>}
