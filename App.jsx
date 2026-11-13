@@ -81,6 +81,7 @@ export default function App() {
     try {
       if (!configured) { setNotice(t.noBackend); return; }
       if (mode === 'signup') {
+        if (!inviteCode.trim()) { setNotice(t.inviteRequired); return; }
         const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { guardian_attested: true, invite_code: inviteCode.trim().toUpperCase() }, emailRedirectTo: window.location.href } });
         if (error) throw error;
         if (!data.session) setNotice(t.checkEmail);
