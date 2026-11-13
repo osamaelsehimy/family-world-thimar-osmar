@@ -19,7 +19,7 @@ const ends = board => board.length ? [board[0].a,board[board.length-1].b] : null
 const faceSpots = {0:[],1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[1,3],[3,1],[3,3]],5:[[1,1],[1,3],[2,2],[3,1],[3,3]],6:[[1,1],[1,2],[1,3],[3,1],[3,2],[3,3]]};
 function PipFace({value}) { return <span className="domino-face">{faceSpots[value].map(([x,y],i)=><i key={i} style={{gridColumn:x,gridRow:y}} />)}</span>; }
 
-export default function DominoGame({lang='ar',onBack}) {
+export default function DominoGame({lang='ar',onBack,onOnline}) {
  const t=labels[lang]||labels.ar;
  const [players,setPlayers]=useState(4);
  const [sets,setSets]=useState(1);
@@ -133,6 +133,7 @@ export default function DominoGame({lang='ar',onBack}) {
    <div className="domino-setting"><label>{t.board}</label><div className="domino-swatch-row">{[['classic','🟫',t.classic],['emerald','🟢',t.emerald],['midnight','🌌',t.midnight]].map(([v,e,l])=><button key={v} className={boardTheme===v?'selected':''} onClick={()=>setBoardTheme(v)}>{e} {l}</button>)}</div></div>
    <div className="domino-setting"><label>{t.tiles}</label><div className="domino-swatch-row">{[['ivory','◻️',t.ivory],['blue','🔹',t.blue],['wood','🪵',t.wood]].map(([v,e,l])=><button key={v} className={tileTheme===v?'selected':''} onClick={()=>setTileTheme(v)}>{e} {l}</button>)}</div></div>
    <button className="domino-start domino-start-pro" onClick={startMatch}>{t.start} <span>←</span></button>
+   <button className="domino-online-entry" onClick={onOnline}>🌐 {lang === "ar" ? "العب أونلاين مع أعضاء المجتمع" : lang === "zh" ? "与社区会员在线游戏" : "Play online with community members"}</button>
   </div>:<>
    <div className="domino-toolbar"><div><b>{t.round} {round}</b><small>{players} {t.players} · {sets===1?t.single:t.double} · {mode==='teams'?t.teams:t.solo}</small></div><button onClick={()=>setShowSetup(true)}>{t.change}</button></div>
    <div className="domino-scoreboard">{totals.map((v,i)=><div key={i} className="domino-score-card"><small>{scoreLabel(i)}</small><strong>{v||0}</strong>{target&&<span>{t.targetScore} {target}</span>}</div>)}</div>
