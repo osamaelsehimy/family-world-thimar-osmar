@@ -150,3 +150,41 @@
 .domino-room-seats b{font-size:11px;color:#345541;overflow-wrap:anywhere}
 .domino-room-seats small{font-size:9px;color:#8a988e}
 @media(max-width:720px){.domino-online-layout{grid-template-columns:1fr}.domino-room-seats{grid-template-columns:repeat(2,minmax(0,1fr))}.domino-lobby-card{padding:14px}.domino-lobby-top h2{font-size:25px}}
+
+
+/* Connected serpentine domino supply-chain board with 1x / 2x / 3x zoom */
+.domino-chain-controls{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:5px 8px;margin:0 0 8px;color:#e7f1e9;font-size:10px}
+.domino-chain-controls span{margin-inline-end:auto;opacity:.85}
+.domino-chain-controls button{min-width:38px;padding:6px 9px;border:1px solid #ffffff55;border-radius:8px;background:#ffffff18;color:#fff;font-size:11px;font-weight:800}
+.domino-chain-controls button.selected{background:#f3d78e;border-color:#f3d78e;color:#294b38}
+.domino-chain-wrap{width:100%;max-height:clamp(230px,48vw,520px);overflow:auto;padding:7px 8px 20px;scrollbar-width:thin;overscroll-behavior:contain;direction:ltr}
+.domino-chain{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:20px;min-width:100%;width:max-content;min-height:110px;padding:12px 18px 18px;overflow:visible}
+.domino-chain-row{position:relative;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:max-content;min-width:100%;padding:8px 0}
+.domino-chain-row.reverse{flex-direction:row-reverse}
+.domino-chain-row .board-tile{position:relative;z-index:1;margin:0 2px;transform:scale(var(--chain-scale,1));transform-origin:center}
+.domino-chain-row .board-tile:not(:last-child)::after{content:"";position:absolute;top:50%;inset-inline-end:-5px;width:6px;height:3px;background:#f3d78e;box-shadow:0 0 5px #f3d78e;z-index:2}
+.domino-chain-row.reverse .board-tile:not(:last-child)::after{inset-inline-end:auto;inset-inline-start:-5px}
+.domino-chain-row:not(:last-child)::after{content:"";position:absolute;bottom:-15px;width:24px;height:22px;border:3px solid #f3d78e;border-top:0;border-radius:0 0 12px 12px;filter:drop-shadow(0 0 3px #f3d78e)}
+.domino-chain-row:not(.reverse):not(:last-child)::after{right:4px;border-left:0}
+.domino-chain-row.reverse:not(:last-child)::after{left:4px;border-right:0}
+.domino-chain-wrap.zoom-1{--chain-scale:1}
+.domino-chain-wrap.zoom-2{--chain-scale:1.28}
+.domino-chain-wrap.zoom-3{--chain-scale:1.58}
+.domino-chain-wrap.zoom-1 .domino-chain-row{min-height:68px}
+.domino-chain-wrap.zoom-2 .domino-chain-row{min-height:88px}
+.domino-chain-wrap.zoom-3 .domino-chain-row{min-height:112px}
+.domino-chain-wrap.zoom-2 .board-tile{transform:scale(1.28)}
+.domino-chain-wrap.zoom-3 .board-tile{transform:scale(1.58)}
+.domino-chain-wrap.zoom-3 .domino-chain{gap:30px}
+.domino-chain-wrap.zoom-3 .domino-chain-row{padding:13px 0}
+.domino-chain-row .board-tile.is-double{transform:scale(var(--chain-scale,1))}
+.domino-chain-wrap.zoom-2 .board-tile.is-double{transform:scale(1.28)}
+.domino-chain-wrap.zoom-3 .board-tile.is-double{transform:scale(1.58)}
+@media(max-width:680px){
+ .domino-chain-wrap{max-height:420px;padding-inline:5px}
+ .domino-chain{align-items:flex-start;padding-inline:16px}
+ .domino-chain-row{justify-content:flex-start;min-height:75px}
+ .domino-chain-row.reverse{justify-content:flex-start}
+ .domino-chain-wrap.zoom-3 .domino-chain-row{min-height:120px}
+ .domino-chain-controls{position:sticky;top:0}
+}
