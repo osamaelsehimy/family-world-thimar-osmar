@@ -10,6 +10,8 @@ const guide=fs.readFileSync('docs/FAMILY_WORLD_VISION_GUIDE_AR_EN.md','utf8');
 const studio=fs.readFileSync('src/components/ThreeXChallengeStudio.jsx','utf8');
 const studioStyles=fs.readFileSync('src/styles/three-x-studio.css','utf8');
 const migration=fs.readFileSync('supabase/migrations/20261114225329_thimar_3x_challenge_engine.sql','utf8');
+const studioMigration=fs.readFileSync('supabase/migrations/20261114225410_thimar_3x_admin_review_and_indexes.sql','utf8');
+const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar_3x_review_decision_validation.sql','utf8');
 
 assert.match(app,/import HomeExperience from ['"]\.\/src\/components\/HomeExperience\.jsx['"]/,'Home experience component must be imported');
 assert.match(app,/import ['"]\.\/src\/styles\/home-experience\.css['"]/,'Home experience stylesheet must be imported');
@@ -43,6 +45,8 @@ assert.match(migration,/membership_status='active'/,'Project creation must requi
 assert.match(migration,/Complete every required task before submitting/,'Server must enforce completion before submission');
 assert.match(migration,/app_metadata/,'Admin review must check trusted app_metadata role');
 assert.match(migration,/osmar_award_points/,'Points must be awarded through the protected points ledger');
+assert.match(studioMigration,/Owners and OSMAR admins read challenge projects/,'Admin review must have scoped project visibility');
+assert.match(reviewMigration,/p_decision is null/,'Review RPC must reject null decisions');
 assert.match(studio,/completed!==tasks\.length/,'Client must prevent incomplete submissions');
 assert.match(studioStyles,/@media\(max-width:600px\)/,'Challenge studio must support mobile');
 console.log('3X Studio checks passed: authenticated route, five apartment tasks, RLS, active membership, server-side completion gate, trusted admin review, ledger-only points, and mobile layout.');
