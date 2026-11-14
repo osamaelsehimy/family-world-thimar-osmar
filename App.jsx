@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import DominoGame from './src/components/DominoGame.jsx';
 import DominoOnlineLobby from './src/components/DominoOnlineLobby.jsx';
+import Number1024Game from './src/components/Number1024Game.jsx';
 import { supabase, configured } from './src/lib/supabase';
 import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy } from 'lucide-react';
 
@@ -18,6 +19,10 @@ const games = [
   { id: 'treasure', icon: '🗝️', ar: 'صيد الكنز العائلي', en: 'Family Treasure Hunt', zh: '家庭寻宝', desc: 'اخفوا غرضًا آمنًا واكتبوا ثلاث تلميحات.', enDesc: 'Hide a safe object and write three clues.', zhDesc: '藏好安全的小物件，写下三个提示。', points: 15 },
   { id: 'guess', icon: '🤔', ar: 'مين أنا؟', en: 'Who Am I?', zh: '我是谁？', desc: 'خمنوا شخصية أو حيوانًا بأسئلة نعم أو لا.', enDesc: 'Guess a person or animal with yes-or-no questions.', zhDesc: '用是非题猜人物或动物。', points: 10 },
   { id: 'story', icon: '📖', ar: 'حكاية على الدور', en: 'A Story in Turns', zh: '接龙故事', desc: 'كل واحد يضيف جملة ونبني حكاية معًا.', enDesc: 'Each person adds a line to a shared story.', zhDesc: '每个人接着讲一句，共同编故事。', points: 10 },
+  { id: 'backgammon', icon: '🎲', ar: 'الطاولة', en: 'Backgammon', zh: '双陆棋', desc: 'لعبة تخطيط وحساب وحركة ذكية.', enDesc: 'A classic game of strategy, counting, and movement.', zhDesc: '经典策略、计数与移动游戏。', points: 0, available: false },
+  { id: 'estimation', icon: '🃏', ar: 'الاستميشن', en: 'Estimation', zh: '估算纸牌', desc: 'توقعات وذكاء وتعاون في لعب الورق.', enDesc: 'Bids, strategy, and smart card play.', zhDesc: '叫牌、策略与纸牌技巧。', points: 0, available: false },
+  { id: 'sequence', icon: '🔵', ar: 'سيكوانس', en: 'Sequence', zh: '连线棋', desc: 'كوّن صفوفًا من الرموز بخطة ذكية.', enDesc: 'Build sequences with thoughtful moves.', zhDesc: '通过巧妙行动连接成线。', points: 0, available: false },
+  { id: '1024', icon: '🔢', ar: '1024', en: '1024', zh: '1024 数字挑战', desc: 'ادمج الأرقام حتى تصل إلى 1024.', enDesc: 'Merge number tiles and reach 1024.', zhDesc: '合并数字方块，挑战 1024。', points: 10, available: true },
 ];
 const gallery = [
   { file: 'analyst-card.jpg', title: { ar: 'محللة البيانات', en: 'Data Analyst', zh: '数据分析师' }, kind: { ar: 'شخصية إرشادية · فكرة أولية', en: 'Guide character · concept', zh: '引导角色 · 概念设计' } },
@@ -98,7 +103,7 @@ export default function App() {
     finally { setBusy(false); }
   }
   async function logout() { await supabase?.auth.signOut(); setSession(null); setPoints(0); setDone([]); }
-  function completeGame(game) { if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
+  function completeGame(game) { if (game.available === false) return; if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
   const nav = useMemo(() => [['home', t.home, Home], ['worlds', t.worlds, Globe2], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
   if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><div className="auth-actions">{installPrompt && <button className="install-button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></div></header><form className="auth-card" onSubmit={auth}>
@@ -120,6 +125,7 @@ export default function App() {
       {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><figure className="concept-map"><img src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.mapCaption} /><figcaption>{t.mapCaption}</figcaption></figure><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
       {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
       {tab === 'domino' && <DominoGame lang={lang} onBack={() => setTab('play')} onOnline={() => setTab('domino-online')} />}
+      {tab === '1024' && <Number1024Game lang={lang} onBack={() => setTab('play')} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
       {tab === 'characters' && <><section className="section"><small>CHARACTER & CARD GALLERY</small><h2>{t.characters}</h2><p className="muted">{t.charactersIntro}</p></section><div className="card-gallery">{gallery.map(card => <article className="art-card" key={card.file}><img src={`${import.meta.env.BASE_URL}assets/ideas/${card.file}`} alt={card.title[lang]} /><div><h3>{card.title[lang]}</h3><small>{card.kind[lang]}</small></div></article>)}</div><p className="notice">{t.artNote}</p></>}
       {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
@@ -130,7 +136,7 @@ export default function App() {
 function Brand() { return <div className="brand"><span className="brand-mark"><Sprout size={22} /></span><span><b>Family World</b><small>THIMAR OSMAR</small></span></div>; }
 function Language({ lang, setLang }) { return <select className="language" value={lang} onChange={event => setLang(event.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="en">English</option><option value="zh">简体中文</option></select>; }
 function WorldGrid({ lang, worlds: list, onSelect }) { return <div className="world-grid">{list.map(world => <button className="world-card" key={world.id} onClick={() => onSelect(world.id)}><span>{world.icon}</span><h3>{translated(world, '', lang)}</h3><p>{translated(world, 'Desc', lang)}</p><b>{copy[lang].explore} <ChevronLeft size={14} /></b></button>)}</div>; }
-function GameGrid({ lang, items, done, onPlay }) { return <div className="game-grid">{items.map(game => <article className="game-card" key={game.id}><span className="game-icon">{game.icon}</span><span className="score">+{game.points} ⭐</span><h3>{translated(game, '', lang)}</h3><p>{translated(game, 'Desc', lang)}</p><button onClick={() => onPlay(game)}>{done.includes(game.id) ? copy[lang].completed : copy[lang].playNow}</button></article>)}</div>; }
+function GameGrid({ lang, items, done, onPlay }) { const soon={ar:'قريبًا',en:'Coming soon',zh:'即将推出'}; return <div className="game-grid">{items.map(game => <article className={'game-card '+(game.available===false?'game-coming':'')} key={game.id}><span className="game-icon">{game.icon}</span>{game.available===false?<span className="score">{soon[lang]}</span>:<span className="score">+{game.points} ⭐</span>}<h3>{translated(game, '', lang)}</h3><p>{translated(game, 'Desc', lang)}</p><button disabled={game.available===false} onClick={() => onPlay(game)}>{game.available===false?soon[lang]:done.includes(game.id) ? copy[lang].completed : copy[lang].playNow}</button></article>)}</div>; }
 function WorldDetail({ lang, world, onPlay }) { return <section className="world-detail"><span>{world.icon}</span><h1>{translated(world, '', lang)}</h1><p>{translated(world, 'Desc', lang)}</p><button className="primary" onClick={onPlay}>{copy[lang].playNow}</button></section>; }
 
 function OSMARAdmin({ supabase, lang }) {
