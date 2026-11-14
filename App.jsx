@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import DominoGame from './src/components/DominoGame.jsx';
 import DominoOnlineLobby from './src/components/DominoOnlineLobby.jsx';
 import Number1024Game from './src/components/Number1024Game.jsx';
+import LudoGame from './src/components/LudoGame.jsx';
 import MemberDashboard from './src/components/MemberDashboard.jsx';
 import { supabase, configured } from './src/lib/supabase';
 import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3 } from 'lucide-react';
@@ -24,7 +25,7 @@ const games = [
   { id: 'estimation', icon: '🃏', ar: 'الاستميشن', en: 'Estimation', zh: '估算纸牌', desc: 'توقعات وذكاء وتعاون في لعب الورق.', enDesc: 'Bids, strategy, and smart card play.', zhDesc: '叫牌、策略与纸牌技巧。', points: 0, available: false },
   { id: 'sequence', icon: '🔵', ar: 'سيكوانس', en: 'Sequence', zh: '连线棋', desc: 'كوّن صفوفًا من الرموز بخطة ذكية.', enDesc: 'Build sequences with thoughtful moves.', zhDesc: '通过巧妙行动连接成线。', points: 0, available: false },
   { id: '1024', icon: '🔢', ar: '1024', en: '1024', zh: '1024 数字挑战', desc: 'ادمج الأرقام حتى تصل إلى 1024.', enDesc: 'Merge number tiles and reach 1024.', zhDesc: '合并数字方块，挑战 1024。', points: 10, available: true },
-  { id: 'ludo', icon: '🎲', ar: 'ليدو', en: 'Ludo', zh: '飞行棋', desc: 'حرّك أحجارك بالنرد ونافس العائلة حتى تصل إلى البيت.', enDesc: 'Roll the dice, race your tokens, and reach home before everyone else.', zhDesc: '掷骰子移动棋子，与家人比赛率先到家。', points: 0, available: false },
+  { id: 'ludo', icon: '🎲', ar: 'ليدو', en: 'Ludo', zh: '飞行棋', desc: 'حرّك أحجارك بالنرد ونافس العائلة حتى تصل إلى البيت.', enDesc: 'Roll the dice, race your tokens, and reach home before everyone else.', zhDesc: '掷骰子移动棋子，与家人比赛率先到家。', points: 0, available: true },
   { id: 'snakes-ladders', icon: '🐍', ar: 'السلم والثعبان', en: 'Snakes & Ladders', zh: '蛇梯棋', desc: 'مغامرة حظ لطيفة من أول المربعات حتى خط النهاية.', enDesc: 'A cheerful race from the first square to the finish.', zhDesc: '从起点到终点的趣味运气竞赛。', points: 0, available: false },
   { id: 'phase-challenge', icon: '🃏', ar: 'تحدي المراحل', en: 'Phase Challenge', zh: '阶段挑战', desc: 'اجمع مجموعات وتسلسلات وأنهِ المراحل واحدة وراء الأخرى.', enDesc: 'Build sets and runs to complete one phase after another.', zhDesc: '收集组合与顺子，逐步完成各个阶段。', points: 0, available: false },
   { id: 'family-quiz', icon: '🧠', ar: 'تحدي المعلومات', en: 'Family Quiz', zh: '家庭知识问答', desc: 'أسئلة ممتعة في الثقافة والعلوم والتاريخ والقيم.', enDesc: 'Fun questions about culture, science, history, and values.', zhDesc: '关于文化、科学、历史与价值观的趣味问答。', points: 0, available: false },
@@ -146,7 +147,7 @@ export default function App() {
     });
     if (error && error.code !== '23505') setNotice(lang === 'ar' ? 'تعذر حفظ نتيجة المباراة: ' + error.message : 'Could not save game result: ' + error.message);
   }
-  function completeGame(game) { if (game.available === false) return; if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
+  function completeGame(game) { if (game.available === false) return; if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } if (game.id === 'ludo') { setTab('ludo'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
   const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['worlds', t.worlds, Globe2], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
   if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><div className="auth-actions">{!isStandalone && <button className="install-button" type="button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></div></header><form className="auth-card" onSubmit={auth}>
@@ -170,6 +171,7 @@ export default function App() {
       {tab === 'dashboard' && <MemberDashboard supabase={supabase} userId={session.user.id} lang={lang} />}
        {tab === 'domino' && <DominoGame lang={lang} onBack={() => setTab('play')} onOnline={() => setTab('domino-online')} onResult={recordGameResult} />}
       {tab === '1024' && <Number1024Game lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
+      {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
       {tab === 'characters' && <><section className="section"><small>CHARACTER & CARD GALLERY</small><h2>{t.characters}</h2><p className="muted">{t.charactersIntro}</p></section><div className="card-gallery">{gallery.map(card => <article className="art-card" key={card.file}><img src={`${import.meta.env.BASE_URL}assets/ideas/${card.file}`} alt={card.title[lang]} /><div><h3>{card.title[lang]}</h3><small>{card.kind[lang]}</small></div></article>)}</div><p className="notice">{t.artNote}</p></>}
       {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
