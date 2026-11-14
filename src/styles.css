@@ -344,3 +344,26 @@
 
 .ecosystem-link-panel{margin:14px 0}.ecosystem-link-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.ecosystem-link-grid article{padding:13px;border:1px solid #e7ece3;border-radius:12px;background:#fbfcf9}.ecosystem-link-grid b{font-size:12px;color:#365f45}.ecosystem-link-grid p{font-size:11px;line-height:1.8;color:#7e8d82;margin:7px 0 0}
 @media(max-width:620px){.ecosystem-link-grid{grid-template-columns:1fr}}
+
+
+/* Family World Ludo */
+.ludo-page{max-width:1050px;margin:0 auto;padding:20px;color:var(--ink,#20352d)}
+.ludo-head,.ludo-status{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ludo-head h1{margin:6px 0}.ludo-head p,.ludo-setup p,.ludo-hint{color:var(--muted,#68776f)}
+.ludo-head button,.ludo-status button,.ludo-setup button,.ludo-new{border:0;border-radius:12px;padding:11px 18px;cursor:pointer}
+.ludo-setup,.ludo-status{background:var(--surface,#fff);border:1px solid var(--line,#dce5de);border-radius:18px;padding:18px;margin:18px 0}
+.ludo-setup label{display:flex;gap:12px;align-items:center;margin-bottom:16px}.ludo-setup select{padding:9px;border-radius:10px}
+.ludo-status button,.ludo-setup .primary,.ludo-new{background:#175b45;color:#fff;font-weight:700}
+.ludo-status button:disabled{opacity:.45;cursor:not-allowed}
+.ludo-board{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;padding:10px;background:#e9eee8;border-radius:18px;max-width:680px;margin:18px auto}
+.ludo-space{aspect-ratio:1;min-width:0;border-radius:7px;background:#fff;border:1px solid #d8e0d8;display:flex;align-items:center;justify-content:center;position:relative;font-size:clamp(8px,1.8vw,12px);color:#8a968e}
+.ludo-space.safe{background:#e3f2e9;border:2px solid #73a88a}
+.ludo-space span{width:9px;height:9px;border-radius:50%;border:1px solid #fff;box-shadow:0 1px 3px #0005;margin:-2px}
+.ludo-hint{text-align:center;line-height:1.7}
+.ludo-players{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0}
+.ludo-players article{background:#fff;border:2px solid;border-radius:15px;padding:14px}
+.ludo-players article>div{display:flex;gap:8px;margin:10px 0}
+.ludo-players article button{width:38px;height:38px;border:2px solid;border-radius:50%;font-weight:800;cursor:pointer}
+.ludo-players article button:disabled{opacity:.45;cursor:not-allowed}
+.ludo-players small{color:#748078}.ludo-message{text-align:center;font-weight:700;color:#175b45}.ludo-new{display:block;margin:15px auto}
+@media(max-width:560px){.ludo-page{padding:10px}.ludo-board{gap:2px;padding:5px}.ludo-space{border-radius:4px}.ludo-space span{width:6px;height:6px}.ludo-status{padding:12px}}
