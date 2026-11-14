@@ -246,3 +246,49 @@
 .member-type{background:#eaf2fb;color:#315d83;font-weight:700}
 .member-inviter{grid-column:1/-1;overflow-wrap:anywhere}
 @media(max-width:560px){.member-row{grid-template-columns:1fr}.member-tags{justify-content:flex-start}.member-inviter{grid-column:auto}}
+
+
+/* Family World original play interactions */
+.domino-drop-zones{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:stretch}
+.domino-drop-target{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:145px;padding:10px 15px;border:1px dashed #8eaa91;border-radius:13px;background:#ffffff12;color:#e9f3e9;font-size:12px;transition:background .18s,border-color .18s,transform .18s}
+.domino-drop-target b{font-size:20px;color:#f4d78f}
+.domino-drop-target small{font-size:10px;opacity:.72}
+.domino-drop-target.available{border:1px dashed #f4d78f;background:#ffffff18;cursor:pointer;box-shadow:inset 0 0 0 1px #f4d78f22}
+.domino-drop-target.available:hover{background:#ffffff2c;transform:translateY(-2px)}
+.domino-drop-target:disabled{opacity:.52;cursor:not-allowed}
+.domino-drop-target.center-drop{min-width:min(420px,100%);min-height:58px}
+.domino-hand .hand-tile{cursor:grab;touch-action:pan-y;transition:transform .16s,box-shadow .16s}
+.domino-hand .hand-tile:active{cursor:grabbing}
+.domino-hand .hand-tile.is-selected{transform:translateY(-7px);outline:3px solid #e8b957;box-shadow:0 10px 22px #102b1b30}
+.domino-choice{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px;margin:8px 0;border:1px solid #e7c77c;border-radius:12px;background:#fff8e7;color:#6c5425;font-size:12px}
+.domino-choice button{padding:7px 11px;border-radius:8px;background:#e8ecd9;color:#34553d;font-size:11px}
+.game-coming{opacity:.86}
+.game-card button:disabled{cursor:not-allowed;background:#f0f2ed;color:#8a958b}
+.number-game{max-width:900px;margin:0 auto;padding:12px 0 30px}
+.number-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.number-head h1{margin:4px 0;color:#1d563d;font-size:28px}
+.number-head p{margin:0;color:#75867a;font-size:13px}
+.number-kicker{font-size:9px;letter-spacing:1.5px;color:#91a294;font-weight:800}
+.number-head>button,.number-controls button,.number-dpad button,.number-overlay button{padding:10px 14px;border-radius:10px;background:#eaf2e7;color:#285a40;font-size:12px;font-weight:800}
+.number-scorebar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.number-scorebar>div{display:grid;gap:3px;padding:12px 15px;border:1px solid #e3ebdf;border-radius:13px;background:#fff;text-align:center}
+.number-scorebar small{color:#87958b;font-size:10px}.number-scorebar strong{font-size:22px;color:#245c43;font-variant-numeric:tabular-nums}
+.number-board{position:relative;display:grid;gap:9px;max-width:510px;aspect-ratio:1;margin:0 auto;padding:12px;border:1px solid #d8e2d3;border-radius:19px;background:linear-gradient(145deg,#dfe9d9,#cdddc8);box-shadow:0 14px 35px #183b2118;touch-action:pan-y}
+.number-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.number-cell{display:grid;place-items:center;min-width:0;border-radius:11px;background:#b8c9b2;color:#fff;font-size:clamp(20px,5vw,35px);font-weight:900;font-variant-numeric:tabular-nums}
+.number-cell.filled{background:#f4f0e4;color:#52634e;box-shadow:0 3px 0 #d7cfbb}
+.number-cell.n-4{background:#e8dfc7}.number-cell.n-8{background:#e8c18d;color:#fff}.number-cell.n-16{background:#e8a66d;color:#fff}.number-cell.n-32{background:#dc875f;color:#fff}.number-cell.n-64{background:#d66d50;color:#fff}.number-cell.n-128{background:#d8bd70;color:#fff}.number-cell.n-256{background:#c6a64d;color:#fff}.number-cell.n-512{background:#8dba83;color:#fff}.number-cell.n-1024{background:#397c59;color:#fff}.number-cell.n-2048{background:#244c3b;color:#fff}
+.number-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;border-radius:18px;background:#f4f8efed;text-align:center;backdrop-filter:blur(5px)}
+.number-overlay h2{margin:0;color:#245c43;font-size:clamp(17px,4vw,25px)}
+.number-controls{display:flex;justify-content:center;gap:10px;margin:14px 0}
+.number-controls button:disabled{opacity:.4;cursor:not-allowed}
+.number-rules{max-width:510px;margin:10px auto;color:#75867a;font-size:12px;line-height:1.9;text-align:center}
+.number-dpad{display:none;flex-direction:column;align-items:center;gap:7px;margin:12px auto}
+.number-dpad>div{display:flex;gap:7px}
+.number-dpad button{width:48px;height:42px;font-size:18px}
+@media(max-width:680px){
+ .domino-drop-target{flex:1;min-width:120px}
+ .number-head{align-items:flex-start}.number-head h1{font-size:23px}.number-head>button{font-size:10px;padding:8px}
+ .number-board{gap:6px;padding:8px;border-radius:14px}.number-row{gap:6px}.number-cell{border-radius:8px}
+ .number-dpad{display:flex}
+}
