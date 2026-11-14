@@ -1,15 +1,24 @@
-const CACHE_NAME = 'family-world-shell-v1';
-const APP_SHELL = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
+const CACHE_NAME = 'family-world-shell-v2';
+const APP_ROOT = new URL('./', self.registration.scope);
+const APP_SHELL = [
+  APP_ROOT.href,
+  new URL('manifest.webmanifest', APP_ROOT).href,
+  new URL('icons/icon-192.png', APP_ROOT).href,
+  new URL('icons/icon-512.png', APP_ROOT).href,
+];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(APP_SHELL);
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((key) => key.startsWith('family-world-') && key !== CACHE_NAME).map((key) => caches.delete(key)));
+    await Promise.all(keys.filter((key) => key.startsWith('family-world-shell-') && key !== CACHE_NAME).map((key) => caches.delete(key)));
     await self.clients.claim();
   })());
 });
@@ -21,15 +30,21 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
+    if (request.mode === 'navigate') {
+      try {
+        const response = await fetch(request);
+        if (response.ok) await cache.put(APP_ROOT.href, response.clone());
+        return response;
+      } catch {
+        return (await cache.match(APP_ROOT.href)) || Response.error();
+      }
+    }
     try {
       const response = await fetch(request);
-      if (response.ok) await cache.put(request, response.clone());
+      if (response.ok && url.pathname.startsWith(new URL(APP_ROOT).pathname)) await cache.put(request, response.clone());
       return response;
     } catch {
-      const cached = await cache.match(request);
-      if (cached) return cached;
-      if (request.mode === 'navigate') return cache.match('./');
-      throw new Error('Offline and no cached app resource is available.');
+      return (await cache.match(request)) || Response.error();
     }
   })());
 });
