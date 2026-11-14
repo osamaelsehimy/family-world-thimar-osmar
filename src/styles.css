@@ -302,3 +302,13 @@
 .member-filters button{padding:7px 11px;border:1px solid #e2e9df;border-radius:20px;background:#f8faf6;color:#6b7b70;font-size:10px}
 .member-filters button.selected{border-color:#a8c7ac;background:#e8f3e6;color:#245d42;font-weight:800}
 @media(max-width:560px){.directory-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Member XP dashboard and expanded game library */
+.member-progress-panel{display:flex;align-items:center;justify-content:space-between;gap:22px;margin:18px 0 26px;padding:22px 25px;border:1px solid #dfeadf;border-radius:20px;background:linear-gradient(115deg,#fff 0%,#f1f7ed 100%);box-shadow:0 8px 26px #173c2409}
+.member-progress-copy{max-width:560px}.member-progress-copy>small{font-size:9px;letter-spacing:1.4px;color:#78927d;font-weight:800}.member-progress-copy h2{font-size:20px;color:#214b37;margin:5px 0}.member-progress-copy p{font-size:12px;line-height:1.8;color:#77877c;margin:0}
+.member-progress-stats{display:flex;gap:10px;flex:none}.member-progress-stats>div{min-width:112px;padding:12px 16px;border:1px solid #e1eadc;border-radius:14px;background:#fff;display:flex;flex-direction:column;gap:4px}.member-progress-stats strong{font-size:25px;line-height:1.2;color:#245c43;font-variant-numeric:tabular-nums}.member-progress-stats span{font-size:10px;color:#7b8c80}
+.member-points{display:block;grid-column:1/-1;color:#6d7e72;font-size:11px;padding-top:3px}.member-points strong{color:#9a742e;font-size:13px}
+.game-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.game-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px #173c2410;border-color:#cfe0ce}.game-card.game-coming{background:linear-gradient(150deg,#fff,#fbfcf8)}.game-card.game-coming .game-icon{filter:saturate(.8)}
+@media(max-width:720px){.member-progress-panel{align-items:stretch;flex-direction:column;padding:18px}.member-progress-stats{width:100%}.member-progress-stats>div{flex:1;min-width:0}.member-progress-copy h2{font-size:18px}}
+@media(max-width:420px){.member-progress-stats>div{padding:10px}.member-progress-stats strong{font-size:21px}}
