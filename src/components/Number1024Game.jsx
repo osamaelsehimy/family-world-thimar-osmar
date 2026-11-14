@@ -50,7 +50,7 @@ export default function Number1024Game({lang='ar',onBack}){
   <header className="number-head"><div><span className="number-kicker">THIMAR OSMAR · PUZZLE STUDIO</span><h1>🔢 {t.title}</h1><p>{t.sub}</p></div><button onClick={onBack}>{t.back}</button></header>
   <div className="number-scorebar"><div><small>{t.score}</small><strong>{score}</strong></div><div><small>{t.best}</small><strong>{best}</strong></div><div><small>{t.moves}</small><strong>{moves}</strong></div></div>
   <div className="number-board" onTouchStart={touchStart} onTouchEnd={touchEnd}>{board.map((row,r)=><div className="number-row" key={r}>{row.map((value,c)=><div className={'number-cell '+(value?'filled n-'+Math.min(value,2048):'')} key={c}>{value||''}</div>)}</div>)}
-   {(won||over)&&<div className="number-overlay"><h2>{won?t.won:t.over}</h2>{won&&!keep&&<button onClick={()=>setKeep(true)}>{t.keep}</button>}<button onClick={reset}>{t.new}</button></div>}
+   {(over||(won&&!keep))&&<div className="number-overlay"><h2>{over?t.over:t.won}</h2>{won&&!over&&!keep&&<button onClick={()=>setKeep(true)}>{t.keep}</button>}<button onClick={reset}>{t.new}</button></div>}
   </div>
   <div className="number-controls"><button onClick={undo} disabled={!history.length}>{t.undo}</button><button onClick={reset}>{t.new}</button></div>
   <p className="number-rules">{t.rules}</p>
