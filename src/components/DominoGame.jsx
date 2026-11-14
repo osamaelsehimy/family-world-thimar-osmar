@@ -91,7 +91,28 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
   if(!game||game.turn!==0||game.winner)return;
   const moves=getMoves(tile,game.board);
   if(!moves.length){setNotice(t.noMove);return;}
-  if(moves.length===2)setChoice({tile});else placeTile(0,tile,moves[0]);
+  setChoice({tile,moves});
+  setNotice('');
+ };
+ const dropOnSide=(side,event)=>{
+  event?.preventDefault();
+  if(!game||!choice||!choice.moves.includes(side))return;
+  placeTile(0,choice.tile,side);
+ };
+ const dragTile=(tile,event)=>{
+  if(!game||game.turn!==0||game.winner)return;
+  event.dataTransfer.effectAllowed='move';
+  event.dataTransfer.setData('text/plain',tile.id);
+  const moves=getMoves(tile,game.board);
+  if(moves.length)setChoice({tile,moves});
+ };
+ const dropDragged=(side,event)=>{
+  event.preventDefault();
+  const id=event.dataTransfer?.getData('text/plain');
+  const tile=game?.hands?.[0]?.find(item=>item.id===id)||choice?.tile;
+  if(!tile)return;
+  const moves=getMoves(tile,game.board);
+  if(moves.includes(side))placeTile(0,tile,side);
  };
  const drawHuman=()=>{
   setGame(g=>{if(!g||g.winner||g.turn!==0||!g.pile.length)return g;const [tile,...pile]=g.pile;return {...g,pile,hands:g.hands.map((h,i)=>i===0?[...h,tile]:h)};});
@@ -143,11 +164,16 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
    <div className={boardClass}>
     <div className="domino-seats">{game.hands.map((h,i)=><span key={i} className={'domino-seat '+(i===current?'current':'')}>{i===0?'🧑':'🤖'} {nameOf(i)} · {h.length}</span>)}</div>
     <div className={"domino-chain-wrap zoom-"+chainZoom}><div className="domino-chain-controls" aria-label="Board zoom"><span>{lang==='ar'?'تكبير السلسلة':lang==='zh'?'牌链缩放':'Chain zoom'}</span>{[3,2,1].map(z=><button key={z} className={chainZoom===z?'selected':''} onClick={()=>setChainZoom(z)}>{z}x</button>)}</div><div className="domino-chain" aria-label="Domino chain" style={{"--chain-columns":chainColumns}}>{game.board.length?chainRows.map((row,rowIndex)=><div key={rowIndex} className={"domino-chain-row "+(rowIndex%2?'reverse':'')} dir="ltr">{row.map((tile,tileIndex)=>{const absoluteIndex=rowIndex*chainColumns+tileIndex;const isStart=absoluteIndex===0;const isEnd=absoluteIndex===game.board.length-1;const shown=rowIndex%2?{...tile,a:tile.b,b:tile.a}:tile;const openValue=isStart?openEnds?.[0]:isEnd?openEnds?.[1]:null;return <div key={tile.id} className={tileClass+' board-tile '+(tile.a===tile.b?'is-double ':'')+(isStart?'open-start ':'')+(isEnd?'open-end ':'')+(isEnd&&rowIndex%2?'end-left':'')}><PipFace value={shown.a}/><PipFace value={shown.b}/>{(isStart||isEnd)&&<span className="domino-open-pin">{(lang==='ar'?'مفتوح ':lang==='zh'?'开放 ':'OPEN ')+(isStart&&isEnd?openEnds?.[0]+' / '+openEnds?.[1]:openValue)}</span>}</div>;})}</div>):<span className="domino-empty">{t.start}</span>}</div></div>
-    <div className="domino-ends">{openEnds?<span>{t.left}: <b>{openEnds[0]}</b>　·　{t.right}: <b>{openEnds[1]}</b></span>:<span>{t.start}</span>}</div>
+    <div className="domino-ends domino-drop-zones">
+      {openEnds?<>
+        <button className={'domino-drop-target '+(choice?.moves?.includes('left')?'available':'')} onClick={()=>choice&&dropOnSide('left')} onDragOver={e=>e.preventDefault()} onDrop={e=>dropDragged('left',e)} disabled={!choice?.moves?.includes('left')}>{t.left}: <b>{openEnds[0]}</b><small>{lang==='ar'?'اسحب القطعة هنا أو اخترها':lang==='zh'?'拖动骨牌到这里':'Drop a tile here'}</small></button>
+        <button className={'domino-drop-target '+(choice?.moves?.includes('right')?'available':'')} onClick={()=>choice&&dropOnSide('right')} onDragOver={e=>e.preventDefault()} onDrop={e=>dropDragged('right',e)} disabled={!choice?.moves?.includes('right')}>{t.right}: <b>{openEnds[1]}</b><small>{lang==='ar'?'اسحب القطعة هنا أو اخترها':lang==='zh'?'拖动骨牌到这里':'Drop a tile here'}</small></button>
+      </>:<button className="domino-drop-target center-drop available" onClick={()=>choice&&dropOnSide('right')} onDragOver={e=>e.preventDefault()} onDrop={e=>dropDragged('right',e)}>{lang==='ar'?'اسحب أول قطعة إلى منتصف البورد أو اخترها':lang==='zh'?'将第一张骨牌拖到棋盘中央':'Drop your first tile in the center'}</button>}
+    </div>
    </div>
    <div className="domino-livebar"><b>{game.winner?result:current===0?t.yourTurn:t.botTurn}</b><span>{t.pile}: {game.pile.length}</span></div>
-   {choice&&<div className="domino-choice"><b>{t.place}</b><button onClick={()=>placeTile(0,choice.tile,'left')}>{t.chooseLeft}</button><button onClick={()=>placeTile(0,choice.tile,'right')}>{t.chooseRight}</button></div>}
-   <div className="domino-hand-panel"><h3>{t.hand} <span>{game.hands[0].length}</span></h3><div className="domino-hand">{game.hands[0].map(tile=><button key={tile.id} className={tileClass+' hand-tile '+(canPlay(tile,game.board)?'is-playable':'')+(tile.a===tile.b?' is-double':'')} onClick={()=>playHuman(tile)} disabled={current!==0||!!game.winner}><PipFace value={tile.a}/><PipFace value={tile.b}/></button>)}</div></div>
+   {choice&&<div className="domino-choice"><b>{lang==='ar'?'اختار مكان القطعة على البورد':lang==='zh'?'选择骨牌放置位置':'Choose where to place your tile'}</b><span>{choice.tile.a} | {choice.tile.b}</span><button onClick={()=>setChoice(null)}>{lang==='ar'?'إلغاء الاختيار':lang==='zh'?'取消选择':'Cancel'}</button></div>}
+   <div className="domino-hand-panel"><h3>{t.hand} <span>{game.hands[0].length}</span></h3><div className="domino-hand">{game.hands[0].map(tile=><button key={tile.id} draggable={current===0&&!game.winner&&canPlay(tile,game.board)} onDragStart={e=>dragTile(tile,e)} className={tileClass+' hand-tile '+(canPlay(tile,game.board)?'is-playable':'')+(choice?.tile.id===tile.id?' is-selected':'')+(tile.a===tile.b?' is-double':'')} onClick={()=>playHuman(tile)} disabled={current!==0||!!game.winner}><PipFace value={tile.a}/><PipFace value={tile.b}/></button>)}</div></div>
    <div className="domino-actions"><button onClick={drawHuman} disabled={current!==0||!!game.winner||!game.pile.length}>{t.draw} ({game.pile.length})</button><button onClick={passHuman} disabled={current!==0||!!game.winner||game.hands[0].some(tile=>canPlay(tile,game.board))||game.pile.length>0}>{t.pass}</button></div>
    {game.winner&&<div className="domino-round-result"><div><small>{t.winner}</small><h3>{result}</h3><p>{t.roundPoints}: <b>{game.earned||0}</b></p></div>{matchWinner?<h2>{championText}</h2>:<button onClick={()=>startRound(false)}>{t.newRound}</button>}<button className="secondary" onClick={()=>setShowSetup(true)}>{t.change}</button></div>}
    <p className="domino-online-note">{t.online}</p>
