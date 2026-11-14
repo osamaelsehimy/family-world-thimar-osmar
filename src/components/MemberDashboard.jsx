@@ -13,7 +13,7 @@ const words = {
   execute:'نفّذ',executeText:'عدد الجولات المكتملة يوضح مستوى المشاركة.',
   measure:'قِس',measureText:'الفوز والخسارة والتعادل والنتيجة مؤشرات أداء للعبة.',
   improve:'حسّن',improveText:'راجع تقدمك واختر مهارة أو تحديًا جديدًا.',
-  integrity:'شفافية البيانات',integrityText:'نتائج هذه النسخة المحلية مسجلة كتقارير ذاتية من اللاعب؛ ليست نتائج أونلاين موثقة ولا تُستخدم في تقييم وظيفي أو مالي.',
+  osmarLink:'كيف ترتبط المؤشرات بأهداف المنظومة؟',osmarFamily:'Family World: المشاركة، إكمال الأنشطة، والاحتفاظ بالمستخدمين.',osmarThimar:'Thimar: إكمال الدروس والمهام التطبيقية بعد التعلم.',osmarBusiness:'OSMAR: حالة المشروعات، الالتزام بالمواعيد، تقدم المراحل، التكلفة، الجودة والمخاطر — داخل مساحة العمل وبصلاحياتها فقط.',integrity:'شفافية البيانات',integrityText:'نتائج هذه النسخة المحلية مسجلة كتقارير ذاتية من اللاعب؛ ليست نتائج أونلاين موثقة ولا تُستخدم في تقييم وظيفي أو مالي.',
   winRate:'معدل الفوز',noHistory:'لا يوجد سجل حديث بعد',pointsNote:'XP نقاط تقدم رمزية وليست أموالًا أو أداة استثمار.'
  },
  en: {
@@ -27,7 +27,7 @@ const words = {
   execute:'Execute',executeText:'Completed rounds show participation.',
   measure:'Measure',measureText:'Wins, losses, draws, and scores measure game performance.',
   improve:'Improve',improveText:'Review progress and choose a new skill or challenge.',
-  integrity:'Data transparency',integrityText:'Local game results are self-reported by the player. They are not verified online results and are not used for employment or financial evaluation.',
+  osmarLink:'How do these indicators connect to ecosystem objectives?',osmarFamily:'Family World: participation, activity completion, and user retention.',osmarThimar:'Thimar: lesson completion and applied tasks after learning.',osmarBusiness:'OSMAR: project health, schedule adherence, milestone progress, cost, quality, and risks—inside its own workspace and permissions.',integrity:'Data transparency',integrityText:'Local game results are self-reported by the player. They are not verified online results and are not used for employment or financial evaluation.',
   winRate:'Win rate',noHistory:'No recent game history yet',pointsNote:'XP are symbolic progress points, not money or an investment instrument.'
  },
  zh: {
@@ -41,7 +41,7 @@ const words = {
   execute:'执行',executeText:'已完成的回合反映参与情况。',
   measure:'衡量',measureText:'胜负、平局和分数用于衡量游戏表现。',
   improve:'改进',improveText:'回顾进步并选择新的技能或挑战。',
-  integrity:'数据透明',integrityText:'本地游戏结果由玩家自行申报，并非经过验证的在线结果，不用于雇佣或财务评价。',
+  osmarLink:'这些指标如何关联生态系统目标？',osmarFamily:'Family World：参与度、活动完成率和用户留存。',osmarThimar:'Thimar：课程完成率和学习后的实践任务。',osmarBusiness:'OSMAR：项目健康度、进度遵循、里程碑、成本、质量与风险——仅在其独立工作区和权限内。',integrity:'数据透明',integrityText:'本地游戏结果由玩家自行申报，并非经过验证的在线结果，不用于雇佣或财务评价。',
   winRate:'胜率',noHistory:'暂无最近游戏记录',pointsNote:'XP 是象征性的成长积分，不是货币或投资工具。'
  }
 };
@@ -93,6 +93,7 @@ export default function MemberDashboard({supabase,userId,lang='ar'}){
     </section>
    </div>
    <section className="dashboard-panel pmo-panel"><div className="dashboard-panel-head"><h2><Target size={18}/>{t.pmo}</h2></div><p className="pmo-intro">{t.pmoIntro}</p><div className="pmo-cycle-grid"><article><b>01 · {t.plan}</b><p>{t.planText}</p></article><article><b>02 · {t.execute}</b><p>{t.executeText}</p></article><article><b>03 · {t.measure}</b><p>{t.measureText}</p></article><article><b>04 · {t.improve}</b><p>{t.improveText}</p></article></div></section>
+   <section className="dashboard-panel ecosystem-link-panel"><div className="dashboard-panel-head"><h2>{t.osmarLink}</h2></div><div className="ecosystem-link-grid"><article><b>🌱 Family World</b><p>{t.osmarFamily}</p></article><article><b>📚 Thimar</b><p>{t.osmarThimar}</p></article><article><b>🏗️ OSMAR</b><p>{t.osmarBusiness}</p></article></div></section>
    <div className="dashboard-integrity"><ShieldCheck size={19}/><div><b>{t.integrity}</b><p>{t.integrityText} {t.pointsNote}</p></div></div>
   </>}
  </section>;
