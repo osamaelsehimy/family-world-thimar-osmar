@@ -31,9 +31,10 @@ const move=(board,direction)=>{
  return {board:next,gained,changed:next.some((row,r)=>row.some((v,c)=>v!==board[r][c]))};
 };
 const hasMoves=board=>board.some(row=>row.some(v=>v===0))||board.some(row=>row.some((v,c)=>c<3&&v===row[c+1]))||board.some((row,r)=>row.some((v,c)=>r<3&&v===board[r+1][c]));
-export default function Number1024Game({lang='ar',onBack}){
- const t=copy[lang]||copy.ar;const [board,setBoard]=useState(start);const [score,setScore]=useState(0);const [best,setBest]=useState(0);const [moves,setMoves]=useState(0);const [won,setWon]=useState(false);const [over,setOver]=useState(false);const [keep,setKeep]=useState(false);const [history,setHistory]=useState([]);const touch=useRef(null);
- const reset=()=>{setBoard(start());setScore(0);setMoves(0);setWon(false);setOver(false);setKeep(false);setHistory([]);};
+export default function Number1024Game({lang='ar',onBack,onResult}){
+ const t=copy[lang]||copy.ar;const [board,setBoard]=useState(start);const [score,setScore]=useState(0);const [best,setBest]=useState(0);const [moves,setMoves]=useState(0);const [won,setWon]=useState(false);const [over,setOver]=useState(false);const [keep,setKeep]=useState(false);const [history,setHistory]=useState([]);const touch=useRef(null);const sessionKey=useRef(crypto.randomUUID());const startedAt=useRef(Date.now());const reported=useRef(false);
+ const reset=()=>{sessionKey.current=crypto.randomUUID();startedAt.current=Date.now();reported.current=false;setBoard(start());setScore(0);setMoves(0);setWon(false);setOver(false);setKeep(false);setHistory([]);};
+ useEffect(()=>{if((won||over)&&!reported.current){reported.current=true;onResult?.({gameId:'1024',sessionKey:sessionKey.current,outcome:won?'won':'lost',score,durationSeconds:Math.max(0,Math.round((Date.now()-startedAt.current)/1000))});}},[won,over,score,onResult]);
  const play=useCallback(direction=>{
   if(over||won&&!keep)return;
   const result=move(board,direction);if(!result.changed)return;
