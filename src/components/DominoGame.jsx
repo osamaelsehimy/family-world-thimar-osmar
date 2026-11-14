@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const labels = {
  ar: {
@@ -19,7 +19,7 @@ const ends = board => board.length ? [board[0].a,board[board.length-1].b] : null
 const faceSpots = {0:[],1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[1,3],[3,1],[3,3]],5:[[1,1],[1,3],[2,2],[3,1],[3,3]],6:[[1,1],[1,2],[1,3],[3,1],[3,2],[3,3]]};
 function PipFace({value}) { return <span className="domino-face">{faceSpots[value].map(([x,y],i)=><i key={i} style={{gridColumn:x,gridRow:y}} />)}</span>; }
 
-export default function DominoGame({lang='ar',onBack,onOnline}) {
+export default function DominoGame({lang='ar',onBack,onOnline,onResult}) {
  const t=labels[lang]||labels.ar;
  const [players,setPlayers]=useState(4);
  const [sets,setSets]=useState(1);
@@ -35,6 +35,7 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
  const [matchWinner,setMatchWinner]=useState(null);
  const [showSetup,setShowSetup]=useState(true);
  const [chainZoom,setChainZoom]=useState(1);
+ const reportedRound=useRef(null);
  const chainColumns=chainZoom===3?2:chainZoom===2?3:5;
  const chainRows=useMemo(()=>{const tiles=game?.board||[];const rows=[];for(let i=0;i<tiles.length;i+=chainColumns)rows.push(tiles.slice(i,i+chainColumns));return rows;},[game?.board,chainColumns]);
  const openEnds=useMemo(()=>ends(game?.board||[]),[game?.board]);
@@ -69,7 +70,7 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
   const perPlayer=sets===1?Math.min(7,Math.floor(deck.length/count)):Math.min(7,Math.floor(deck.length/count));
   const hands=Array.from({length:count},(_,i)=>deck.slice(i*perPlayer,(i+1)*perPlayer));
   const pile=deck.slice(count*perPlayer);
-  setGame({hands,pile,board:[],turn:0,passes:0,winner:null,earned:0,round:round+1});
+  setGame({hands,pile,board:[],turn:0,passes:0,winner:null,earned:0,round:round+1,sessionKey:crypto.randomUUID(),startedAt:Date.now()});
   setChoice(null);setNotice('');setRound(v=>v+1);setShowSetup(false);
   if(fresh){setTotals(Array(mode==='teams'?2:count).fill(0));setMatchWinner(null);}
  };
@@ -141,7 +142,13 @@ export default function DominoGame({lang='ar',onBack,onOnline}) {
   },650);
   return ()=>clearTimeout(timer);
  },[game?.turn,game?.winner,game?.hands,game?.board,game?.pile,game?.passes,players,mode]);
- const result=game?.winner==='draw'?t.drawResult:game?.winner?(game.winner==='teamA'||game.winner==='p0'?t.roundWin:t.roundLose):'';
+ useEffect(()=>{
+   if(!game?.winner||!game.sessionKey||reportedRound.current===game.sessionKey)return;
+   reportedRound.current=game.sessionKey;
+   const outcome=game.winner==='draw'?'draw':(mode==='teams'?game.winner==='teamA':game.winner==='p0')?'won':'lost';
+   onResult?.({gameId:'domino',sessionKey:game.sessionKey,outcome,score:game.earned||0,durationSeconds:Math.max(0,Math.round((Date.now()-(game.startedAt||Date.now()))/1000))});
+  },[game?.winner,game?.sessionKey,game?.earned,game?.startedAt,mode,onResult]);
+  const result=game?.winner==='draw'?t.drawResult:game?.winner?(game.winner==='teamA'||game.winner==='p0'?t.roundWin:t.roundLose):'';
  const championText=matchWinner?(matchWinner==='teamA'||matchWinner==='p0'?t.matchWin:t.matchLose):'';
  const boardClass='domino-table theme-'+boardTheme;
  const tileClass='domino-tile tile-'+tileTheme;
