@@ -148,6 +148,7 @@ function OSMARAdmin({ supabase, lang }) {
   const [pending, setPending] = useState([]);
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState('');
+  const [memberFilter, setMemberFilter] = useState('all');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -194,10 +195,20 @@ function OSMARAdmin({ supabase, lang }) {
     setBusy(false);
   }
 
-  const filteredMembers = members.filter(item =>
-    (item.email || '').toLowerCase().includes(search.toLowerCase()) ||
-    (item.member_code || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const counts = {
+    active: members.filter(item => item.membership_status === 'active').length,
+    pending: members.filter(item => item.membership_status === 'pending').length,
+    suspended: members.filter(item => item.membership_status === 'suspended' || item.membership_status === 'rejected').length,
+    trusted: members.filter(item => item.referral_type === 'TRU').length,
+  };
+  const filteredMembers = members.filter(item => {
+    const matchesSearch = (item.email || '').toLowerCase().includes(search.toLowerCase()) ||
+      (item.member_code || '').toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = memberFilter === 'all' || (memberFilter === 'suspended'
+      ? ['suspended','rejected'].includes(item.membership_status)
+      : memberFilter === 'TRU' ? item.referral_type === 'TRU' : item.membership_status === memberFilter);
+    return matchesSearch && matchesFilter;
+  });
 
   return <div className="admin-page">
     <section className="section"><small>OSMAR ECOSYSTEMS</small><h2>{t.admin}</h2><p className="muted">{lang === 'ar' ? 'لوحة داخلية لإدارة الدعوات ومراجعة العضويات.' : lang === 'zh' ? '用于管理邀请和审核会员的内部控制台。' : 'Internal console for invitations and membership review.'}</p></section>
@@ -212,8 +223,16 @@ function OSMARAdmin({ supabase, lang }) {
 
     <section className="admin-panel member-directory">
       <div className="admin-heading"><div><h3>{t.memberDirectory}</h3><p className="muted">{t.autoRefresh}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
-      <div className="directory-summary"><strong>{members.length}</strong><span>{t.registeredMembers}</span></div>
+      <div className="directory-metrics">
+        <div><strong>{members.length}</strong><span>{lang==='ar'?'إجمالي الأعضاء':lang==='zh'?'会员总数':'Total members'}</span></div>
+        <div><strong>{counts.active}</strong><span>{lang==='ar'?'نشط':lang==='zh'?'活跃':'Active'}</span></div>
+        <div><strong>{counts.pending}</strong><span>{lang==='ar'?'معلّق':lang==='zh'?'待审核':'Pending'}</span></div>
+        <div><strong>{counts.trusted}</strong><span>TRU</span></div>
+      </div>
       <input className="member-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.searchMembers} />
+      <div className="member-filters">
+        {[['all',lang==='ar'?'الكل':lang==='zh'?'全部':'All'],['active',lang==='ar'?'نشط':lang==='zh'?'活跃':'Active'],['pending',lang==='ar'?'معلّق':lang==='zh'?'待审核':'Pending'],['TRU','TRU'],['suspended',lang==='ar'?'موقوف':lang==='zh'?'已暂停':'Paused']].map(([value,label])=><button type="button" key={value} className={memberFilter===value?'selected':''} onClick={()=>setMemberFilter(value)}>{label}</button>)}
+      </div>
       {filteredMembers.length === 0 ? <p className="muted">{t.noMembers}</p> : <div className="member-list">
         {filteredMembers.map(item => <article className="member-row" key={item.member_id}>
           <div className="member-main">
