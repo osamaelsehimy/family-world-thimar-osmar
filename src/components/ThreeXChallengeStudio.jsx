@@ -41,7 +41,7 @@ export default function ThreeXChallengeStudio({supabase,user,lang='ar',isAdmin=f
   }
   setLoading(false);
  },[supabase,user?.id,demo,isAdmin,active?.id,t.loadError]);
- useEffect(()=>{load();},[]);
+ useEffect(()=>{load();},[load]);
  async function createProject(){
   if(demo||!challenge)return;
   setBusy(true);setError('');const title=projectName.trim()|| (rtl?'شقة عائلتي 100 متر':'My 100 m² family apartment');
