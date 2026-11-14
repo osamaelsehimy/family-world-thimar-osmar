@@ -367,3 +367,5 @@
 .ludo-players article button:disabled{opacity:.45;cursor:not-allowed}
 .ludo-players small{color:#748078}.ludo-message{text-align:center;font-weight:700;color:#175b45}.ludo-new{display:block;margin:15px auto}
 @media(max-width:560px){.ludo-page{padding:10px}.ludo-board{gap:2px;padding:5px}.ludo-space{border-radius:4px}.ludo-space span{width:6px;height:6px}.ludo-status{padding:12px}}
+
+.ludo-no-move{display:flex;justify-content:center;align-items:center;gap:12px;margin:12px}.ludo-no-move button{border:0;border-radius:10px;padding:10px 16px;background:#175b45;color:#fff;font-weight:700;cursor:pointer}
