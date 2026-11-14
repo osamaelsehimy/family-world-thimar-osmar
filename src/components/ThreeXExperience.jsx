@@ -40,7 +40,7 @@ en:{
  guide:'Vision & Challenge Guide'
 }};
 export default function ThreeXExperience({lang='ar'}){
- const t=copy[lang==='en'?'en':'ar'];
+ const t=copy[lang==='ar'?'ar':'en'];
  return <main className="threex-page" dir={lang==='ar'?'rtl':'ltr'}>
   <header className="threex-hero"><span>{t.kicker}</span><h1>{t.title}</h1><p>{t.intro}</p><div className="threex-open"><ShieldCheck/><div><b>{t.access}</b><small>{t.accessSub}</small></div></div></header>
   <section className="threex-section"><div className="threex-heading"><span>3X / THREE CHALLENGES</span><h2>{t.guide}</h2></div><div className="threex-grid">{t.tracks.map((x)=>{const Icon=x.icon;return <article className="threex-card" key={x.n}><div className="threex-card-head"><span>{x.n}</span><Icon/><small>{x.tag}</small></div><h3>{x.name}</h3><p>{x.desc}</p><h4>{lang==='ar'?'المهام':'Mission tasks'}</h4><ol>{x.tasks.map((task,i)=><li key={i}>{task}</li>)}</ol><div className="threex-deliver"><b>{lang==='ar'?'المخرج المطلوب':'Expected output'}</b><p>{x.deliver}</p></div><div className="threex-gate">{x.gate}</div></article>})}</div></section>
