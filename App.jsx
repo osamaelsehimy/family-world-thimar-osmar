@@ -7,6 +7,7 @@ import MemberDashboard from './src/components/MemberDashboard.jsx';
 import MemberProfile from './src/components/MemberProfile.jsx';
 import HomeExperience from './src/components/HomeExperience.jsx';
 import ThreeXExperience from './src/components/ThreeXExperience.jsx';
+import ThreeXChallengeStudio from './src/components/ThreeXChallengeStudio.jsx';
 import './src/styles/home-experience.css';
 import { supabase, configured } from './src/lib/supabase';
 import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3, UserRound, Map } from 'lucide-react';
@@ -172,7 +173,7 @@ export default function App() {
     {tab === 'home' && <>{session.user.id === 'demo' && <p className="notice">{t.demoInfo}</p>}<HomeExperience lang={lang} points={session.user.id==='demo'?points:accountPoints.total_points} awards={session.user.id==='demo'?done.length:accountPoints.awards_count} onExplore={() => setTab('worlds')} /><section className="section"><small>SEVEN WORLDS</small><h2>{t.worlds}</h2></section><WorldGrid lang={lang} worlds={worlds.slice(0, 3)} onSelect={id => { setTab('worlds'); setActiveWorld(id); }} /><section className="section"><small>PLAY & LEARN</small><h2>{t.play}</h2></section><GameGrid lang={lang} items={games.slice(0, 2)} done={done} onPlay={completeGame} /><p className="notice">{t.privacy}</p></>}
       {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><figure className="concept-map"><img src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.mapCaption} /><figcaption>{t.mapCaption}</figcaption></figure><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
       {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
-      {tab === 'threex' && <ThreeXExperience lang={lang} />}
+      {tab === 'threex' && <><ThreeXExperience lang={lang} /><ThreeXChallengeStudio supabase={supabase} user={session.user} lang={lang} isAdmin={isAdmin} /></>}
       {tab === 'dashboard' && <MemberDashboard supabase={supabase} userId={session.user.id} lang={lang} />}
       {tab === 'profile' && <MemberProfile supabase={supabase} user={session.user} lang={lang} />}
        {tab === 'domino' && <DominoGame lang={lang} onBack={() => setTab('play')} onOnline={() => setTab('domino-online')} onResult={recordGameResult} />}
