@@ -28,6 +28,8 @@ jobs:
         run: npm install
       - name: Build application
         run: npm run build
+      - name: Verify installable PWA output
+        run: npm run test:pwa
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
