@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 
 const I18N = {
- ar:{title:'ليدو العائلية',subtitle:'لعبة محلية بالتناوب على نفس الجهاز · 2 إلى 4 لاعبين',players:'عدد اللاعبين',start:'ابدأ لعبة جديدة',roll:'ارمِ النرد',turn:'الدور على',dice:'نتيجة النرد',choose:'اختار الحجر الذي تريد تحريكه',home:'في البيت',finish:'وصل للبيت',safe:'مربع آمن',six:'ستة! لك رمية إضافية',blocked:'لا توجد حركة متاحة',win:'فاز اللاعب',again:'لعبة جديدة',rules:'تحتاج 6 لإخراج الحجر من البيت. تحرك حسب نتيجة النرد، والوقوف على خصم في مربع غير آمن يعيده للبيت. تحتاج الرقم المناسب للوصول إلى خط النهاية.',back:'العودة للألعاب',p:['الأحمر','الأزرق','الأخضر','الأصفر']},
- en:{title:'Family Ludo',subtitle:'Local pass-and-play · 2 to 4 players on one device',players:'Players',start:'Start new game',roll:'Roll dice',turn:"Player's turn",dice:'Dice',choose:'Choose a token to move',home:'At home',finish:'Home',safe:'Safe square',six:'Six! Roll again',blocked:'No legal move',win:'Winner',again:'New game',rules:'You need a 6 to leave home. Move by the dice result. Landing on an opponent on a non-safe square sends them home. Reach the finish with the exact roll.',back:'Back to games',p:['Red','Blue','Green','Yellow']},
- zh:{title:'家庭飞行棋',subtitle:'本地轮流游戏 · 2 至 4 人共用一台设备',players:'玩家人数',start:'开始新游戏',roll:'掷骰子',turn:'当前玩家',dice:'骰子',choose:'选择要移动的棋子',home:'在基地',finish:'到达终点',safe:'安全格',six:'掷出六点！再来一次',blocked:'没有可走的棋子',win:'获胜者',again:'新游戏',rules:'掷出 6 才能离开基地。按点数移动。在非安全格落到对手位置可将其送回基地。必须掷出准确点数到达终点。',back:'返回游戏',p:['红色','蓝色','绿色','黄色']}
+ ar:{title:'ليدو العائلية',subtitle:'لعبة محلية بالتناوب على نفس الجهاز · 2 إلى 4 لاعبين',players:'عدد اللاعبين',start:'ابدأ لعبة جديدة',roll:'ارمِ النرد',turn:'الدور على',dice:'نتيجة النرد',choose:'اختار الحجر الذي تريد تحريكه',home:'في البيت',finish:'وصل للبيت',safe:'مربع آمن',six:'ستة! لك رمية إضافية',blocked:'لا توجد حركة متاحة',win:'فاز اللاعب',again:'لعبة جديدة',rules:'تحتاج 6 لإخراج الحجر من البيت. تحرك حسب نتيجة النرد، والوقوف على خصم في مربع غير آمن يعيده للبيت. تحتاج الرقم المناسب للوصول إلى خط النهاية.',back:'العودة للألعاب',skip:'تخطي الدور',p:['الأحمر','الأزرق','الأخضر','الأصفر']},
+ en:{title:'Family Ludo',subtitle:'Local pass-and-play · 2 to 4 players on one device',players:'Players',start:'Start new game',roll:'Roll dice',turn:"Player's turn",dice:'Dice',choose:'Choose a token to move',home:'At home',finish:'Home',safe:'Safe square',six:'Six! Roll again',blocked:'No legal move',win:'Winner',again:'New game',rules:'You need a 6 to leave home. Move by the dice result. Landing on an opponent on a non-safe square sends them home. Reach the finish with the exact roll.',back:'Back to games',skip:'Skip turn',p:['Red','Blue','Green','Yellow']},
+ zh:{title:'家庭飞行棋',subtitle:'本地轮流游戏 · 2 至 4 人共用一台设备',players:'玩家人数',start:'开始新游戏',roll:'掷骰子',turn:'当前玩家',dice:'骰子',choose:'选择要移动的棋子',home:'在基地',finish:'到达终点',safe:'安全格',six:'掷出六点！再来一次',blocked:'没有可走的棋子',win:'获胜者',again:'新游戏',rules:'掷出 6 才能离开基地。按点数移动。在非安全格落到对手位置可将其送回基地。必须掷出准确点数到达终点。',back:'返回游戏',skip:'跳过回合',p:['红色','蓝色','绿色','黄色']}
 };
 const COLORS=['#d94b4b','#3984d6','#3d9a69','#e0ae35'];
 const SAFE=new Set([0,8,13,21,26,34,39,47]);
@@ -24,6 +24,7 @@ export default function LudoGame({lang='ar',onBack}){
   else setMessage('');
  };
  const legal=useMemo(()=>game?.rolled?game.tokens[current].map((p,i)=>({p,i})).filter(({p})=>p<57&&(p>=0||game.dice===6))||[]:[],[game,current]);
+ const skipTurn=()=>{if(!game||!game.rolled||legal.length!==0||game.winner!==null)return;setGame(g=>({...g,turn:(g.turn+1)%g.players,dice:null,rolled:false,log:t.blocked}));};
  const move=(index)=>{
   if(!game||!game.rolled||game.winner!==null)return;
   const value=game.dice;
@@ -51,6 +52,7 @@ export default function LudoGame({lang='ar',onBack}){
   <header className="ludo-head"><div><small>FAMILY WORLD · THIMAR OSMAR</small><h1>🎲 {t.title}</h1><p>{t.subtitle}</p></div><button onClick={onBack}>{t.back}</button></header>
   {!game?<div className="ludo-setup"><label>{t.players}<select value={count} onChange={e=>setCount(Number(e.target.value))}>{[2,3,4].map(n=><option key={n} value={n}>{n}</option>)}</select></label><button className="primary" onClick={()=>{setGame(fresh(count));setMessage('');}}>{t.start}</button><p>{t.rules}</p></div>:<>
    <div className="ludo-status"><b style={{color:COLORS[current]}}>{t.turn}: {t.p[current]}</b><span>{t.dice}: {game.dice??'—'}</span><button disabled={game.rolled||game.winner!==null} onClick={roll}>{t.roll}</button></div>
+   {game.rolled&&legal.length===0&&game.winner===null&&<div className="ludo-no-move"><span>{t.blocked}</span><button onClick={skipTurn}>{t.skip}</button></div>}
    <div className="ludo-board" aria-label={t.title}>
     {Array.from({length:52},(_,space)=>{const pieces=[];board.forEach((row,player)=>row.forEach((pos,token)=>{if(pos>=0&&pos<52&&globalPos(player,pos)===space)pieces.push({player,token});}));return <div key={space} className={'ludo-space '+(SAFE.has(space)?'safe':'')}>{space+1}{pieces.map(piece=><span key={piece.player+'-'+piece.token} style={{background:COLORS[piece.player]}} title={t.p[piece.player]+' '+(piece.token+1)} />)}</div>;})}
    </div>
