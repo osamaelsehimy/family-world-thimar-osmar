@@ -4,7 +4,7 @@ import { BarChart3, Trophy, Gamepad2, Target, Clock3, ShieldCheck, RefreshCw } f
 const words = {
  ar: {
   title:'لوحة إنجازاتي',subtitle:'ملخص لعبك وتقدمك في Family World',
-  played:'إجمالي المباريات',wins:'مرات الفوز',losses:'مرات الخسارة',draws:'تعادلات',xp:'نقاط الخبرة',
+  played:'إجمالي المباريات',wins:'مرات الفوز',losses:'مرات الخسارة',draws:'تعادلات',xp:'نقاط FWP',
   games:'أدائي حسب اللعبة',recent:'آخر المباريات',empty:'لسه مفيش مباريات مسجلة. ابدأ لعبة الدومينو أو 1024 وهتظهر نتائجك هنا.',
   domino:'الدومينو',number:'1024',win:'فوز',loss:'خسارة',draw:'تعادل',score:'النتيجة',duration:'المدة',date:'التاريخ',
   refresh:'تحديث',loading:'بنحمّل إحصائياتك…',error:'تعذر تحميل الإحصائيات',demo:'أنت في وضع التجربة. سجلات اللعب لا تُحفظ في الحساب التجريبي.',
@@ -18,7 +18,7 @@ const words = {
  },
  en: {
   title:'My Performance',subtitle:'Your Family World game and progress summary',
-  played:'Games played',wins:'Wins',losses:'Losses',draws:'Draws',xp:'Experience points',
+  played:'Games played',wins:'Wins',losses:'Losses',draws:'Draws',xp:'FWP points',
   games:'Performance by game',recent:'Recent games',empty:'No games recorded yet. Play Dominoes or 1024 and your results will appear here.',
   domino:'Dominoes',number:'1024',win:'Won',loss:'Lost',draw:'Draw',score:'Score',duration:'Duration',date:'Date',
   refresh:'Refresh',loading:'Loading your stats…',error:'Could not load statistics',demo:'You are in demo mode. Game records are not saved to a demo account.',
@@ -32,7 +32,7 @@ const words = {
  },
  zh: {
   title:'我的表现',subtitle:'Family World 游戏与成长概览',
-  played:'已玩场次',wins:'胜利',losses:'失败',draws:'平局',xp:'经验值',
+  played:'已玩场次',wins:'胜利',losses:'失败',draws:'平局',xp:'FWP 积分',
   games:'各游戏表现',recent:'最近游戏',empty:'还没有游戏记录。开始玩多米诺或 1024，结果就会显示在这里。',
   domino:'多米诺',number:'1024',win:'胜利',loss:'失败',draw:'平局',score:'分数',duration:'时长',date:'日期',
   refresh:'刷新',loading:'正在加载统计…',error:'无法加载统计数据',demo:'当前为体验模式。体验账户不会保存游戏记录。',
