@@ -292,3 +292,13 @@
  .number-board{gap:6px;padding:8px;border-radius:14px}.number-row{gap:6px}.number-cell{border-radius:8px}
  .number-dpad{display:flex}
 }
+
+
+.directory-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0 15px}
+.directory-metrics>div{display:grid;gap:4px;padding:12px;border:1px solid #e6ede3;border-radius:12px;background:linear-gradient(145deg,#fff,#f7faf5)}
+.directory-metrics strong{font-size:23px;color:#235d42;font-variant-numeric:tabular-nums}
+.directory-metrics span{font-size:10px;color:#829086}
+.member-filters{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 14px}
+.member-filters button{padding:7px 11px;border:1px solid #e2e9df;border-radius:20px;background:#f8faf6;color:#6b7b70;font-size:10px}
+.member-filters button.selected{border-color:#a8c7ac;background:#e8f3e6;color:#245d42;font-weight:800}
+@media(max-width:560px){.directory-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
