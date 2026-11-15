@@ -6,6 +6,7 @@ import LudoGame from './src/components/LudoGame.jsx';
 import MemberDashboard from './src/components/MemberDashboard.jsx';
 import MemberProfile from './src/components/MemberProfile.jsx';
 import WorldHub from './src/components/WorldHub.jsx';
+import CharacterStudio from './src/components/CharacterStudio.jsx';
 import ThreeXExperience from './src/components/ThreeXExperience.jsx';
 import ThreeXChallengeStudio from './src/components/ThreeXChallengeStudio.jsx';
 import { supabase, configured } from './src/lib/supabase';
@@ -207,7 +208,7 @@ export default function App() {
       {tab === '1024' && <Number1024Game lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
-      {tab === 'characters' && <><section className="section"><small>CHARACTER & CARD GALLERY</small><h2>{t.characters}</h2><p className="muted">{t.charactersIntro}</p></section><div className="card-gallery">{gallery.map(card => <article className="art-card" key={card.file}><img src={`${import.meta.env.BASE_URL}assets/ideas/${card.file}`} alt={card.title[lang]} /><div><h3>{card.title[lang]}</h3><small>{card.kind[lang]}</small></div></article>)}</div><p className="notice">{t.artNote}</p></>}
+      {tab === 'characters' && <CharacterStudio lang={lang} />}
       {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
       {tab === 'guide' && <section className="guide-download"><BookOpen size={38} /><h1>{t.guide}</h1><p className="muted">{t.guideHint}</p><a className="primary guide-link" href={`${import.meta.env.BASE_URL}OG01-Game-Guide-AR-EN.pdf`} target="_blank" rel="noreferrer">{lang === 'ar' ? 'فتح دليل اللعبة PDF' : lang === 'zh' ? '打开 PDF 游戏指南' : 'Open the PDF game guide'}</a></section>}
       <footer>{t.name} © 2026</footer></main></div>;
