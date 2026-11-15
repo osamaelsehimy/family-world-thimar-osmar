@@ -10,8 +10,8 @@ const words={
  zh:{title:'家庭住宅挑战工作室 · 100 平方米',sub:'逐步完成项目、保存进度并提交审核。',create:'开始住宅项目',project:'项目名称',projectPlaceholder:'例如：我们的未来之家',tasks:'项目计划',done:'已完成',of:'共',save:'保存任务',notes:'备注（可选）',submit:'提交审核',narrative:'介绍设计理念与完成内容',narrativeHint:'至少输入30个字符：设计如何满足家庭需求？做出了哪些决定？',link:'平面图或文件链接（可选 HTTPS）',progress:'进度',status:{draft:'草稿',submitted:'审核中',approved:'已通过',revision_requested:'需要修改'},noProject:'你还没有开始项目。',createError:'无法创建项目，请确认会员状态。',loadError:'无法加载挑战数据。',completeAll:'请先完成所有必做任务。',submitError:'提交失败。',submitOk:'项目已成功提交审核。',review:'3X 项目审核',pending:'等待审核的提交',approve:'通过并奖励积分',revise:'要求修改',reject:'拒绝',reviewNote:'审核意见',reviewOk:'审核决定已保存。',reviewError:'无法保存审核决定。',points:'审核通过后获得 FWP 积分',earned:'仅在项目通过审核后发放',signin:'请使用有效会员账户登录后开始挑战。',emptyQueue:'没有待审核的提交。',refresh:'刷新',retry:'重试',deliver:'挑战交付成果',deliverText:'概念平面图 + 面积表 + 使用场景 + 初步成本估算',guard:'积分不是现金或股份，仅在 OSMAR 审核通过后发放。',myProjects:'我的项目',urlError:'链接必须以 https:// 开头。',minText:'请输入至少30个字符。',saving:'正在保存…'}
 };
 export default function ThreeXChallengeStudio({supabase,user,lang='ar',isAdmin=false}){
- const t=words[lang==='ar'?'ar':'en'],rtl=lang==='ar';
- const [challenge,setChallenge]=useState(null),[tasks,setTasks]=useState([]),[projects,setProjects]=useState([]),[active,setActive]=useState(null),[progress,setProgress]=useState([]),[submissions,setSubmissions]=useState([]),[queue,setQueue]=useState([]);
+ const t=words[lang]||words.en,rtl=lang==='ar';
+ const [challenge,setChallenge]=useState(null),[tasks,setTasks]=useState([]),[projects,setProjects]=useState([]),[active,setActive]=useState(null),[progress,setProgress]=useState([]),[submissions,setSubmissions]=useState([]),[queue,setQueue]=useState([]),[queuePlans,setQueuePlans]=useState([]);
  const [projectName,setProjectName]=useState(''),[narrative,setNarrative]=useState(''),[url,setUrl]=useState(''),[reviewNote,setReviewNote]=useState('');
  const [busy,setBusy]=useState(false),[loading,setLoading]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const demo=!user||user.id==='demo';
@@ -41,6 +41,8 @@ export default function ThreeXChallengeStudio({supabase,user,lang='ar',isAdmin=f
   if(isAdmin){
    const q=await supabase.from('challenge_submissions').select('id,project_id,user_id,submission_no,narrative,deliverable_url,created_at,challenge_projects(title,challenge_catalog(title_ar,title_en,points_award))').eq('status','pending').order('created_at');
    setQueue(q.data||[]);
+   const plans=await supabase.from('apartment_designs').select('project_id,design_json');
+   setQueuePlans(plans.data||[]);
   }
   setLoading(false);
  },[supabase,user?.id,demo,isAdmin,active?.id,t.loadError]);
@@ -99,7 +101,7 @@ export default function ThreeXChallengeStudio({supabase,user,lang='ar',isAdmin=f
     {submissions.length>0&&<div className="tx-history"><h3><Clock3/>{t.status[active.status]||active.status}</h3>{submissions.map(s=><p key={s.id}>#{s.submission_no} · {t.status[s.status]||s.status}{s.review_note?' · '+s.review_note:''}</p>)}</div>}
    </>}
    <p className="tx-guard"><ShieldCheck size={16}/>{t.guard}</p>
-   {isAdmin&&<div className="tx-admin"><h3><ClipboardCheck/>{t.review}</h3><p>{t.pending}</p>{queue.length?queue.map(q=><article key={q.id}><b>{q.challenge_projects?.title||'3X Project'}</b><p>{q.narrative}</p>{q.deliverable_url&&<a href={q.deliverable_url} target="_blank" rel="noreferrer"><ExternalLink size={13}/> {q.deliverable_url}</a>}<textarea rows="2" value={reviewNote} onChange={e=>setReviewNote(e.target.value)} placeholder={t.reviewNote}/><div><button onClick={()=>review(q.id,'approved')} disabled={busy}>{t.approve}</button><button onClick={()=>review(q.id,'revision_requested')} disabled={busy}>{t.revise}</button><button onClick={()=>review(q.id,'rejected')} disabled={busy}>{t.reject}</button></div></article>):<p>{t.emptyQueue}</p>}</div>}
+   {isAdmin&&<div className="tx-admin"><h3><ClipboardCheck/>{t.review}</h3><p>{t.pending}</p>{queue.length?queue.map(q=><article key={q.id}><b>{q.challenge_projects?.title||'3X Project'}</b><p>{q.narrative}</p>{(()=>{const plan=queuePlans.find(x=>x.project_id===q.project_id)?.design_json;if(!plan)return null;const cost=(plan.furniture||[]).reduce((sum,item)=>sum+(Number(item.cost)||0),0);return <div className="tx-plan-review"><b>{lang==='ar'?'ملخص المخطط':lang==='zh'?'平面图摘要':'Plan summary'}</b><span>{(plan.cells||[]).filter(Boolean).length}/100 m² · {(plan.furniture||[]).length} {lang==='ar'?'قطعة أثاث':lang==='zh'?'件家具':'furniture items'} · {(plan.doors||[]).length} {lang==='ar'?'باب':lang==='zh'?'扇门':'doors'}</span><strong>{cost.toLocaleString('en-US')} EGP</strong></div>})()}{q.deliverable_url&&<a href={q.deliverable_url} target="_blank" rel="noreferrer"><ExternalLink size={13}/> {q.deliverable_url}</a>}<textarea rows="2" value={reviewNote} onChange={e=>setReviewNote(e.target.value)} placeholder={t.reviewNote}/><div><button onClick={()=>review(q.id,'approved')} disabled={busy}>{t.approve}</button><button onClick={()=>review(q.id,'revision_requested')} disabled={busy}>{t.revise}</button><button onClick={()=>review(q.id,'rejected')} disabled={busy}>{t.reject}</button></div></article>):<p>{t.emptyQueue}</p>}</div>}
   </>}
  </section>;
 }
