@@ -3,17 +3,19 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.utils import ImageReader
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'output' / 'pdf' / 'OG01-Game-Guide-AR-EN.pdf'
+OUT = ROOT / 'public' / 'OG01-Game-Guide-AR-EN.pdf'
 ASSETS = ROOT / 'public' / 'assets' / 'ideas'
 PAGE = landscape(A4)
 W, H = PAGE
 GREEN = HexColor('#164b3b'); LIGHT = HexColor('#eef4eb'); GOLD = HexColor('#c69a3b'); INK = HexColor('#20372e'); MUTED = HexColor('#65776b')
-pdfmetrics.registerFont(TTFont('Arial', r'C:\Windows\Fonts\arial.ttf'))
-pdfmetrics.registerFont(TTFont('Tahoma', r'C:\Windows\Fonts\tahoma.ttf'))
+pdfmetrics.registerFont(TTFont('Arial', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'))
+pdfmetrics.registerFont(TTFont('Tahoma', '/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf'))
+pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
 # Arabic joining forms: isolated, final, initial, medial (Unicode Arabic Presentation Forms).
 FORMS = {
@@ -52,7 +54,9 @@ def wrap_lines(text, font, size, max_width, rtl=False):
     if cur: lines.append(cur)
     return lines
 def draw_copy(c, title, sections, x, top, width, rtl=False, bottom=38, fontsize=9.0):
-    font='Tahoma' if rtl else 'Arial'; y=top
+    font='Tahoma' if rtl else 'Arial'
+    if any('\u4e00' <= ch <= '\u9fff' for _, body in sections for paragraph in body for ch in paragraph): font='STSong-Light'
+    y=top
     if rtl: draw_rtl(c,title,x+width,y,font,size=15,color=GREEN)
     else:
         c.setFont(font,15); c.setFillColor(GREEN); c.drawString(x,y,title)
@@ -90,7 +94,7 @@ def section_pair(c, n, en_title, ar_title, en_sections, ar_sections, font=9):
     c.showPage()
 
 c=canvas.Canvas(str(OUT),pagesize=PAGE,pageCompression=1)
-c.setTitle('Family World - Game Guide - English and Arabic')
+c.setTitle('Family World - Official Game Guide 2.0 - English and Arabic')
 c.setAuthor('OSMAR Ecosystems')
 # Cover
 page_base(c,1,'A simple guide','دليل مبسّط')
@@ -101,7 +105,9 @@ draw_rtl(c,'عالم الأسرة',W-58,H-135,size=23,color=GREEN)
 draw_rtl(c,'ثمار OSMAR',W-58,H-159,size=13,color=GOLD)
 c.setFont('Arial',11); c.setFillColor(INK); c.drawString(58,H-202,'A family-friendly way to learn, play, and help together.')
 draw_rtl(c,'مساحة عائلية للتعلم واللعب والتعاون على الخير.',W-58,H-202,size=11,color=INK)
-map_img=ImageReader(str(ASSETS/'world-map.jpg'))
+BRAND = ROOT / 'public' / 'assets' / 'brand'
+cover_path = BRAND / 'family-world-cover.webp'
+map_img=ImageReader(str(cover_path if cover_path.exists() else ASSETS/'world-map.jpg'))
 c.drawImage(map_img, W/2-205, 94, width=410,height=205,preserveAspectRatio=True,anchor='c',mask='auto')
 c.setFont('Arial',8.5); c.setFillColor(MUTED); c.drawCentredString(W/2,79,'Early concept artwork · The app is a demo; progress is not saved.')
 draw_rtl(c,'رسومات تصورية أولية · اللعبة نسخة تجريبية ولا تحفظ التقدم.',W/2,65,size=8.5,color=MUTED)
@@ -209,5 +215,110 @@ ar_safety=[
 ])]
 draw_copy(c,'Points, safety, and getting started',en_safety,34,H-88,W/2-50,False,bottom=48,fontsize=8.5)
 draw_copy(c,'النقاط والأمان وطريقة البدء',ar_safety,W/2+16,H-88,W/2-50,True,bottom=48,fontsize=8.5)
+print('Adding current release sections to the PDF')
+
+# Release update: current implementation truth, 3X and safeguards (15 Nov 2026)
+section_pair(c,7,'Current app features and availability','الخصائص المتاحة وحالة التطبيق',[
+('Available now',[
+'Public guest demo; email/password account interface with guardian affirmation and email confirmation.',
+'Dominoes against the computer, 1024, and Ludo are available game experiences.',
+'Seven-world navigation, starter character cards, local card creation, and the 100 m² Thimar 3X home challenge path.',
+'Family World is an installable Progressive Web App (PWA), not an APK or EXE.'
+]),('Partial or planned',[
+'Family Treasure Hunt, Who Am I?, Story Chain, Backgammon, Estimation, Sequence, Snakes & Ladders, Phase Challenge, Family Quiz, Memory Match and Connect Four are ideas/coming soon unless explicitly enabled.',
+'Online Domino has a lobby foundation; synchronized turns, validated match completion and permanent online results remain future work.',
+'The 10,000 m² enterprise and 1000 × 1000 city tracks, avatar progression, Thimar learning paths, full OSMAR dashboards and interactive Sponge City are planned or staged.'
+]),('Account boundary',[
+'Guest-demo progress is temporary. Character cards added in Character Studio are stored locally in the current browser/device and are not a shared family collection yet.'
+])],[
+('المتاح حاليًا',[
+'تجربة عامة كضيف، وواجهة حساب بالبريد وكلمة المرور مع إقرار ولي الأمر وتأكيد البريد.',
+'الألعاب المتاحة: الدومينو ضد الكمبيوتر، و1024، وليدو.',
+'العوالم السبعة، ومجموعة بداية للشخصيات، وإضافة كروت محليًا، ومسار تحدي البيت 100 م² في ثلاثي الأثر.',
+'اللعبة تطبيق ويب قابل للتثبيت PWA، مش APK أو EXE.'
+]),('جزئي أو مخطط',[
+'صيد الكنز ومين أنا وحكاية على الدور والطاولة والاستميشن وسيكوانس والسلم والثعبان وتحدي المراحل وتحدي المعلومات والذاكرة وأربعة على التوالي أفكار أو قادمة إلا لو اتفعلت صراحة.',
+'ردهة الدومينو أونلاين لها أساس، لكن تزامن الأدوار والتحقق من نهاية المباراة وحفظ النتائج الدائمة ما زال تطويرًا مستقبليًا.',
+'مسارا المشروع 10,000 م² والمدينة 1000×1000، وتطور الشخصيات ومسارات Thimar ولوحات OSMAR الكاملة وSponge City التفاعلية ما زالت مخططة أو مرحلية.'
+]),('حدود الحساب',[
+'التقدم في تجربة الضيف مؤقت. والكروت المضافة في استوديو الشخصيات محفوظة محليًا على نفس المتصفح والجهاز، وليست مجموعة عائلية مشتركة حتى الآن.'
+])],8.2)
+section_pair(c,8,'Thimar 3X: the three challenges','ثلاثي الأثر 3X: التحديات الثلاثة',[
+('01 · Home challenge — 100 m²',[
+'Design a 10 × 10 m concept home around family needs, room zoning, circulation, privacy, daylight, ventilation, water, energy, materials and an initial cost estimate.',
+'Deliverables: concept plan, area schedule, user story, sustainability notes and initial cost range.'
+]),('02 · Enterprise/campus — 10,000 m²',[
+'Plan a 100 × 100 m project: value proposition, OBS roles, WBS work packages, site flows, suppliers, safety, schedule, cost, risks and KPIs.',
+'This is a specialist-review track; no project is automatically approved for investment or construction.'
+]),('03 · Egypt city-region — 1000 × 1000',[
+'A virtual planning grid for neighbourhoods, housing, work, education, worship, health, mobility, water, energy, green/blue infrastructure, logistics and community services.',
+'The map is an educational model, not a land-title map, official zoning plan or permit.'
+]),('Sponge City layer',[
+'Candidate systems: permeable streets, rain gardens, bioswales, green roofs, wetlands, retention ponds, rainwater harvesting, safely treated greywater reuse, floodable parks and safe overflow routes.',
+'Water balance, soil, rainfall, water quality, maintenance and engineering capacities require local data and qualified review.'
+])],[
+('01 · تحدي البيت 100 م²',[
+'تصميم بيت مفاهيمي 10×10 متر حسب احتياجات الأسرة وتوزيع الغرف والحركة والخصوصية والضوء والتهوية والمياه والطاقة والخامات والتكلفة المبدئية.',
+'المخرجات: مخطط مبدئي، جدول مساحات، قصة استخدام، ملاحظات استدامة، ونطاق تكلفة أولي.'
+]),('02 · المشروع 10,000 م²',[
+'تخطيط مشروع 100×100 متر: القيمة المقترحة، المسؤوليات OBS، حزم العمل WBS، حركة الموقع، الموردون، السلامة، الجدول والتكلفة والمخاطر والمؤشرات.',
+'ده مسار يحتاج مراجعة متخصصين؛ ومفيش مشروع بيتعتمد تلقائيًا للاستثمار أو البناء.'
+]),('03 · مصر 1000×1000',[
+'شبكة تخطيط افتراضية للأحياء والسكن والعمل والتعليم والعبادة والصحة والتنقل والمياه والطاقة والمساحات الخضراء والزرقاء واللوجستيات والخدمات المجتمعية.',
+'الخريطة نموذج تعليمي، مش خريطة ملكية أو تقسيم رسمي أو ترخيص.'
+]),('طبقة Sponge City',[
+'أنظمة مقترحة: شوارع منفذة للمياه، حدائق مطرية، قنوات نباتية، أسطح خضراء، أراضٍ رطبة، أحواض احتجاز، حصاد مياه الأمطار، إعادة استخدام المياه الرمادية بعد المعالجة الآمنة، حدائق قابلة للغمر ومسارات فائض آمنة.',
+'ميزان المياه والتربة والأمطار والجودة والصيانة والسعات الهندسية تحتاج بيانات محلية ومراجعة مختصين.'
+])],8.2)
+section_pair(c,9,'Points, supply chain and project methods','النقاط وسلسلة الإمداد وإدارة المشروعات',[
+('FWP points',[
+'FWP are progress indicators earned through eligible tasks and reviewed contributions. They are not money, shares, ownership, investments or promised returns.',
+'There is no approved cash exchange rate, point purchase or trading. Demo points are temporary; permanent points require a live server-backed event and accepted record.'
+]),('Supply chain',[
+'The proposed connection is person → team → supplier → project → community. Record need, source, accountable owner, status, quality, timing, cost assumptions and impact evidence.',
+'SMART objectives are Specific, Measurable, Achievable, Relevant and Time-bound. OKRs pair an objective with 2–5 measurable key results. KPIs need a definition, formula, owner, source, timestamp and review cadence.',
+'OBS defines accountability; WBS decomposes work; PMO manages scope, schedule, cost, quality and risk; BI supports evidence-based decisions.'
+])],[
+('نقاط FWP',[
+'نقاط FWP مؤشرات تقدم لمهام ومساهمات مؤهلة بعد مراجعتها. مش فلوس ولا أسهم ولا ملكية ولا استثمار ولا وعد بعائد.',
+'مفيش سعر تحويل نقدي معتمد ولا شراء أو تداول نقاط. نقاط العرض التجريبي مؤقتة؛ والنقاط الدائمة تحتاج حدثًا مسجلًا ومقبولًا من السيرفر.'
+]),('سلسلة الإمداد',[
+'الربط المقترح: شخص ← فريق ← مورد ← مشروع ← مجتمع. نسجل الاحتياج والمصدر والمسؤول والحالة والجودة والوقت وافتراضات التكلفة ودليل الأثر.',
+'أهداف SMART محددة وقابلة للقياس والتحقيق ومرتبطة بالاحتياج ومحددة بزمن. وOKR يربط هدفًا بنتيجتين إلى خمس نتائج قابلة للقياس. وكل KPI يحتاج تعريفًا ومعادلة ومسؤولًا ومصدرًا وتاريخًا ودورية مراجعة.',
+'OBS يوضح المسؤوليات، وWBS يقسم العمل، وPMO يدير النطاق والوقت والتكلفة والجودة والمخاطر، وBI يدعم القرار بالبيانات.'
+])],8.2)
+section_pair(c,10,'Permissions, privacy and safe use','الصلاحيات والخصوصية والاستخدام الآمن',[
+('Ordinary member by default',[
+'Every new member is an ordinary user by default. Invitation labels and membership classifications do not grant admin permissions.',
+'The owner retains OSMAR Admin. Delegated permissions are separate and owner-controlled; the permissions manager is inside Admin behind its own icon.',
+'Server-side authorization, database policies and audit records—not hidden buttons—control protected actions.'
+]),('Child and family privacy',[
+'Do not enter children’s full names, photos, phone numbers, school, precise location or sensitive details. Keep family and organization workspaces separate.',
+'The latest reviewed Supabase security advisor still flags leaked-password protection as disabled. Enable it before broad public launch; real-browser email confirmation and password-reset tests remain required.'
+])],[
+('العضو العادي هو الأصل',[
+'كل عضو جديد مستخدم عادي افتراضيًا. نوع الدعوة أو تصنيف العضوية مش صلاحية إدارية.',
+'المالك فقط يحتفظ بإدارة OSMAR. الصلاحيات المفوضة منفصلة وتحت تحكم المالك؛ ومدير الصلاحيات داخل الإدارة في أيقونة مستقلة.',
+'التحقق من الصلاحيات يتم من السيرفر وسياسات قاعدة البيانات وسجل المراجعة، مش من إخفاء الأزرار.'
+]),('خصوصية الأطفال والأمان',[
+'ما تدخلش أسماء الأطفال الكاملة أو صورهم أو أرقامهم أو مدارسهم أو مواقعهم الدقيقة أو بيانات حساسة. وخلي مساحات الأسرة والمؤسسات منفصلة.',
+'آخر مراجعة أمنية لـ Supabase لسه بتظهر إن حماية كلمات المرور المسرّبة غير مفعّلة. لازم تتفعل قبل الإطلاق العام الواسع، واختبارات البريد الحقيقي واستعادة كلمة المرور لسه مطلوبة.'
+])],8.2)
+section_pair(c,11,'Roadmap and Chinese quick guide','خطة التطوير والدليل الصيني المختصر',[
+('Next milestones',[
+'Install the exact approved cover and character/game artwork and verify desktop/mobile. Enable leaked-password protection and finish browser sign-up/recovery tests. Complete online Domino synchronization. Expand 3X with expert review. Build source-backed Thimar learning paths and OSMAR dashboards. Run clean migration replay and full release regression before broad launch.'
+]),('中文快速指南',[
+'Family World – Thimar OSMAR 是一个以家庭和社区为核心的学习与游戏体验，鼓励把数字活动转化为现实生活中的善行、合作与成长。',
+'七大主题：家庭与日常、家庭关系、学习技能、自然与可持续、工作与事业、健康运动、社区服务。',
+'当前可体验：访客演示、多米诺（对电脑）、1024、飞行棋。演示积分不会永久保存。企业与城市 3X 挑战仍在规划或分阶段开发。',
+'FWP 是进度指标，不是货币、股票或所有权。新会员默认是普通用户。请保护儿童个人信息。'
+])],[
+('الخطوات القادمة',[
+'تثبيت الغلاف ولوحات الشخصيات واللعبة الأصلية والتحقق من الكمبيوتر والموبايل. تفعيل حماية كلمات المرور المسرّبة واستكمال اختبارات التسجيل والاستعادة. إكمال تزامن الدومينو أونلاين. تطوير 3X بمراجعة متخصصين. بناء مسارات تعلم Thimar ولوحات OSMAR، ثم إعادة اختبار migrations واختبارات الإصدار قبل الإطلاق العام.'
+]),('中文快速指南',[
+'Family World – Thimar OSMAR 是一个以家庭和社区为核心的学习与游戏体验，鼓励把数字活动转化为现实生活中的善行、合作与成长。',
+'七大主题：家庭与日常、家庭关系、学习技能、自然与可持续、工作与事业、健康运动、社区服务。',
+'当前可体验：访客演示、多米诺（对电脑）、1024、飞行棋。演示积分不会永久保存。',
+'FWP 积分是进度指标，不是货币、股票或所有权。新会员默认是普通用户。请保护儿童个人信息。'
+])],8.2)
 c.save()
-print(OUT)
