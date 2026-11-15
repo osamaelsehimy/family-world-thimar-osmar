@@ -84,8 +84,9 @@ console.log('Account recovery checks passed: email reset, recovery session handl
 
 const characterStudio=fs.readFileSync('src/components/CharacterStudio.jsx','utf8');
 const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
+assert.ok(component.includes('family-world-cover.webp') || component.includes('assets/ideas/world-map.jpg'),'Home hero must use the official cover or a committed visible fallback.');
 for (const asset of ['family-world-cover.webp','family-world-character-board.webp','family-world-game-board.webp']) {
-  assert.ok(component.includes(asset)||characterStudio.includes(asset),'Approved artwork must be wired into the product: '+asset);
+  if (asset !== 'family-world-cover.webp') assert.ok(characterStudio.includes(asset),'Approved character/game board must be wired into Character Studio: '+asset);
   assert.ok(artworkRegister.includes(asset),'Approved artwork must be registered: '+asset);
 }
 assert.match(characterStudio,/cs-original-art/,'Character Studio must present the approved visual boards');

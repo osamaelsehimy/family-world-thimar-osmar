@@ -7,7 +7,7 @@ const fixMigration = fs.readFileSync('supabase/migrations/20261115153321_fix_ref
 
 const migrationFiles = fs.readdirSync('supabase/migrations').filter(name => name.endsWith('.sql')).sort();
 const expectedMigrationFiles = [
-  "20261115170000_member_directory_v2_and_profile_editor.sql",
+  "20261115174031_member_directory_v2_and_profile_editor.sql",
   "20261109110610_family_world_auth_profiles.sql",
   "20261113165253_trust_membership_foundation.sql",
   "20261113165316_enforce_trusted_invitation_signup.sql",
