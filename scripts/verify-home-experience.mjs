@@ -8,6 +8,8 @@ const threeX=fs.readFileSync('src/components/ThreeXExperience.jsx','utf8');
 const threeXStyles=fs.readFileSync('src/styles/three-x.css','utf8');
 const guide=fs.readFileSync('docs/FAMILY_WORLD_VISION_GUIDE_AR_EN.md','utf8');
 const studio=fs.readFileSync('src/components/ThreeXChallengeStudio.jsx','utf8');
+const planner=fs.readFileSync('src/components/ApartmentPlanner.jsx','utf8');
+const plannerStyles=fs.readFileSync('src/styles/apartment-planner.css','utf8');
 const studioStyles=fs.readFileSync('src/styles/three-x-studio.css','utf8');
 const migration=fs.readFileSync('supabase/migrations/20261114225329_thimar_3x_challenge_engine.sql','utf8');
 const studioMigration=fs.readFileSync('supabase/migrations/20261114225410_thimar_3x_admin_review_and_indexes.sql','utf8');
@@ -50,3 +52,11 @@ assert.match(reviewMigration,/p_decision is null/,'Review RPC must reject null d
 assert.match(studio,/completed!==tasks\.length/,'Client must prevent incomplete submissions');
 assert.match(studioStyles,/@media\(max-width:600px\)/,'Challenge studio must support mobile');
 console.log('3X Studio checks passed: authenticated route, five apartment tasks, RLS, active membership, server-side completion gate, trusted admin review, ledger-only points, and mobile layout.');
+
+assert.match(studio,/import ApartmentPlanner/,'Apartment planner must be integrated');
+assert.match(studio,/<ApartmentPlanner lang=\{lang\} userId=\{user\.id\} projectId=\{active\.id\} \/>/,'Planner must be scoped to the signed-in member and project');
+for (const phrase of ['Array(100)','localStorage.setItem','localStorage.getItem','10 × 10','m²']) assert.ok(planner.includes(phrase),'Missing planner capability: '+phrase);
+for (const locale of ['ar','en','zh']) assert.ok(planner.includes(locale+':{'),'Apartment planner must support '+locale);
+for (const zone of ['bed','living','kitchen','bath','entry','corridor']) assert.ok(planner.includes("'"+zone+"'"),'Missing apartment zone: '+zone);
+assert.match(plannerStyles,/@media\(max-width:650px\)/,'Apartment planner must support mobile');
+console.log('Apartment planner checks passed: 100 m² grid, six zones, local draft persistence, three locales, and mobile layout.');
