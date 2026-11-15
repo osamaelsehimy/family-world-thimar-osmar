@@ -19,7 +19,7 @@ const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_
 const designValidationMigration=fs.readFileSync('supabase/migrations/20261115104809_apartment_design_json_validation.sql','utf8');
 
 assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
-assert.match(app,/<WorldHub[^>]*onChallenge=\{\(\) => setTab\(['"]threex['"]\)\}/,'Home route must render WorldHub and link to the apartment challenge');
+assert.ok(app.includes('<WorldHub lang={lang}') && app.includes("onChallenge={() => setTab('threex')}") ,'Home route must render WorldHub and link to the apartment challenge');
 for (const locale of ['ar','en','zh']) assert.match(component,new RegExp('\\n\\s*'+locale+':\\{'),locale+' translation must exist');
 for (const concept of ['100 m²','family','market','learning','community','projects','progress']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing hub concept: '+concept);
 for (const feature of ['wh-feature-art','wh-house','wh-grid','wh-card-icon']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
