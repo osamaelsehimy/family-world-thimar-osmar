@@ -3,6 +3,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.utils import ImageReader
 
@@ -14,6 +15,7 @@ W, H = PAGE
 GREEN = HexColor('#164b3b'); LIGHT = HexColor('#eef4eb'); GOLD = HexColor('#c69a3b'); INK = HexColor('#20372e'); MUTED = HexColor('#65776b')
 pdfmetrics.registerFont(TTFont('Arial', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'))
 pdfmetrics.registerFont(TTFont('Tahoma', '/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf'))
+pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
 # Arabic joining forms: isolated, final, initial, medial (Unicode Arabic Presentation Forms).
 FORMS = {
@@ -52,7 +54,9 @@ def wrap_lines(text, font, size, max_width, rtl=False):
     if cur: lines.append(cur)
     return lines
 def draw_copy(c, title, sections, x, top, width, rtl=False, bottom=38, fontsize=9.0):
-    font='Tahoma' if rtl else 'Arial'; y=top
+    font='Tahoma' if rtl else 'Arial'
+    if any('\u4e00' <= ch <= '\u9fff' for _, body in sections for paragraph in body for ch in paragraph): font='STSong-Light'
+    y=top
     if rtl: draw_rtl(c,title,x+width,y,font,size=15,color=GREEN)
     else:
         c.setFont(font,15); c.setFillColor(GREEN); c.drawString(x,y,title)
