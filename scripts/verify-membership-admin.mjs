@@ -7,6 +7,7 @@ const fixMigration = fs.readFileSync('supabase/migrations/20261115153321_fix_ref
 
 const migrationFiles = fs.readdirSync('supabase/migrations').filter(name => name.endsWith('.sql')).sort();
 const expectedMigrationFiles = [
+  "20261115170000_member_directory_v2_and_profile_editor.sql",
   "20261109110610_family_world_auth_profiles.sql",
   "20261113165253_trust_membership_foundation.sql",
   "20261113165316_enforce_trusted_invitation_signup.sql",
@@ -34,12 +35,17 @@ const expectedMigrationFiles = [
   "20261115155051_osmar_least_privilege_admin_rbac.sql",
   "20261115155251_enforce_core_admin_permissions.sql"
 ];
-assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the 26 recorded Supabase migrations');
+assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
   assert.ok(migrationFiles.includes(file), 'Missing or misnamed Supabase migration: ' + file);
 }
 
 assert.match(app, /session\?\.user\?\.app_metadata\?\.role === 'osmar_admin'/, 'Admin navigation must use trusted app_metadata role');
+assert.match(app, /Map as MapIcon/, 'Lucide map icon must not shadow the native Map constructor');
+assert.match(app, /new Map\(/, 'Directory aggregation must use the native Map constructor');
+assert.match(app, /osmar_member_directory_v2/, 'Admin directory must load the live member directory v2');
+assert.match(app, /osmar_update_member_profile/, 'Owner must be able to edit member profiles');
+assert.match(app, /member_type/, 'Admin directory must use the owner-controlled member type');
 assert.match(app, /supabase\.rpc\('osmar_create_invite'/, 'Invite creation must call the protected RPC');
 assert.match(app, /supabase\.rpc\('osmar_review_member'/, 'Membership decisions must call the protected RPC');
 assert.match(app, /guardian_attested: true/, 'Signup must record adult guardian affirmation');
