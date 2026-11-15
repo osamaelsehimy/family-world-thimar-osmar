@@ -17,12 +17,12 @@ const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar
 
 assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
 assert.match(app,/<WorldHub[^>]*onChallenge=\{\(\) => setTab\(['"]threex['"]\)\}/,'Home route must render WorldHub and link to the apartment challenge');
-for (const locale of ['ar','en','zh']) assert.match(component,new RegExp('\\n'+locale+':\\{'),locale+' translation must exist');
+for (const locale of ['ar','en','zh']) assert.match(component,new RegExp('\\n\\s*'+locale+':\\{'),locale+' translation must exist');
 for (const concept of ['100 m²','family','market','learning','community','projects','progress']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing hub concept: '+concept);
 for (const feature of ['wh-feature-art','wh-house','wh-grid','wh-card-icon']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
 assert.match(styles,/@media\(max-width:760px\)/,'World Hub must have a mobile layout');
 assert.match(component,/family-world\.svg/,'World Hub must use the original app icon');
-assert.match(component,/lang==='ar'\?'rtl':'ltr'/,'Arabic must use right-to-left layout');
+assert.match(component,/rtl=lang==='ar'/,'Arabic must use right-to-left layout');
 assert.match(component,/soon:'Coming soon'/,'Unbuilt areas must be clearly labelled');
 assert.match(component,/is-soon/,'Unbuilt areas must be visually distinguished');
 const icon=fs.readFileSync('public/icons/family-world.svg','utf8');
