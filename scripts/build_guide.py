@@ -215,8 +215,7 @@ ar_safety=[
 ])]
 draw_copy(c,'Points, safety, and getting started',en_safety,34,H-88,W/2-50,False,bottom=48,fontsize=8.5)
 draw_copy(c,'النقاط والأمان وطريقة البدء',ar_safety,W/2+16,H-88,W/2-50,True,bottom=48,fontsize=8.5)
-c.save()
-print(OUT)
+print('Adding current release sections to the PDF')
 
 # Release update: current implementation truth, 3X and safeguards (15 Nov 2026)
 section_pair(c,7,'Current app features and availability','الخصائص المتاحة وحالة التطبيق',[
