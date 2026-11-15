@@ -17,6 +17,9 @@ const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar
 const designMigration=fs.readFileSync('supabase/migrations/20261115104454_apartment_design_cloud_sync.sql','utf8');
 const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_apartment_design_admin_review.sql','utf8');
 const designValidationMigration=fs.readFileSync('supabase/migrations/20261115104809_apartment_design_json_validation.sql','utf8');
+const designMigration=fs.readFileSync('supabase/migrations/20261115104454_apartment_design_cloud_sync.sql','utf8');
+const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_apartment_design_admin_review.sql','utf8');
+const designValidationMigration=fs.readFileSync('supabase/migrations/20261115104809_apartment_design_json_validation.sql','utf8');
 
 assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
 assert.match(app,/<WorldHub[^>]*onChallenge=\{\(\) => setTab\(['"]threex['"]\)\}/,'Home route must render WorldHub and link to the apartment challenge');
@@ -62,9 +65,16 @@ assert.match(studioStyles,/@media\(max-width:600px\)/,'Challenge studio must sup
 console.log('3X Studio checks passed: authenticated route, five apartment tasks, RLS, active membership, server-side completion gate, trusted admin review, ledger-only points, and mobile layout.');
 
 assert.match(studio,/import ApartmentPlanner/,'Apartment planner must be integrated');
-assert.match(studio,/<ApartmentPlanner lang=\{lang\} userId=\{user\.id\} projectId=\{active\.id\} \/>/,'Planner must be scoped to the signed-in member and project');
+assert.match(studio,/<ApartmentPlanner lang=\{lang\} userId=\{user\.id\} projectId=\{active\.id\} supabase=\{supabase\} \/>/,'Planner must be scoped to the signed-in member, project, and cloud client');
 for (const phrase of ['Array(100)','localStorage.setItem','localStorage.getItem','10 × 10','m²']) assert.ok(planner.includes(phrase),'Missing planner capability: '+phrase);
 for (const locale of ['ar','en','zh']) assert.ok(planner.includes(locale+':{'),'Apartment planner must support '+locale);
 for (const zone of ['bed','living','kitchen','bath','entry','corridor']) assert.ok(planner.includes("'"+zone+"'"),'Missing apartment zone: '+zone);
 assert.match(plannerStyles,/@media\(max-width:650px\)/,'Apartment planner must support mobile');
-console.log('Apartment planner checks passed: 100 m² grid, six zones, local draft persistence, three locales, and mobile layout.');
+for (const feature of ['apartment_designs','design_json','furniture','doors','rotated','itemCost','cloudSaved']) assert.ok(planner.includes(feature),'Missing apartment studio capability: '+feature);
+assert.match(studio,/words\[lang\]\|\|words\.en/,'Challenge studio must resolve all three locales');
+assert.match(designMigration,/enable row level security/i,'Apartment design table must enable RLS');
+assert.match(designMigration,/grant select, insert on public\.apartment_designs to authenticated/i,'Apartment design table must have explicit Data API grants');
+assert.match(designMigration,/with check/i,'Apartment design writes must enforce ownership');
+assert.match(designReviewMigration,/app_metadata/,'Only trusted OSMAR admins may read plans for review');
+assert.match(designValidationMigration,/jsonb_array_length/,'Apartment design payload must be validated');
+console.log('Apartment planner checks passed: 100 m² zoning, furniture footprints, doors, editable cost inputs, cloud/local save, RLS, admin review and three locales.');
