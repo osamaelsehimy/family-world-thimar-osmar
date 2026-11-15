@@ -232,6 +232,31 @@ function OSMARAdmin({ supabase, lang }) {
   const [memberFilter, setMemberFilter] = useState('all');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [editingMember, setEditingMember] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editNickname, setEditNickname] = useState('');
+  const [editType, setEditType] = useState('TRU');
+  const label = (ar, en, zh) => lang === 'ar' ? ar : lang === 'zh' ? zh : en;
+  function startMemberEdit(item) {
+    setEditingMember(item.member_id);
+    setEditName(item.display_name || '');
+    setEditNickname(item.nickname || '');
+    setEditType(item.member_type || 'TRU');
+  }
+  async function saveMemberEdit(event) {
+    event.preventDefault(); setBusy(true); setMessage('');
+    try {
+      const { error } = await supabase.rpc('osmar_update_member_profile', {
+        p_member_id: editingMember, p_display_name: editName,
+        p_nickname: editNickname, p_member_type: editType
+      });
+      if (error) throw error;
+      setEditingMember(null);
+      setMessage(label('تم تحديث بيانات العضو وتسجيل التعديل في سجل المراجعة.','Member profile updated and audit event recorded.','会员资料已更新并记录审计事件。'));
+      await refresh();
+    } catch (error) { setMessage(error?.message || 'Could not update this member.'); }
+    finally { setBusy(false); }
+  }
 
   async function refresh() {
     setBusy(true);
@@ -239,7 +264,7 @@ function OSMARAdmin({ supabase, lang }) {
     try {
       const [pendingResult, memberResult, pointsResult, gamesResult] = await Promise.all([
         supabase.rpc('osmar_pending_members'),
-        supabase.rpc('osmar_member_directory'),
+        supabase.rpc('osmar_member_directory_v2'),
         supabase.rpc('osmar_points_directory'),
         supabase.rpc('osmar_game_directory')
       ]);
@@ -330,14 +355,14 @@ function OSMARAdmin({ supabase, lang }) {
     active: members.filter(item => item.membership_status === 'active').length,
     pending: members.filter(item => item.membership_status === 'pending').length,
     suspended: members.filter(item => item.membership_status === 'suspended' || item.membership_status === 'rejected').length,
-    trusted: members.filter(item => item.referral_type === 'TRU').length,
+    trusted: members.filter(item => item.member_type === 'TRU').length,
   };
   const filteredMembers = members.filter(item => {
     const matchesSearch = (item.email || '').toLowerCase().includes(search.toLowerCase()) ||
       (item.member_code || '').toLowerCase().includes(search.toLowerCase());
     const matchesFilter = memberFilter === 'all' || (memberFilter === 'suspended'
       ? ['suspended','rejected'].includes(item.membership_status)
-      : memberFilter === 'TRU' ? item.referral_type === 'TRU' : item.membership_status === memberFilter);
+      : ['TRU','FAM','NET','OSM','TEAM'].includes(memberFilter) ? item.member_type === memberFilter : item.membership_status === memberFilter);
     return matchesSearch && matchesFilter;
   });
 
@@ -364,7 +389,7 @@ function OSMARAdmin({ supabase, lang }) {
       </div>
       <input className="member-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.searchMembers} />
       <div className="member-filters">
-        {[['all',lang==='ar'?'الكل':lang==='zh'?'全部':'All'],['active',lang==='ar'?'نشط':lang==='zh'?'活跃':'Active'],['pending',lang==='ar'?'معلّق':lang==='zh'?'待审核':'Pending'],['TRU','TRU'],['suspended',lang==='ar'?'موقوف':lang==='zh'?'已暂停':'Paused']].map(([value,label])=><button type="button" key={value} className={memberFilter===value?'selected':''} onClick={()=>setMemberFilter(value)}>{label}</button>)}
+        {[['all',lang==='ar'?'الكل':lang==='zh'?'全部':'All'],['active',lang==='ar'?'نشط':lang==='zh'?'活跃':'Active'],['pending',lang==='ar'?'معلّق':lang==='zh'?'待审核':'Pending'],['TRU','TRU'],['FAM','FAM'],['NET','NET'],['OSM','OSM'],['TEAM','TEAM'],['suspended',lang==='ar'?'موقوف':lang==='zh'?'已暂停':'Paused']].map(([value,label])=><button type="button" key={value} className={memberFilter===value?'selected':''} onClick={()=>setMemberFilter(value)}>{label}</button>)}
       </div>
       {filteredMembers.length === 0 ? <p className="muted">{t.noMembers}</p> : <div className="member-list">
         {filteredMembers.map(item => <article className="member-row" key={item.member_id}>
@@ -375,9 +400,17 @@ function OSMARAdmin({ supabase, lang }) {
           </div>
           <div className="member-tags">
             <span className={item.membership_status === 'active' ? 'member-status active' : 'member-status'}>{item.membership_status}</span>
-            <span className="member-type">{item.referral_type || '—'}</span>
+            <span className="member-type">{item.member_type || item.referral_type || '—'}</span>
           </div>
           <small className="member-inviter">{t.invitedBy}: {item.inviter_email || (item.referral_type === 'OSM' ? 'OSMAR' : '—')}</small>
+          <small className="member-contact">{label('الاسم: ','Name: ','姓名：')}{item.display_name || '—'} · {label('اللقب: ','Nickname: ','昵称：')}{item.nickname || '—'} · {label('الهاتف: ','Phone: ','电话：')}{item.phone || '—'}</small>
+          <button type="button" className="member-edit-trigger" onClick={()=>startMemberEdit(item)}>{label('تعديل بيانات العضو','Edit member','编辑会员')}</button>
+          {editingMember === item.member_id && <form className="member-edit-form" onSubmit={saveMemberEdit}>
+            <label>{label('الاسم الظاهر','Display name','显示名称')}<input value={editName} onChange={e=>setEditName(e.target.value)} maxLength={80}/></label>
+            <label>{label('اللقب','Nickname','昵称')}<input value={editNickname} onChange={e=>setEditNickname(e.target.value)} maxLength={50}/></label>
+            <label>{label('تصنيف العضوية','Member type','会员类型')}<select value={editType} onChange={e=>setEditType(e.target.value)}>{['TRU','FAM','NET','OSM','TEAM'].map(v=><option key={v}>{v}</option>)}</select></label>
+            <div><button type="submit" disabled={busy}>{label('حفظ','Save','保存')}</button><button type="button" disabled={busy} onClick={()=>setEditingMember(null)}>{label('إلغاء','Cancel','取消')}</button></div>
+          </form>}
           <small className="member-points">{lang==='ar'?'نقاط الخبرة':'XP'}: <strong>{item.total_points || 0}</strong> · {lang==='ar'?'الإنجازات':'Awards'}: {item.awards_count || 0}</small>
           <small className="member-game-stats">{lang==='ar'?'المباريات':'Games'}: <b>{item.games_played||0}</b> · {lang==='ar'?'فوز':'Wins'}: <b>{item.game_wins||0}</b> · {lang==='ar'?'خسارة':'Losses'}: <b>{item.game_losses||0}</b> · {lang==='ar'?'تعادل':'Draws'}: <b>{item.game_draws||0}</b></small>
         </article>)}
