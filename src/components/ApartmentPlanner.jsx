@@ -33,6 +33,7 @@ export default function ApartmentPlanner({lang='ar',userId,projectId,supabase}){
   };
   load();return()=>{alive=false};
  },[key,supabase,userId,projectId]);
+ useEffect(()=>{setSaved(false);},[design]);
  const counts=useMemo(()=>Object.fromEntries(types.map(([id])=>[id,design.cells.filter(x=>x===id).length])),[design.cells]);
  const item= furniture.find(x=>x.id===selectedItem)||furniture[0];
  const total=useMemo(()=>design.furniture.reduce((sum,x)=>sum+(Number(x.cost)||0),0),[design.furniture]);
@@ -63,7 +64,6 @@ export default function ApartmentPlanner({lang='ar',userId,projectId,supabase}){
   if(result?.error){setCloudState('local');setNotice(t.cloudPending);}else{setCloudState('cloud');setNotice(t.cloudSaved);}
  };
  const placed=design.furniture;
- const doorCellMap=Object.fromEntries(design.doors.map(d=>[d.cell,(doorCellMap=>doorCellMap||[])]));
  return <section className="ap-planner" dir={rtl?'rtl':'ltr'}>
   <header className="ap-head"><div><span>THIMAR HOME STUDIO · 01</span><h3>{t.title}</h3><p>{t.sub}</p></div><div className="ap-dimension"><Ruler size={15}/>10 × 10 <small>100 m²</small></div></header>
   <div className="ap-toolbar"><button className={tool==='zone'?'active':''} onClick={()=>setTool('zone')}><Grid3X3 size={15}/>{t.zones}</button><button className={tool==='furniture'?'active':''} onClick={()=>setTool('furniture')}><Armchair size={15}/>{t.furnish}</button><button className={tool==='door'?'active':''} onClick={()=>setTool('door')}><DoorClosed size={15}/>{t.doorTool}</button></div>
