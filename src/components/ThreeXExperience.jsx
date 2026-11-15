@@ -1,51 +1,29 @@
 import React from 'react';
-import { Home, Building2, Map, Users, Network, BookOpen, Target, ShieldCheck, Leaf, GraduationCap, Store, Boxes, Route } from 'lucide-react';
+import { Home, Building2, Map, BookOpen, ArrowUpRight, Sparkles } from 'lucide-react';
 import '../styles/three-x.css';
 
 const copy={
-ar:{
- kicker:'THIMAR · THE LIVING WORLD',title:'ثلاثة أبعاد… وأثر واحد',intro:'حوّل الفكرة إلى مساحة، والمساحة إلى تجربة، والتجربة إلى أثر نافع على أرض الواقع. ابدأ من حيث أنت؛ وتعلّم وأنجز وتعاون.',
- access:'التحديات متاحة للجميع',accessSub:'المشاركة الأساسية مفتوحة. النقاط تُكتسب بالإنجاز ولا تُشترى، ولا تمثل مالًا أو أسهمًا أو عائدًا.',
- tracks:[
- {n:'01',name:'بيتك يبدأ بفكرة',tag:'تحدي السكن · 100 م²',icon:Home,desc:'صمّم شقة بمساحة 10 × 10 متر: منزل مريح، عملي، صحي، موفّر للطاقة، ومناسب لاحتياجات الأسرة.',tasks:['تحديد احتياجات الأسرة ونمط الحياة','توزيع الفراغات والحركة والخصوصية','تصميم الإضاءة والتهوية والطاقة والمياه','اختيار مواد مستدامة وتقدير تكلفة مبدئي','عرض المخطط ومراجعته وتحسينه'],deliver:'مخطط مبدئي + لوحة مساحات + قصة استخدام + تقدير تكلفة أولي',gate:'متاح للجميع كبداية مجانية؛ تُفتح مراحل التطوير بالنقاط المكتسبة والمهام المنجزة.'},
- {n:'02',name:'من مشروع إلى شركة',tag:'تحدي الأعمال والهندسة · 10,000 م²',icon:Building2,desc:'لأصحاب المشروعات الحقيقية والمهندسين والمصممين: ابتكر مخطط شركة أو مجمع عمل بمساحة 100 × 100 متر، أو قدّم مشروعًا عالميًا لم تتح له فرصة التنفيذ.',tasks:['تعريف المشروع والمشكلة والقيمة المقترحة','إعداد OBS للأقسام والوظائف والمسؤوليات','تفكيك النطاق إلى WBS وحزم عمل','تخطيط الموقع والتدفقات وسلامة التشغيل','رسم سلسلة الإمداد والموردين والشركاء','تقدير الجدول والتكلفة والمخاطر ومؤشرات الأداء'],deliver:'Concept masterplan + OBS/WBS + تدفق سلسلة الإمداد + دراسة جدوى أولية',gate:'مسار مراجعة متخصص؛ لا يُعرض المشروع للاستثمار أو التنفيذ تلقائيًا.'},
- {n:'03',name:'مصر التي نبنيها معًا',tag:'تحدي المدينة الكبرى · 1000 × 1000',icon:Map,desc:'خريطة افتراضية لمصر مستوحاة من مساحة تقارب مليون كيلومتر مربع: شبكة تخطيط من 1000 × 1000 خلية، تتطور بالمشاركة إلى مدينة/إقليم متصل.',tasks:['اختيار خلية وتحديد احتياج المجتمع','تخطيط الأحياء والسكن والعمل والخدمات','توزيع المساجد ومراكز العلم والخدمة المجتمعية','ربط المياه والطاقة والنقل والمساحات الخضراء','توصيل المنتجين والموردين والمخازن والأسواق','اختبار الأثر البيئي والاجتماعي والاقتصادي'],deliver:'خريطة طبقية + مخطط استعمالات أراضٍ + شبكة خدمات + نموذج Supply Chain',gate:'عالم افتراضي تعليمي وتعاوني؛ لا يمثل خريطة ملكية أو تقسيمًا رسميًا أو تصريح بناء.'}
- ],
- pointsTitle:'نظام النقاط والإنجاز',points:['نقاط FWP تُكتسب من مهام موثقة ومراجعات عادلة ومساعدة الآخرين.','كل تحدٍّ يعلن مسبقًا نقاط كل مهمة ومعايير قبولها ووقت إنجازها.','لا شراء للنقاط ولا تحويلها إلى نقود أو أسهم في هذه المرحلة.','أي اشتراك مستقبلي يكون مقابل خدمات رقمية واضحة، منفصلًا عن ملكية الأسهم أو الاستثمار.'],
- supplyTitle:'سلسلة إمداد… الكل للكل',supply:'من فرد إلى فرد، ومن فريق إلى فريق، ومن مورد إلى مشروع، ومن مشروع إلى مجتمع. كل طلب له مصدر، وكل مورد له مالك، وكل تسليم له حالة، وكل أثر قابل للقياس.',
- pillars:[['الناس','الأدوار والمهارات والفرق'],['المشروعات','الاحتياج والنطاق والتسليم'],['الموردون','المواد والخدمات والمخزون'],['اللوجستيات','النقل والتخزين والتوزيع'],['البيانات','الطلب والتكلفة والجودة والزمن'],['الأثر','المنفعة والعدالة والاستدامة']],
- balanceTitle:'توازن العمل والحياة على أساس إسلامي',balance:'العبادة والنية والأمانة والعدل والرحمة وصلة الرحم وإتقان العمل؛ لا تُقاس قيمة الإنسان بعدد النقاط، ولا تكون المنافسة على حساب الأسرة أو الصحة أو الصلاة أو حقوق الآخرين.',
- learningTitle:'عالم يتعلّم ويحكي ويبتكر',learning:'دروس قصيرة ومسارات مهارات، شخصيات وبطاقات، قصص ومسلسلات وأفلام كرتونية و3D، ثم متجر وسوق رقمي يربط المنتجات والخدمات والتطبيقات والمشروعات وفق ضوابط واضحة.',
- pmoTitle:'منظومة الإدارة والتحليل',pmo:'OBS يوضح من المسؤول ولماذا؛ WBS يوضح ماذا سننفذ؛ PMO يدير النطاق والوقت والتكلفة والجودة والمخاطر؛ BI وData Analysis تحوّل البيانات إلى قرارات. منصة OSMAR للمعرفة والتشغيل تتصل بعالم اللعبة عبر واجهات وصلاحيات مستقلة.',
- roadmapTitle:'من الرؤية إلى الواقع',roadmap:['ابدأ بتحدي الشقة 100 م² ونموذج تقييم موحّد.','افتح مسار الشركات 10,000 م² بمراجعة مهندسين وخبراء.','ابنِ خريطة مصر الافتراضية خليةً بعد خلية، مع طبقات وخدمات.','اختبر Supply Chain ومشروعات صغيرة في نطاق واقعي قبل التوسع.'],
- cautionTitle:'حدود واضحة تحمي المجتمع',caution:'النقاط ليست أسهمًا ولا عملة ولا وعدًا بعائد. أي أسهم أو ملكية أو تمويل جماعي أو تداول مستقبلي يحتاج كيانًا قانونيًا وإفصاحًا ومراجعة تنظيمية وضريبية في كل دولة. كما أن المخططات داخل اللعبة مفاهيم تعليمية وليست رسومات هندسية تنفيذية أو بديلًا عن مهندس مرخّص أو موافقات الجهات المختصة.',
- guide:'دليل الرؤية والتحديات'
-},
-en:{
- kicker:'THIMAR · THE LIVING WORLD',title:'Three dimensions. One shared impact.',intro:'Turn an idea into a place, a place into an experience, and an experience into meaningful real-world impact. Start where you are: learn, build, and collaborate.',
- access:'Open to everyone',accessSub:'Core participation is open. Points are earned through achievement, never purchased; they are not money, shares, or returns.',
- tracks:[
- {n:'01',name:'A Home Begins with an Idea',tag:'Living space · 100 m²',icon:Home,desc:'Design a 10 × 10 metre apartment: comfortable, practical, healthy, energy-aware, and shaped around family needs.',tasks:['Define household needs and lifestyle','Plan rooms, circulation, and privacy','Design lighting, ventilation, energy, and water','Select responsible materials and estimate costs','Present, review, and improve the plan'],deliver:'Concept floor plan + area schedule + user story + initial cost estimate',gate:'Open to everyone as a free starting challenge; advanced stages unlock through earned points and completed tasks.'},
- {n:'02',name:'From Project to Enterprise',tag:'Business & engineering · 10,000 m²',icon:Building2,desc:'For real project owners, engineers, and designers: imagine a 100 × 100 metre company or campus—or revive a worthy global concept that never reached implementation.',tasks:['Define the project, problem, and value proposition','Build an OBS of functions, roles, and accountabilities','Decompose scope into a WBS and work packages','Plan site layout, flows, and safe operations','Map suppliers, partners, and supply-chain flows','Estimate schedule, cost, risks, and performance measures'],deliver:'Concept masterplan + OBS/WBS + supply-chain flow + initial feasibility brief',gate:'Specialist review track; submission does not automatically mean investment or implementation.'},
- {n:'03',name:'The Egypt We Build Together',tag:'The grand city challenge · 1000 × 1000',icon:Map,desc:'A virtual Egypt inspired by an area of roughly one million square kilometres: a 1000 × 1000 planning grid that participants develop into a connected city-region.',tasks:['Choose a cell and identify a community need','Plan neighbourhoods, homes, work, and services','Place mosques, learning, and community-service hubs','Connect water, energy, mobility, and green spaces','Connect producers, suppliers, warehouses, and markets','Evaluate environmental, social, and economic impact'],deliver:'Layered map + land-use concept + service network + supply-chain model',gate:'An educational collaborative world—not a land title map, official zoning plan, or building permit.'}
- ],
- pointsTitle:'Points, progress, and fairness',points:['FWP points are earned through documented tasks, fair reviews, and helping others.','Each challenge publishes task points, acceptance criteria, and expected effort in advance.','No point purchases or conversion into cash or shares at this stage.','Any future subscription must pay for clearly described digital services, separate from equity or investment.'],
- supplyTitle:'One for all. All for all. One to one.',supply:'Connect person to person, team to team, supplier to project, and project to community. Every request has a source, every resource an owner, every delivery a status, and every outcome a measurable impact.',
- pillars:[['People','Roles, skills, and teams'],['Projects','Needs, scope, and delivery'],['Suppliers','Materials, services, and inventory'],['Logistics','Transport, storage, and distribution'],['Data','Demand, cost, quality, and time'],['Impact','Benefit, fairness, and sustainability']],
- balanceTitle:'Work–life balance, rooted in Islamic values',balance:'Worship, intention, trust, justice, mercy, family ties, and excellence in work. A person’s worth is never measured by points, and competition must never come at the expense of family, health, prayer, or others’ rights.',
- learningTitle:'A world that learns, teaches, and tells stories',learning:'Short lessons and skill paths; characters and collectible cards; stories, animated series, films, and 3D experiences; then a marketplace connecting products, services, apps, and ventures under transparent rules.',
- pmoTitle:'The management and intelligence ecosystem',pmo:'OBS clarifies who is accountable and why; WBS defines what gets done; PMO manages scope, time, cost, quality, and risk; BI and data analysis turn evidence into decisions. OSMAR’s knowledge and operations platform connects to the game through separate interfaces and permissions.',
- roadmapTitle:'From vision to reality',roadmap:['Pilot the 100 m² home challenge with a consistent review rubric.','Open the 10,000 m² enterprise track with engineers and subject experts.','Build the virtual Egypt map cell by cell, with layered services.','Test supply-chain workflows and small real-world pilots before scaling.'],
- cautionTitle:'Clear boundaries protect everyone',caution:'Points are not shares, currency, or a promise of returns. Any future equity, ownership, crowdfunding, or trading requires a legal entity, disclosures, and regulatory and tax review in every relevant country. In-game plans are educational concepts—not construction documents and not a substitute for licensed professionals or authority approvals.',
- guide:'Vision & Challenge Guide'
-}};
-export default function ThreeXExperience({lang='ar'}){
- const t=copy[lang==='ar'?'ar':'en'];
- return <main className="threex-page" dir={lang==='ar'?'rtl':'ltr'}>
-  <header className="threex-hero"><span>{t.kicker}</span><h1>{t.title}</h1><p>{t.intro}</p><div className="threex-open"><ShieldCheck/><div><b>{t.access}</b><small>{t.accessSub}</small></div></div></header>
-  <section className="threex-section"><div className="threex-heading"><span>3X / THREE CHALLENGES</span><h2>{t.guide}</h2></div><div className="threex-grid">{t.tracks.map((x)=>{const Icon=x.icon;return <article className="threex-card" key={x.n}><div className="threex-card-head"><span>{x.n}</span><Icon/><small>{x.tag}</small></div><h3>{x.name}</h3><p>{x.desc}</p><h4>{lang==='ar'?'المهام':'Mission tasks'}</h4><ol>{x.tasks.map((task,i)=><li key={i}>{task}</li>)}</ol><div className="threex-deliver"><b>{lang==='ar'?'المخرج المطلوب':'Expected output'}</b><p>{x.deliver}</p></div><div className="threex-gate">{x.gate}</div></article>})}</div></section>
-  <section className="threex-section"><div className="threex-info-grid"><article><h2><Target/>{t.pointsTitle}</h2><ul>{t.points.map(x=><li key={x}>{x}</li>)}</ul></article><article><h2><Network/>{t.supplyTitle}</h2><p>{t.supply}</p><div className="threex-pillars">{t.pillars.map(([a,b],i)=><div key={a}><b>{['01','02','03','04','05','06'][i]} · {a}</b><small>{b}</small></div>)}</div></article></div></section>
-  <section className="threex-section"><div className="threex-info-grid"><article><h2><ShieldCheck/>{t.balanceTitle}</h2><p>{t.balance}</p></article><article><h2><GraduationCap/>{t.learningTitle}</h2><p>{t.learning}</p><div className="threex-mini-icons"><BookOpen/><Store/><Boxes/><Users/></div></article><article><h2><Route/>{t.pmoTitle}</h2><p>{t.pmo}</p></article><article><h2><Map/>{t.roadmapTitle}</h2><ol>{t.roadmap.map(x=><li key={x}>{x}</li>)}</ol></article></div></section>
-  <section className="threex-caution"><h2>{t.cautionTitle}</h2><p>{t.caution}</p></section>
- </main>
+ ar:{kicker:'THIMAR · FAMILY WORLD',title:'ثلاثي الأثر | 3X',intro:'ثلاث مساحات للخيال والتخطيط والعمل النافع. اختار التحدي اللي يناسبك وابدأ بخطوة صغيرة.',guide:'افتح دليل اللعب',tracks:[
+ {n:'01',name:'بيت يبدأ بفكرة',tag:'تحدي البيت · 100 م²',desc:'صمّم بيتًا عمليًا ومريحًا يخدم احتياجات الأسرة.',cta:'ابدأ تحدي البيت',icon:Home},
+ {n:'02',name:'مشروع يصنع فرقًا',tag:'المشروعات · 10,000 م²',desc:'حوّل فكرة مشروع إلى مخطط وفريق وخطة تنفيذ.',cta:'قريبًا · مسار متخصص',icon:Building2},
+ {n:'03',name:'مدينة نبنيها سوا',tag:'المدينة · 1000 × 1000',desc:'شارك في تخطيط مدينة مترابطة بخدمات ومساحات خضراء.',cta:'قريبًا · عالم تعاوني',icon:Map}
+ ],note:'ابدأ من تحدي البيت 100 م²؛ باقي المسارات تتفتح على مراحل.'},
+ en:{kicker:'THIMAR · FAMILY WORLD',title:'Thimar 3X · Threefold Impact',intro:'Three spaces for imagination, planning, and meaningful action. Choose a challenge and begin with one small step.',guide:'Open the play guide',tracks:[
+ {n:'01',name:'A Home Starts with an Idea',tag:'Home challenge · 100 m²',desc:'Design a practical, comfortable home around family needs.',cta:'Start the home challenge',icon:Home},
+ {n:'02',name:'A Project That Makes a Difference',tag:'Enterprise · 10,000 m²',desc:'Turn a project idea into a plan, team, and delivery path.',cta:'Coming soon · Expert track',icon:Building2},
+ {n:'03',name:'A City We Build Together',tag:'City · 1000 × 1000',desc:'Help plan a connected city with services and green spaces.',cta:'Coming soon · Collaborative world',icon:Map}
+ ],note:'Start with the 100 m² home challenge. Other tracks will open in stages.'},
+ zh:{kicker:'THIMAR · FAMILY WORLD',title:'Thimar 3X · 三重影响力',intro:'三个空间，激发创意、规划与有益行动。选择一个挑战，从小小一步开始。',guide:'打开游戏指南',tracks:[
+ {n:'01',name:'从构想到家',tag:'住宅挑战 · 100 平方米',desc:'围绕家庭需求设计实用舒适的住宅。',cta:'开始住宅挑战',icon:Home},
+ {n:'02',name:'创造价值的项目',tag:'企业项目 · 10,000 平方米',desc:'把项目构想转化为计划、团队与执行路径。',cta:'即将推出 · 专家路线',icon:Building2},
+ {n:'03',name:'共同建设的城市',tag:'城市 · 1000 × 1000',desc:'参与规划服务完善、绿色宜居的互联城市。',cta:'即将推出 · 协作世界',icon:Map}
+ ],note:'先从 100 平方米住宅挑战开始，其他路线将分阶段开放。'}
+};
+export default function ThreeXExperience({lang='ar',onGuide,onStart}){
+ const t=copy[lang]||copy.en,rtl=lang==='ar';
+ return <main className="threex-page threex-landing" dir={rtl?'rtl':'ltr'}>
+  <header className="threex-hero"><span><Sparkles size={13}/> {t.kicker}</span><h1>{t.title}</h1><p>{t.intro}</p><button className="threex-guide-button" onClick={onGuide}><BookOpen size={17}/>{t.guide}<ArrowUpRight size={16}/></button></header>
+  <section className="threex-section"><div className="threex-heading"><span>THREE WORLDS · ONE PURPOSE</span><h2>{lang==='ar'?'اختار رحلتك':'Choose your challenge'}</h2></div><div className="threex-grid">{t.tracks.map((x,i)=>{const Icon=x.icon;return <article className="threex-card threex-short-card" key={x.n}><div className="threex-card-head"><span>{x.n}</span><Icon/><small>{x.tag}</small></div><h3>{x.name}</h3><p>{x.desc}</p><button className="threex-card-action" onClick={()=>i===0&&onStart?.()} disabled={i!==0}>{x.cta}</button></article>})}</div></section>
+  <p className="threex-note">{t.note}</p>
+ </main>;
 }

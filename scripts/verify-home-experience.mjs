@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 const app=fs.readFileSync('App.jsx','utf8');
 const component=fs.readFileSync('src/components/WorldHub.jsx','utf8');
 const styles=fs.readFileSync('src/styles/world-hub.css','utf8');
-const threeX=fs.readFileSync('src/components/ThreeXExperience.jsx','utf8');
+const threeX=fs.readFileSync('src/components/ThreeXGuide.jsx','utf8');
+const threeXLanding=fs.readFileSync('src/components/ThreeXExperience.jsx','utf8');
 const threeXStyles=fs.readFileSync('src/styles/three-x.css','utf8');
 const guide=fs.readFileSync('docs/FAMILY_WORLD_VISION_GUIDE_AR_EN.md','utf8');
 const studio=fs.readFileSync('src/components/ThreeXChallengeStudio.jsx','utf8');
@@ -35,8 +36,12 @@ assert.match(manifest,/family-world\.svg/,'PWA manifest must register the origin
 console.log('World Hub checks passed: route, 3 locales, original brand icon, 100 m² challenge link, clean module map, mobile layout, and honest feature status.');
 
 assert.match(app,/import ThreeXExperience/,'3X page must be imported');
+assert.match(app,/import ThreeXGuide/,'Dedicated 3X guide page must be imported');
+assert.match(app,/tab === 'threex-guide'/,'3X guide must have its own route');
+assert.match(threeXLanding,/onGuide/,'3X landing must link to the separate guide page');
+assert.match(threeXLanding,/threex-short-card/,'3X landing must use concise challenge cards');
 assert.match(app,/\['threex', t\.threex, MapIcon\]/,'3X page must use the non-conflicting map icon alias');
-assert.match(app,/<ThreeXExperience lang=\{lang\} \/>/,'3X page must be routed');
+assert.match(app,/<ThreeXExperience lang=\{lang\} onGuide=\{\(\) => setTab\('threex-guide'\)\}/,'3X page must be routed with its separate guide action');
 for (const phrase of ['10,000 m²','1000 × 1000','FWP','OBS','WBS','PMO','Supply Chain','Work–life balance']) assert.ok(threeX.includes(phrase),'Missing 3X concept: '+phrase);
 for (const phrase of ['100 م²','10,000 م²','1000 × 1000','FWP','OBS','WBS','PMO','سلسلة إمداد']) assert.ok(threeX.includes(phrase),'Missing Arabic 3X concept: '+phrase);
 assert.match(guide,/### العربية/,'Bilingual guide must include Arabic');
@@ -84,7 +89,8 @@ console.log('Account recovery checks passed: email reset, recovery session handl
 
 const characterStudio=fs.readFileSync('src/components/CharacterStudio.jsx','utf8');
 const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
-assert.ok(component.includes('family-world-cover.webp') || component.includes('assets/ideas/world-map.jpg'),'Home hero must use the official cover or a committed visible fallback.');
+assert.ok(!component.includes('assets/ideas/world-map.jpg'),'Home hero must not use the unrelated map image.');
+assert.match(styles,/linear-gradient\(125deg,#102b45/,'Home hero must use the branded gradient fallback until official cover assets are installed.');
 for (const asset of ['family-world-cover.webp','family-world-character-board.webp','family-world-game-board.webp']) {
   if (asset !== 'family-world-cover.webp') assert.ok(characterStudio.includes(asset),'Approved character/game board must be wired into Character Studio: '+asset);
   assert.ok(artworkRegister.includes(asset),'Approved artwork must be registered: '+asset);
