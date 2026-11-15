@@ -8,7 +8,6 @@ import MemberProfile from './src/components/MemberProfile.jsx';
 import WorldHub from './src/components/WorldHub.jsx';
 import ThreeXExperience from './src/components/ThreeXExperience.jsx';
 import ThreeXChallengeStudio from './src/components/ThreeXChallengeStudio.jsx';
-import './src/styles/home-experience.css';
 import { supabase, configured } from './src/lib/supabase';
 import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3, UserRound, Map } from 'lucide-react';
 
