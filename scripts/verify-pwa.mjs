@@ -22,13 +22,18 @@ for (const icon of manifest.icons || []) {
   if (!fs.existsSync(file)) fail(`Manifest icon missing: ${icon.src}`);
   else {
     const data = fs.readFileSync(file);
-    if (data.toString('hex', 0, 8) !== '89504e470d0a1a0a') fail(`Invalid PNG icon: ${icon.src}`);
-    const width = data.readUInt32BE(16), height = data.readUInt32BE(20);
-    const expected = Number(icon.sizes.split('x')[0]);
-    if (width !== expected || height !== expected) fail(`Icon dimensions mismatch for ${icon.src}: ${width}x${height}`);
+    if (icon.type === 'image/svg+xml' || icon.src.toLowerCase().endsWith('.svg')) {
+      const svg = data.toString('utf8');
+      if (!/<svg\b/.test(svg) || !/viewBox=["']0 0 512 512["']/.test(svg)) fail(`Invalid scalable SVG icon: ${icon.src}`);
+    } else {
+      if (data.toString('hex', 0, 8) !== '89504e470d0a1a0a') fail(`Invalid PNG icon: ${icon.src}`);
+      const width = data.readUInt32BE(16), height = data.readUInt32BE(20);
+      const expected = Number(icon.sizes.split('x')[0]);
+      if (width !== expected || height !== expected) fail(`Icon dimensions mismatch for ${icon.src}: ${width}x${height}`);
+    }
   }
 }
 if (!sw.includes('family-world-shell-v2')) fail('Service worker cache version was not bumped');
 if (!sw.includes('self.registration.scope')) fail('Service worker does not derive its root from its registration scope');
 if (process.exitCode) process.exit(1);
-console.log('PWA smoke checks passed: manifest, GitHub Pages-relative paths, service worker, and PNG icons.');
+console.log('PWA smoke checks passed: manifest, GitHub Pages-relative paths, service worker, and SVG and PNG icons.');

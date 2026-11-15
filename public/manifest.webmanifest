@@ -9,8 +9,8 @@
     "standalone",
     "minimal-ui"
   ],
-  "background_color": "#f5f8f3",
-  "theme_color": "#164b3b",
+  "background_color": "#f7f8f4",
+  "theme_color": "#286b55",
   "lang": "ar",
   "dir": "rtl",
   "categories": [
@@ -20,6 +20,12 @@
   ],
   "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "./icons/family-world.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173f3a"/><stop offset="1" stop-color="#286b58"/></linearGradient><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8f1b2"/><stop offset="1" stop-color="#8acb9b"/></linearGradient></defs>
+<rect width="512" height="512" rx="116" fill="url(#bg)"/>
+<circle cx="256" cy="245" r="174" fill="#ffffff" opacity=".055"/>
+<path d="M112 245 256 126l144 119v146a24 24 0 0 1-24 24H136a24 24 0 0 1-24-24Z" fill="#f6f4e9"/>
+<path d="m91 250 165-137 165 137-21 25-144-119-144 119Z" fill="#d5e8c0"/>
+<path d="M216 415V290a40 40 0 0 1 80 0v125" fill="#2b6754"/>
+<path d="M256 263c-49-44-51-96-6-122 36 20 50 57 6 122Z" fill="url(#leaf)"/>
+<path d="M256 263c6-59 39-92 83-78 2 43-25 75-83 78Z" fill="#91c99a"/>
+<path d="M256 264v-94" stroke="#477b58" stroke-width="9" stroke-linecap="round"/>
+<path d="M148 300h35v36h-35zM329 300h35v36h-35z" rx="8" fill="#9bc9c0"/>
+<circle cx="256" cy="452" r="11" fill="#e5c987"/>
+</svg>

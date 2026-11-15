@@ -1,0 +1,20 @@
+import React from 'react';
+import { Home, Gamepad2, BookOpen, Store, Users, BriefcaseBusiness, Trophy, UserRound, ArrowUpLeft, ArrowUpRight, Sprout, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import '../styles/world-hub.css';
+
+const copy={
+ ar:{eyebrow:'FAMILY WORLD · THIMAR OSMAR',title:'عالم الأسرة',intro:'نتعلم ونلعب وننجز معًا… بخطوات بسيطة وأثر طيب.',start:'كمّل رحلتك',featured:'التحدي الرئيسي',apartment:'بيت الأسرة · 100 متر مربع',apartmentDesc:'صمّم توزيع البيت، راجع احتياجات الأسرة، وابدأ من المساحة.',open:'افتح تحدي الشقة',sections:'اختار وجهتك',games:'الألعاب',worlds:'العوالم',projects:'التحديات والمشروعات',learning:'التعلّم',market:'السوق',community:'المجتمع',progress:'إنجازاتي',profile:'حسابي',ready:'متاح',soon:'قريبًا',points:'نقاطي',awards:'إنجازاتي',foot:'بناء عالم نافع للأسرة · Developed by OSMAR Ecosystems'},
+ en:{eyebrow:'FAMILY WORLD · THIMAR OSMAR',title:'Family World',intro:'Learn, play and achieve together—with simple steps and meaningful impact.',start:'Continue your journey',featured:'Featured challenge',apartment:'Family Home · 100 m²',apartmentDesc:'Shape your home layout, review family needs and plan the space.',open:'Open apartment challenge',sections:'Choose your space',games:'Games',worlds:'Worlds',projects:'Challenges & Projects',learning:'Learning',market:'Marketplace',community:'Community',progress:'My progress',profile:'My account',ready:'Available',soon:'Coming soon',points:'My points',awards:'Achievements',foot:'A useful world for families · Developed by OSMAR Ecosystems'},
+ zh:{eyebrow:'FAMILY WORLD · THIMAR OSMAR',title:'家庭世界',intro:'一起学习、游戏与成长，用简单的行动创造美好。',start:'继续旅程',featured:'精选挑战',apartment:'家庭住宅 · 100 平方米',apartmentDesc:'规划住宅布局，了解家庭需求，合理安排空间。',open:'打开住宅挑战',sections:'选择你的空间',games:'游戏',worlds:'世界',projects:'挑战与项目',learning:'学习',market:'虚拟市场',community:'社区',progress:'我的进度',profile:'我的账户',ready:'现已开放',soon:'即将推出',points:'我的积分',awards:'成就',foot:'为家庭创造有益的世界 · Developed by OSMAR Ecosystems'}
+};
+const items=[['play',Gamepad2,'games',true],['worlds',Sprout,'worlds',true],['threex',BriefcaseBusiness,'projects',true],['learning',BookOpen,'learning',false],['market',Store,'market',false],['community',Users,'community',false],['dashboard',Trophy,'progress',true],['profile',UserRound,'profile',true]];
+export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChallenge}){
+ const t=copy[lang]||copy.ar,rtl=lang==='ar',Arrow=rtl?ArrowUpLeft:ArrowUpRight;
+ return <main className="world-hub" dir={rtl?'rtl':'ltr'}>
+  <header className="wh-welcome"><div><span className="wh-eyebrow"><Sparkles size={13}/>{t.eyebrow}</span><h1>{t.title}</h1><p>{t.intro}</p></div><div className="wh-brand"><img src="./icons/family-world.svg" alt=""/><span>THIMAR</span></div></header>
+  <section className="wh-progress"><div><span>{t.points}</span><b>{points}</b></div><i/><div><span>{t.awards}</span><b>{awards}</b></div><button onClick={()=>onNavigate('dashboard')}><span>{t.start}</span><Arrow size={16}/></button></section>
+  <button className="wh-feature" onClick={onChallenge}><div className="wh-feature-art"><div className="wh-sun"/><div className="wh-house"><span/><span/><b/></div><div className="wh-plant">✦</div><small>100 m²</small></div><div className="wh-feature-copy"><span>{t.featured}</span><h2>{t.apartment}</h2><p>{t.apartmentDesc}</p><strong>{t.open}<Arrow size={16}/></strong></div></button>
+  <section className="wh-spaces"><div className="wh-section-head"><h2>{t.sections}</h2><span>01 — 08</span></div><div className="wh-grid">{items.map(([id,Icon,key,active])=><button key={id} className={'wh-card '+(active?'':'is-soon')} onClick={()=>active&&onNavigate(id==='threex'?'threex':id)} disabled={!active}><span className={'wh-card-icon tone-'+id}><Icon size={21}/></span><b>{t[key]}</b><small>{active?t.ready:t.soon}</small>{active&&<Arrow size={15} className="wh-card-arrow"/>}</button>)}</div></section>
+  <footer className="wh-foot"><Sprout size={15}/>{t.foot}</footer>
+ </main>;
+}
