@@ -20,3 +20,5 @@
 @media(max-width:700px){.wh-hero{grid-template-columns:1fr;padding:23px 20px;gap:0}.wh-copy h1{font-size:29px}.wh-art{height:245px;transform:scale(.88);transform-origin:top center;margin-bottom:-18px}.wh-feature{grid-template-columns:1fr;padding:20px}.wh-plan{margin:12px auto 20px}.wh-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wh-card{min-height:116px;padding:13px}.wh-card b{font-size:12px}}
 @media(max-width:390px){.wh-grid{grid-template-columns:1fr}.wh-card{min-height:90px}}
 @media(prefers-reduced-motion:reduce){.wh-card{transition:none}}
+
+.wh-card:disabled{cursor:default;opacity:.72;transform:none;border-style:dashed}.wh-card:disabled:hover{border-color:#e4ebe2}
