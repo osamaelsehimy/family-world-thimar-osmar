@@ -5,7 +5,7 @@ import Number1024Game from './src/components/Number1024Game.jsx';
 import LudoGame from './src/components/LudoGame.jsx';
 import MemberDashboard from './src/components/MemberDashboard.jsx';
 import MemberProfile from './src/components/MemberProfile.jsx';
-import HomeExperience from './src/components/HomeExperience.jsx';
+import WorldHub from './src/components/WorldHub.jsx';
 import ThreeXExperience from './src/components/ThreeXExperience.jsx';
 import ThreeXChallengeStudio from './src/components/ThreeXChallengeStudio.jsx';
 import './src/styles/home-experience.css';
@@ -170,7 +170,7 @@ export default function App() {
     {mobileOpen && <button className="scrim" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
     <main><header className="topbar"><button className="icon-btn menu-btn" onClick={() => setMobileOpen(true)} aria-label="Menu"><Menu /></button><div className="page-title"><small>{t.tagline}</small><h2>{nav.find(item => item[0] === tab)?.[1]}</h2></div><span className="points"><Star size={16} />{session.user.id === 'demo' ? points : accountPoints.total_points} {t.points}</span>{!isStandalone && <button className="install-button" type="button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></header>
       {notice && <button className="notice" onClick={() => setNotice('')} role="status">{notice}　×</button>}
-    {tab === 'home' && <>{session.user.id === 'demo' && <p className="notice">{t.demoInfo}</p>}<HomeExperience lang={lang} points={session.user.id==='demo'?points:accountPoints.total_points} awards={session.user.id==='demo'?done.length:accountPoints.awards_count} onExplore={() => setTab('worlds')} /><section className="section"><small>SEVEN WORLDS</small><h2>{t.worlds}</h2></section><WorldGrid lang={lang} worlds={worlds.slice(0, 3)} onSelect={id => { setTab('worlds'); setActiveWorld(id); }} /><section className="section"><small>PLAY & LEARN</small><h2>{t.play}</h2></section><GameGrid lang={lang} items={games.slice(0, 2)} done={done} onPlay={completeGame} /><p className="notice">{t.privacy}</p></>}
+    {tab === 'home' && <>{session.user.id === 'demo' && <p className="notice">{t.demoInfo}</p>}<WorldHub lang={lang} points={session.user.id==='demo'?points:accountPoints.total_points} awards={session.user.id==='demo'?done.length:accountPoints.awards_count} onNavigate={next => { setTab(next); setActiveWorld(null); }} onChallenge={() => setTab('threex')} /></>}
       {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><figure className="concept-map"><img src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.mapCaption} /><figcaption>{t.mapCaption}</figcaption></figure><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
       {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
       {tab === 'threex' && <><ThreeXExperience lang={lang} /><ThreeXChallengeStudio supabase={supabase} user={session.user} lang={lang} isAdmin={isAdmin} /></>}
