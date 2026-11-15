@@ -31,8 +31,8 @@ const expectedMigrationFiles = [
   "20261115104946_apartment_design_least_privilege_grants.sql",
   "20261115153213_member_profiles_and_avatars.sql",
   "20261115153321_fix_referral_directory_and_rls_performance.sql",
-  "20261115180000_osmar_least_privilege_admin_rbac.sql",
-  "20261115193000_enforce_core_admin_permissions.sql"
+  "20261115155051_osmar_least_privilege_admin_rbac.sql",
+  "20261115155251_enforce_core_admin_permissions.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the 26 recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
