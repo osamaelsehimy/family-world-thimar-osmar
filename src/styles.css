@@ -433,3 +433,43 @@
 @media(max-width:430px){.cs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-art{height:165px}.cs-card-copy p{font-size:11px}.cs-form-grid{grid-template-columns:1fr}}
 
 .cs-original-art{display:grid;grid-template-columns:1.15fr 1fr;gap:10px;margin:14px 0 18px}.cs-original-art img{width:100%;height:clamp(120px,22vw,230px);object-fit:cover;border-radius:15px;border:1px solid #e8e0c8;box-shadow:0 8px 24px #1c315014}.cs-original-art img[hidden]{display:none}@media(max-width:560px){.cs-original-art{grid-template-columns:1fr}.cs-original-art img{height:180px}}
+
+/* OSMAR Admin Console v2 — clear hierarchy, live member cards and compact controls */
+.admin-page{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(0,1.6fr);gap:18px;align-items:start;max-width:1440px;margin:0 auto;padding:8px 0 40px}
+.admin-page>.section{grid-column:1/-1;padding:clamp(20px,3vw,34px);border-radius:22px;background:linear-gradient(125deg,#123f35,#286b55 62%,#548b68);color:#fff}
+.admin-page>.section small{letter-spacing:2px;color:#d4e7d7;font-weight:800}
+.admin-page>.section h2{margin:8px 0;font-size:clamp(25px,4vw,38px);color:#fff}
+.admin-page>.section .muted{color:#e0eee4}
+.admin-panel{border:1px solid #e2eadf;border-radius:20px;padding:clamp(15px,2vw,23px);box-shadow:0 12px 32px #173c240c;min-width:0}
+.admin-panel.member-directory{grid-column:2;grid-row:2 / span 2}
+.admin-panel:has(.pending-row){grid-column:1}
+.admin-panel h3{font-size:17px;letter-spacing:-.2px}
+.admin-panel label{font-size:12px;font-weight:650}
+.admin-panel input,.admin-panel select{min-height:42px;border-radius:11px;border-color:#dce7dc}
+.admin-heading{align-items:flex-start}
+.directory-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}
+.directory-metrics>div{padding:13px 12px;border:1px solid #e6eee5;border-radius:14px;background:linear-gradient(145deg,#fbfdf9,#f2f7f0);min-width:0}
+.directory-metrics strong{display:block;font-size:25px;line-height:1.2;color:#20563f;font-variant-numeric:tabular-nums}
+.directory-metrics span{display:block;margin-top:5px;font-size:10px;color:#718177}
+.member-search{margin:6px 0 12px}
+.member-filters{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.member-filters button{border:1px solid #e1e9df;background:#f8faf7;border-radius:999px;padding:7px 12px;color:#506458;font-size:11px}
+.member-filters button.selected{background:#1f5b43;border-color:#1f5b43;color:white}
+.member-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.member-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 12px;padding:15px;border:1px solid #e6ede4;border-radius:15px;background:#fff;min-width:0}
+.member-main{min-width:0}
+.member-main strong{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:30px;padding:0 9px;border-radius:9px;background:#eaf3e8;color:#20563f;font-size:15px;font-variant-numeric:tabular-nums}
+.member-main span{display:block;overflow-wrap:anywhere;margin-top:8px;font-size:12px;color:#334c3d}
+.member-main small,.member-contact,.member-inviter,.member-points,.member-game-stats{font-size:10px;line-height:1.7;color:#77857b;overflow-wrap:anywhere}
+.member-tags{display:flex;align-items:flex-start;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.member-status,.member-type{display:inline-flex;padding:5px 8px;border-radius:999px;background:#f1f4ef;color:#53665a;font-size:10px}
+.member-status.active{background:#e5f4e8;color:#28613e}
+.member-edit-trigger{justify-self:start;border:1px solid #dce8dc;background:#f7faf5;color:#275c42;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:750}
+.member-edit-form{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px;padding:12px;background:#f6f9f4;border:1px solid #e4ece1;border-radius:12px}
+.member-edit-form label{margin:4px 0}
+.member-edit-form label:last-of-type{grid-column:1/-1}
+.member-edit-form>div{grid-column:1/-1;display:flex;gap:8px}
+.member-edit-form button{padding:8px 13px;border-radius:9px;background:#245c43;color:white;font-size:11px}
+.member-edit-form button+button{background:#fff;color:#52665a;border:1px solid #dfe8dc}
+@media(max-width:1050px){.admin-page{grid-template-columns:1fr}.admin-panel.member-directory,.admin-panel:has(.pending-row){grid-column:1;grid-row:auto}.member-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.admin-page{gap:12px}.directory-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.directory-metrics>div{padding:11px}.directory-metrics strong{font-size:22px}.member-list{grid-template-columns:1fr}.member-row{padding:12px}.member-edit-form{grid-template-columns:1fr}.member-edit-form label:last-of-type{grid-column:1}}
