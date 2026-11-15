@@ -236,31 +236,34 @@ function OSMARAdmin({ supabase, lang }) {
   async function refresh() {
     setBusy(true);
     setMessage('');
-    const [pendingResult, memberResult, pointsResult, gamesResult] = await Promise.all([
-      supabase.rpc('osmar_pending_members'),
-      supabase.rpc('osmar_member_directory'),
-      supabase.rpc('osmar_points_directory'),
-      supabase.rpc('osmar_game_directory')
-    ]);
-    if (pendingResult.error) setMessage(pendingResult.error.message);
-    else setPending(pendingResult.data || []);
-    if (memberResult.error) setMessage(memberResult.error.message);
-    else {
-      const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
-      const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
-      setMembers((memberResult.data || []).map(item => ({
-        ...item,
-        total_points: pointsByMember.get(item.member_id)?.total_points || 0,
-        awards_count: pointsByMember.get(item.member_id)?.awards_count || 0,
-        games_played: gamesByMember.get(item.member_id)?.games_played || 0,
-        game_wins: gamesByMember.get(item.member_id)?.wins || 0,
-        game_losses: gamesByMember.get(item.member_id)?.losses || 0,
-        game_draws: gamesByMember.get(item.member_id)?.draws || 0
-      })));
+    try {
+      const [pendingResult, memberResult, pointsResult, gamesResult] = await Promise.all([
+        supabase.rpc('osmar_pending_members'),
+        supabase.rpc('osmar_member_directory'),
+        supabase.rpc('osmar_points_directory'),
+        supabase.rpc('osmar_game_directory')
+      ]);
+      const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error;
+      if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
+      if (!pendingResult.error) setPending(pendingResult.data || []);
+      if (!memberResult.error) {
+        const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
+        const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
+        setMembers((memberResult.data || []).map(item => ({
+          ...item,
+          total_points: pointsByMember.get(item.member_id)?.total_points || 0,
+          awards_count: pointsByMember.get(item.member_id)?.awards_count || 0,
+          games_played: gamesByMember.get(item.member_id)?.games_played || 0,
+          game_wins: gamesByMember.get(item.member_id)?.wins || 0,
+          game_losses: gamesByMember.get(item.member_id)?.losses || 0,
+          game_draws: gamesByMember.get(item.member_id)?.draws || 0
+        })));
+      }
+    } catch (error) {
+      setMessage(error?.message || 'Could not connect to the membership service. Please try again.');
+    } finally {
+      setBusy(false);
     }
-    if (pointsResult.error) setMessage(pointsResult.error.message);
-    if (gamesResult.error) setMessage(gamesResult.error.message);
-    setBusy(false);
   }
 
   useEffect(() => {
@@ -277,19 +280,50 @@ function OSMARAdmin({ supabase, lang }) {
   }, [supabase]);
 
   async function createInvite(event) {
-    event.preventDefault(); setBusy(true); setMessage(''); setCode('');
-    const { data, error } = await supabase.rpc('osmar_create_invite', { p_code_type: type, p_source_label: source || null, p_max_uses: Number(uses), p_expires_at: null });
-    if (error) setMessage(error.message);
-    else { setCode(data?.[0]?.invite_code || ''); setMessage(t.inviteCreated); }
-    setBusy(false);
+    event.preventDefault();
+    const maxUses = Number(uses);
+    if (!Number.isInteger(maxUses) || maxUses < 1 || maxUses > 500) {
+      setMessage(lang === 'ar' ? 'عدد الاستخدامات لازم يكون من 1 إلى 500.' : lang === 'zh' ? '使用次数必须在 1 到 500 之间。' : 'Uses must be between 1 and 500.');
+      return;
+    }
+    setBusy(true); setMessage(''); setCode('');
+    try {
+      const { data, error } = await supabase.rpc('osmar_create_invite', {
+        p_code_type: type, p_source_label: source.trim() || null, p_max_uses: maxUses, p_expires_at: null
+      });
+      if (error) throw error;
+      const generatedCode = data?.[0]?.invite_code;
+      if (!generatedCode) throw new Error('The invitation service returned no code. Refresh and try again.');
+      setCode(generatedCode);
+      setMessage(t.inviteCreated);
+    } catch (error) {
+      setMessage(error?.message || 'Could not create the invitation. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function copyInviteCode() {
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
+      setMessage(lang === 'ar' ? 'تم نسخ كود الدعوة.' : lang === 'zh' ? '邀请码已复制。' : 'Invitation code copied.');
+    } catch {
+      setMessage(lang === 'ar' ? 'النسخ غير متاح في المتصفح. انسخ الكود الظاهر يدويًا.' : lang === 'zh' ? '浏览器无法复制，请手动复制显示的邀请码。' : 'Clipboard access is unavailable. Copy the visible code manually.');
+    }
   }
 
   async function review(memberId, decision) {
     setBusy(true); setMessage('');
-    const { error } = await supabase.rpc('osmar_review_member', { p_member_id: memberId, p_decision: decision });
-    if (error) setMessage(error.message);
-    else await refresh();
-    setBusy(false);
+    try {
+      const { error } = await supabase.rpc('osmar_review_member', { p_member_id: memberId, p_decision: decision });
+      if (error) throw error;
+      await refresh();
+    } catch (error) {
+      setMessage(error?.message || 'Could not update this membership. Please try again.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   const counts = {
@@ -315,7 +349,7 @@ function OSMARAdmin({ supabase, lang }) {
       <label>{t.uses}<input type="number" min="1" max="500" value={uses} onChange={e=>setUses(e.target.value)} /></label>
       <label>{t.sourceLabel}<input value={source} onChange={e=>setSource(e.target.value)} maxLength="120" /></label>
       <button className="primary" disabled={busy}>{busy ? '…' : t.createInvite}</button>
-      {code && <div className="generated-code"><strong>{code}</strong><button type="button" onClick={()=>navigator.clipboard?.writeText(code)}><Copy size={15}/>{t.copyCode}</button></div>}
+      {code && <div className="generated-code"><strong>{code}</strong><button type="button" onClick={copyInviteCode}><Copy size={15}/>{t.copyCode}</button></div>}
     </form>
 
     <section className="admin-panel member-directory">
@@ -358,5 +392,93 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
     </section>
+    <OSMARAccessManager supabase={supabase} lang={lang} />
   </div>;
+}
+
+
+const OSMAR_PERMISSION_GROUPS = [
+  { key: 'engineering', label: { ar: 'هندسة البرمجيات', en: 'Software engineering', zh: '软件工程' }, items: ['code.read','code.write','deploy.manage'] },
+  { key: 'infrastructure_security', label: { ar: 'البنية التحتية والأمان', en: 'Infrastructure & security', zh: '基础设施与安全' }, items: ['infrastructure.manage','security.audit'] },
+  { key: 'game_operations', label: { ar: 'تشغيل اللعبة', en: 'Game operations', zh: '游戏运营' }, items: ['game.configure','events.manage'] },
+  { key: 'membership_support', label: { ar: 'العضويات والمجتمع', en: 'Membership & community', zh: '会员与社区' }, items: ['members.read','members.approve','invites.manage'] },
+  { key: 'rewards_moderator', label: { ar: 'النقاط والمكافآت', en: 'Points & rewards', zh: '积分与奖励' }, items: ['rewards.review','rewards.award'] },
+  { key: 'content_moderator', label: { ar: 'المحتوى واللغات', en: 'Content & languages', zh: '内容与语言' }, items: ['content.manage'] },
+  { key: 'auditor', label: { ar: 'المراجعة والتدقيق', en: 'Audit & reporting', zh: '审计与报告' }, items: ['reports.read','audit.read'] }
+];
+const OSMAR_PERMISSION_LABELS = {
+  'code.read': {ar:'قراءة الكود',en:'Read code',zh:'读取代码'},
+  'code.write': {ar:'تعديل الكود',en:'Modify code',zh:'修改代码'},
+  'deploy.manage': {ar:'إدارة الإصدارات',en:'Manage releases',zh:'管理发布'},
+  'infrastructure.manage': {ar:'إدارة البنية التحتية',en:'Manage infrastructure',zh:'管理基础设施'},
+  'security.audit': {ar:'مراجعة الأمان',en:'Security audit',zh:'安全审计'},
+  'members.read': {ar:'قراءة بيانات العضويات',en:'Read membership records',zh:'查看会员记录'},
+  'members.approve': {ar:'اعتماد العضويات',en:'Approve memberships',zh:'审核会员'},
+  'invites.manage': {ar:'إدارة أكواد الدعوة',en:'Manage invitation codes',zh:'管理邀请码'},
+  'game.configure': {ar:'إعدادات اللعبة',en:'Configure game',zh:'配置游戏'},
+  'events.manage': {ar:'إدارة الفعاليات',en:'Manage events',zh:'管理活动'},
+  'rewards.review': {ar:'مراجعة المكافآت',en:'Review rewards',zh:'审核奖励'},
+  'rewards.award': {ar:'اعتماد النقاط',en:'Award points',zh:'发放积分'},
+  'content.manage': {ar:'إدارة المحتوى والترجمة',en:'Manage content & translation',zh:'管理内容与翻译'},
+  'reports.read': {ar:'قراءة التقارير',en:'Read reports',zh:'查看报告'},
+  'audit.read': {ar:'قراءة سجل التدقيق',en:'Read audit log',zh:'查看审计日志'}
+};
+
+function OSMARAccessManager({supabase,lang}) {
+  const ar=lang==='ar', zh=lang==='zh';
+  const [email,setEmail]=useState('');
+  const [role,setRole]=useState('game_operations');
+  const [permissions,setPermissions]=useState(['game.configure','events.manage']);
+  const [days,setDays]=useState('30');
+  const [assignments,setAssignments]=useState([]);
+  const [busy,setBusy]=useState(false);
+  const [notice,setNotice]=useState('');
+  const label=(a,b,c)=>ar?a:zh?c:b;
+  async function refresh(){
+    setBusy(true);setNotice('');
+    try { const {data,error}=await supabase.rpc('osmar_list_admin_assignments'); if(error) throw error; setAssignments(data||[]); }
+    catch(e){setNotice(e.message||'Unable to load administrator assignments.');}
+    finally{setBusy(false);}
+  }
+  useEffect(()=>{refresh();},[supabase]);
+  function chooseRole(next){
+    setRole(next);
+    const preset=OSMAR_PERMISSION_GROUPS.find(g=>g.key===next);
+    setPermissions(preset?[...preset.items]:[]);
+  }
+  function togglePermission(p){
+    setPermissions(old=>old.includes(p)?old.filter(x=>x!==p):[...old,p]);
+  }
+  async function save(event){
+    event.preventDefault();setBusy(true);setNotice('');
+    try{
+      const expires=days==='forever'?null:new Date(Date.now()+Number(days)*86400000).toISOString();
+      const {error}=await supabase.rpc('osmar_set_admin_assignment',{p_email:email.trim(),p_role_key:role,p_permissions:permissions,p_expires_at:expires});
+      if(error)throw error;
+      setNotice(label('تم حفظ صلاحيات المدير.','Administrator permissions saved.','管理员权限已保存。'));
+      setEmail('');await refresh();
+    }catch(e){setNotice(e.message||'Unable to save administrator.');}
+    finally{setBusy(false);}
+  }
+  async function revoke(id){
+    if(!window.confirm(label('تأكيد إلغاء صلاحيات هذا المدير؟','Revoke this administrator access?','确认撤销此管理员权限？')))return;
+    setBusy(true);setNotice('');
+    try{const {error}=await supabase.rpc('osmar_revoke_admin_assignment',{p_user_id:id});if(error)throw error;await refresh();setNotice(label('تم إلغاء الصلاحية.','Access revoked.','权限已撤销。'));}
+    catch(e){setNotice(e.message||'Unable to revoke access.');}
+    finally{setBusy(false);}
+  }
+  return <section className="admin-panel osmar-access-manager">
+    <div className="admin-heading"><div><h3>{label('إدارة مديري OSMAR والصلاحيات','OSMAR administrators & permissions','OSMAR 管理员与权限')}</h3><p className="muted">{label('كل شخص يحصل على أقل صلاحيات تكفي لمهمته. لا تمنح صلاحيات إلا لحساب مؤكد.','Give each person only the access required for their role. Only confirmed accounts can be assigned.','仅授予完成工作所需的权限。只能分配给已验证的账户。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{label('تحديث','Refresh','刷新')}</button></div>
+    <form onSubmit={save} className="admin-form">
+      <label>{label('بريد حساب الشخص','User account email','用户账户邮箱')}<input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@example.com"/></label>
+      <label>{label('الفريق / الدور','Team / role','团队 / 角色')}<select value={role} onChange={e=>chooseRole(e.target.value)}>{OSMAR_PERMISSION_GROUPS.map(g=><option key={g.key} value={g.key}>{g.label[lang]||g.label.ar}</option>)}</select></label>
+      <label>{label('مدة الصلاحية','Access duration','权限期限')}<select value={days} onChange={e=>setDays(e.target.value)}><option value="7">{label('7 أيام','7 days','7天')}</option><option value="30">{label('30 يومًا','30 days','30天')}</option><option value="90">{label('90 يومًا','90 days','90天')}</option><option value="365">{label('سنة','1 year','1年')}</option><option value="forever">{label('بدون انتهاء (غير موصى به)','No expiry (not recommended)','永不过期（不推荐）')}</option></select></label>
+      <div className="osmar-permission-grid">{OSMAR_PERMISSION_GROUPS.flatMap(g=>g.items).map(p=><label className="guardian-check" key={p}><input type="checkbox" checked={permissions.includes(p)} onChange={()=>togglePermission(p)}/>{OSMAR_PERMISSION_LABELS[p][lang]||OSMAR_PERMISSION_LABELS[p].ar}</label>)}</div>
+      <button className="primary" disabled={busy||!permissions.length}>{busy?'…':label('حفظ الصلاحيات','Save permissions','保存权限')}</button>
+    </form>
+    {notice&&<p className="notice" role="status">{notice}</p>}
+    <h4>{label('المديرون المضافون','Delegated administrators','已委派管理员')}</h4>
+    {assignments.length===0?<p className="muted">{label('لا توجد صلاحيات إضافية مسجلة.','No delegated administrators yet.','暂无委派管理员。')}</p>:<div className="member-list">{assignments.map(a=><article className="member-row" key={a.user_id}><div className="member-main"><strong>{a.email}</strong><span>{OSMAR_PERMISSION_GROUPS.find(g=>g.key===a.role_key)?.label[lang]||a.role_key}</span><small>{label('تنتهي: ','Expires: ','到期时间：')}{a.expires_at?new Date(a.expires_at).toLocaleString():label('لا تنتهي','Never','永不过期')}</small><small>{label('الصلاحيات: ','Permissions: ','权限：')}{(a.permissions||[]).join(' · ')}</small></div>{!a.revoked_at?<button type="button" disabled={busy} onClick={()=>revoke(a.user_id)}>{label('إلغاء الصلاحية','Revoke','撤销权限')}</button>:<span className="member-status">{label('ملغاة','Revoked','已撤销')}</span>}</article>)}</div>}
+    <p className="privacy">{label('تنبيه: هذه شاشة إدارة التعيينات. تفعيل صلاحيات كل عملية داخل النظام يتم تدريجيًا قبل إتاحة الأدوار المفوضة للاستخدام الفعلي.','Note: this manages assignments. Each protected operation must be migrated to enforce its permission before delegated roles are enabled for production.','注意：此页面管理权限分配。必须先逐项迁移系统操作的权限检查，才能在生产环境启用委派角色。')}</p>
+  </section>;
 }

@@ -18,5 +18,6 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run test:home
+      - run: npm run test:membership
       - run: npm run build
       - run: npm run test:pwa

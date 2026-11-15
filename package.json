@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test:pwa": "node scripts/verify-pwa.mjs",
-    "test:home": "node scripts/verify-home-experience.mjs"
+    "test:home": "node scripts/verify-home-experience.mjs",
+    "test:membership": "node scripts/verify-membership-admin.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
