@@ -13,7 +13,7 @@ export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChall
  const t=copy[lang]||copy.ar,rtl=lang==='ar',Arrow=rtl?ArrowUpLeft:ArrowUpRight;
  return <main className="world-hub" dir={rtl?'rtl':'ltr'}>
   <section className="wh-hero">
-   <img className="wh-hero-art" src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.art}/>
+
    <div className="wh-hero-shade"/><div className="wh-brand"><img src="./icons/family-world.svg" alt="Family World"/></div>
    <div className="wh-hero-copy"><span className="wh-eyebrow"><Sparkles size={14}/>{t.eyebrow}</span><h1>{t.title}</h1><p>{t.intro}</p><div className="wh-motto">{t.motto}</div><button className="wh-start" onClick={()=>onNavigate('worlds')}>{t.start}<Arrow size={18}/></button></div>
    <div className="wh-hero-stats"><span><b>{points}</b><small>{t.points}</small></span><span><b>{awards}</b><small>{t.awards}</small></span></div>
