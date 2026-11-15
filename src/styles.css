@@ -473,3 +473,13 @@
 .member-edit-form button+button{background:#fff;color:#52665a;border:1px solid #dfe8dc}
 @media(max-width:1050px){.admin-page{grid-template-columns:1fr}.admin-panel.member-directory,.admin-panel:has(.pending-row){grid-column:1;grid-row:auto}.member-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.admin-page{gap:12px}.directory-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.directory-metrics>div{padding:11px}.directory-metrics strong{font-size:22px}.member-list{grid-template-columns:1fr}.member-row{padding:12px}.member-edit-form{grid-template-columns:1fr}.member-edit-form label:last-of-type{grid-column:1}}
+
+
+/* Dedicated, initially closed permissions area inside OSMAR Admin */
+.admin-permissions-entry { padding: 0; overflow: hidden; }
+.admin-permissions-launch { display: flex; align-items: center; gap: 14px; width: 100%; padding: 18px; border: 0; background: transparent; color: inherit; text-align: start; cursor: pointer; }
+.admin-permissions-icon { display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 46px; border-radius: 14px; background: var(--surface-2, #eef3ed); color: var(--primary, #28734d); }
+.admin-permissions-launch > span:nth-child(2) { display: grid; gap: 4px; flex: 1; }
+.admin-permissions-launch small { color: var(--muted, #6b7280); line-height: 1.5; }
+.admin-permissions-toggle { font-size: 24px; font-weight: 700; }
+.admin-permissions-entry > .osmar-access-manager { margin: 0 16px 16px; }
