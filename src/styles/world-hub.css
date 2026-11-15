@@ -24,3 +24,9 @@
 @media(max-width:850px){.wh-character-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.wh-hero{min-height:390px}.wh-hero-copy{max-width:75%}}
 @media(max-width:560px){.world-hub{padding:4px 0 20px}.wh-hero{min-height:480px;align-items:flex-start;padding:24px 18px;border-radius:19px}.wh-hero-shade{background:linear-gradient(180deg,#071735f0 0%,#09234dbf 58%,#07173560 100%)}.wh-hero-copy{max-width:100%;padding-top:38px}.wh-hero h1{font-size:38px}.wh-hero p{font-size:14px}.wh-hero-stats{top:10px;inset-inline-end:10px}.wh-hero-stats span{min-width:58px;padding:6px 9px}.wh-progress{gap:10px;padding:11px}.wh-progress>div{min-width:48px}.wh-progress>button{padding:9px;font-size:10px}.wh-feature{grid-template-columns:1fr;gap:12px}.wh-feature-art{min-height:145px}.wh-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wh-character-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wh-character{padding:10px 5px}.wh-companions{padding:15px}.wh-companions>div{grid-template-columns:1fr}.wh-section-head{align-items:flex-start;gap:8px}.wh-section-head h2{font-size:18px}}
 @media(min-width:561px) and (max-width:700px){.wh-character-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Clean brand-first hero: no unrelated map image while official cover is being installed */
+.wh-hero{background:radial-gradient(ellipse at 82% 18%,#c69b4b55 0,transparent 26%),radial-gradient(ellipse at 15% 90%,#2aa88b55 0,transparent 38%),linear-gradient(125deg,#102b45 0%,#174e58 48%,#243c58 100%)}
+.wh-hero:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.22;background-image:radial-gradient(#ffffff 0.7px,transparent .7px);background-size:22px 22px;mask-image:linear-gradient(90deg,transparent,#000)}
+.wh-hero-shade{background:linear-gradient(90deg,#071b30e8 0%,#0c3049b8 54%,#102d4640 100%),linear-gradient(0deg,#081b2ca8,transparent 60%)}
+.wh-hero-art{display:none}
