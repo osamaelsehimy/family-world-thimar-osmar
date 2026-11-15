@@ -41,7 +41,7 @@ assert.match(app,/tab === 'threex-guide'/,'3X guide must have its own route');
 assert.match(threeXLanding,/onGuide/,'3X landing must link to the separate guide page');
 assert.match(threeXLanding,/threex-short-card/,'3X landing must use concise challenge cards');
 assert.match(app,/\['threex', t\.threex, MapIcon\]/,'3X page must use the non-conflicting map icon alias');
-assert.match(app,/<ThreeXExperience lang=\{lang\} \/>/,'3X page must be routed');
+assert.match(app,/<ThreeXExperience lang=\{lang\} onGuide=\{\(\) => setTab\('threex-guide'\)\}/,'3X page must be routed with its separate guide action');
 for (const phrase of ['10,000 m²','1000 × 1000','FWP','OBS','WBS','PMO','Supply Chain','Work–life balance']) assert.ok(threeX.includes(phrase),'Missing 3X concept: '+phrase);
 for (const phrase of ['100 م²','10,000 م²','1000 × 1000','FWP','OBS','WBS','PMO','سلسلة إمداد']) assert.ok(threeX.includes(phrase),'Missing Arabic 3X concept: '+phrase);
 assert.match(guide,/### العربية/,'Bilingual guide must include Arabic');
