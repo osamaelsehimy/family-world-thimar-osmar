@@ -236,6 +236,7 @@ function OSMARAdmin({ supabase, lang }) {
   const [editName, setEditName] = useState('');
   const [editNickname, setEditNickname] = useState('');
   const [editType, setEditType] = useState('TRU');
+  const [showPermissions, setShowPermissions] = useState(false);
   const label = (ar, en, zh) => lang === 'ar' ? ar : lang === 'zh' ? zh : en;
   function startMemberEdit(item) {
     setEditingMember(item.member_id);
@@ -425,7 +426,14 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
     </section>
-    <OSMARAccessManager supabase={supabase} lang={lang} />
+    <section className="admin-panel admin-permissions-entry">
+      <button type="button" className="admin-permissions-launch" aria-expanded={showPermissions} onClick={() => setShowPermissions(value => !value)}>
+        <span className="admin-permissions-icon"><ShieldCheck size={22}/></span>
+        <span><strong>{label('إدارة الصلاحيات','Permissions management','权限管理')}</strong><small>{label('قسم مستقل — لا توجد صلاحيات مفوضة إلا إذا أضفتها بنفسك.','Separate area — no delegated access unless you assign it yourself.','独立区域 — 只有您主动分配才会授予委派权限。')}</small></span>
+        <span className="admin-permissions-toggle">{showPermissions ? '−' : '+'}</span>
+      </button>
+      {showPermissions && <OSMARAccessManager supabase={supabase} lang={lang} />}
+    </section>
   </div>;
 }
 
