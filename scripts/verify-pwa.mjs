@@ -24,7 +24,7 @@ for (const icon of manifest.icons || []) {
     const data = fs.readFileSync(file);
     if (icon.type === 'image/svg+xml' || icon.src.toLowerCase().endsWith('.svg')) {
       const svg = data.toString('utf8');
-      if (!/<svg\\b/.test(svg) || !/viewBox=["']0 0 512 512["']/.test(svg)) fail(`Invalid scalable SVG icon: ${icon.src}`);
+      if (!/<svg\b/.test(svg) || !/viewBox=["']0 0 512 512["']/.test(svg)) fail(`Invalid scalable SVG icon: ${icon.src}`);
     } else {
       if (data.toString('hex', 0, 8) !== '89504e470d0a1a0a') fail(`Invalid PNG icon: ${icon.src}`);
       const width = data.readUInt32BE(16), height = data.readUInt32BE(20);
