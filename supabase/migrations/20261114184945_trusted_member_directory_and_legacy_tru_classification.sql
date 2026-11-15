@@ -41,7 +41,7 @@ begin
     p.member_code,
     p.membership_status,
     p.created_at,
-    coalesce(p.admin_referral_label, r.referral_type, 'UNCLASSIFIED'),
+    coalesce(r.referral_type, p.admin_referral_label, 'UNCLASSIFIED'),
     inviter.email::text,
     r.status
   from public.profiles p

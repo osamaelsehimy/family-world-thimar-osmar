@@ -12,7 +12,7 @@ const planner=fs.readFileSync('src/components/ApartmentPlanner.jsx','utf8');
 const plannerStyles=fs.readFileSync('src/styles/apartment-planner.css','utf8');
 const studioStyles=fs.readFileSync('src/styles/three-x-studio.css','utf8');
 const migration=fs.readFileSync('supabase/migrations/20261114225329_thimar_3x_challenge_engine.sql','utf8');
-const studioMigration=fs.readFileSync('supabase/migrations/20261114225410_thimar_3x_admin_review_and_indexes.sql','utf8');
+const studioMigration=fs.readFileSync('supabase/migrations/20261114225434_thimar_3x_admin_review_and_indexes.sql','utf8');
 const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar_3x_review_decision_validation.sql','utf8');
 const designMigration=fs.readFileSync('supabase/migrations/20261115104454_apartment_design_cloud_sync.sql','utf8');
 const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_apartment_design_admin_review.sql','utf8');
@@ -81,3 +81,14 @@ for (const capability of ['resetPasswordForEmail','PASSWORD_RECOVERY','updateUse
 assert.match(authSource,/minLength="8"/,'New passwords must have a minimum length');
 assert.match(authSource,/authRedirectUrl/,'Recovery and confirmation links must use a controlled application redirect');
 console.log('Account recovery checks passed: email reset, recovery session handling, password update, resend confirmation, 3 locales, and minimum password length.');
+
+const characterStudio=fs.readFileSync('src/components/CharacterStudio.jsx','utf8');
+const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
+for (const asset of ['family-world-cover.webp','family-world-character-board.webp','family-world-game-board.webp']) {
+  assert.ok(component.includes(asset)||characterStudio.includes(asset),'Approved artwork must be wired into the product: '+asset);
+  assert.ok(artworkRegister.includes(asset),'Approved artwork must be registered: '+asset);
+}
+assert.match(characterStudio,/cs-original-art/,'Character Studio must present the approved visual boards');
+assert.match(characterStudio,/onError/,'Artwork slots must fail gracefully until assets are installed');
+console.log('Original artwork checks passed: official cover and both visual boards are wired and registered.');
+
