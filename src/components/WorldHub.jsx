@@ -13,7 +13,7 @@ export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChall
  const t=copy[lang]||copy.ar,rtl=lang==='ar',Arrow=rtl?ArrowUpLeft:ArrowUpRight;
  return <main className="world-hub" dir={rtl?'rtl':'ltr'}>
   <section className="wh-hero">
-   <img className="wh-hero-art" src={`${import.meta.env.BASE_URL}assets/brand/family-world-cover.webp`} alt="" onError={e=>{e.currentTarget.style.display='none';}}/>
+   <img className="wh-hero-art" src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.art}/>
    <div className="wh-hero-shade"/><div className="wh-brand"><img src="./icons/family-world.svg" alt="Family World"/></div>
    <div className="wh-hero-copy"><span className="wh-eyebrow"><Sparkles size={14}/>{t.eyebrow}</span><h1>{t.title}</h1><p>{t.intro}</p><div className="wh-motto">{t.motto}</div><button className="wh-start" onClick={()=>onNavigate('worlds')}>{t.start}<Arrow size={18}/></button></div>
    <div className="wh-hero-stats"><span><b>{points}</b><small>{t.points}</small></span><span><b>{awards}</b><small>{t.awards}</small></span></div>
@@ -22,7 +22,7 @@ export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChall
   <section className="wh-feature" onClick={onChallenge} role="button" tabIndex="0" onKeyDown={e=>e.key==='Enter'&&onChallenge?.()}><div className="wh-feature-art"><div className="wh-sun"/><div className="wh-house"><span/><span/><b/></div><div className="wh-plant">✦</div><small>100 m²</small></div><div className="wh-feature-copy"><span>{t.featured}</span><h2>{t.apartment}</h2><p>{t.apartmentDesc}</p><strong>{t.open}<Arrow size={16}/></strong></div></section>
   <section className="wh-spaces"><div className="wh-section-head"><h2>{t.sections}</h2><span>01 — 08</span></div><div className="wh-grid">{items.map(([id,Icon,key,active])=><button key={id} className={'wh-card '+(active?'':'is-soon')} onClick={()=>active&&onNavigate(id==='threex'?'threex':id==='worlds'?'worlds':id)} disabled={!active}><span className={'wh-card-icon tone-'+id}><Icon size={21}/></span><b>{t[key]}</b><small>{active?t.ready:t.soon}</small>{active&&<Arrow size={15} className="wh-card-arrow"/>}</button>)}</div></section>
   <section className="wh-characters"><div className="wh-section-head"><div><h2>{t.roles}</h2><p>{t.rolesSub}</p></div><span>11 ROLES</span></div><div className="wh-character-grid">{roles.map(([id,key,icon],i)=><article className="wh-character" key={id}><div className={'wh-character-avatar role-'+id}>{icon}</div><b>{t[key]}</b><small>FW · {String(i+1).padStart(2,'0')}</small></article>)}</div></section>
-  <section className="wh-companions"><h2>{t.companion}</h2><div><article><span className="wh-thimmy">🐥</span><b>{t.thimmy}</b><small><Bot size={13}/> AI Companion</small></article><article><span className="wh-robot">🤖</span><b>{t.robot}</b><small><Sparkles size={13}/> Smart Assistant</small></article></div></section>
+  <section className="wh-companions"><h2>{t.companion}</h2><div><article><span className="wh-thimmy">🐥</span><b>{t.thimmy}</b><small><Bot size={13}/> {t.companionLabel}</small></article><article><span className="wh-robot">🤖</span><b>{t.robot}</b><small><Sparkles size={13}/> {t.assistantLabel}</small></article></div></section>
   <footer className="wh-foot"><Sprout size={15}/>{t.foot}</footer>
  </main>;
 }
