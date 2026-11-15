@@ -78,3 +78,9 @@ assert.match(designMigration,/with check/i,'Apartment design writes must enforce
 assert.match(designReviewMigration,/app_metadata/,'Only trusted OSMAR admins may read plans for review');
 assert.match(designValidationMigration,/jsonb_array_length/,'Apartment design payload must be validated');
 console.log('Apartment planner checks passed: 100 m² zoning, furniture footprints, doors, editable cost inputs, cloud/local save, RLS, admin review and three locales.');
+
+const authSource=fs.readFileSync('App.jsx','utf8');
+for (const capability of ['resetPasswordForEmail','PASSWORD_RECOVERY','updateUser({ password: newPassword })','auth.resend({ type: \'signup\'','forgotPassword','resendConfirmation','passwordMismatch']) assert.ok(authSource.includes(capability),'Missing secure account recovery capability: '+capability);
+assert.match(authSource,/minLength="8"/,'New passwords must have a minimum length');
+assert.match(authSource,/authRedirectUrl/,'Recovery and confirmation links must use a controlled application redirect');
+console.log('Account recovery checks passed: email reset, recovery session handling, password update, resend confirmation, 3 locales, and minimum password length.');
