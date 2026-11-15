@@ -17,9 +17,6 @@ const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar
 const designMigration=fs.readFileSync('supabase/migrations/20261115104454_apartment_design_cloud_sync.sql','utf8');
 const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_apartment_design_admin_review.sql','utf8');
 const designValidationMigration=fs.readFileSync('supabase/migrations/20261115104809_apartment_design_json_validation.sql','utf8');
-const designMigration=fs.readFileSync('supabase/migrations/20261115104454_apartment_design_cloud_sync.sql','utf8');
-const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_apartment_design_admin_review.sql','utf8');
-const designValidationMigration=fs.readFileSync('supabase/migrations/20261115104809_apartment_design_json_validation.sql','utf8');
 
 assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
 assert.match(app,/<WorldHub[^>]*onChallenge=\{\(\) => setTab\(['"]threex['"]\)\}/,'Home route must render WorldHub and link to the apartment challenge');
