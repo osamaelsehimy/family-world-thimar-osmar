@@ -35,7 +35,7 @@ assert.match(manifest,/family-world\.svg/,'PWA manifest must register the origin
 console.log('World Hub checks passed: route, 3 locales, original brand icon, 100 m² challenge link, clean module map, mobile layout, and honest feature status.');
 
 assert.match(app,/import ThreeXExperience/,'3X page must be imported');
-assert.match(app,/\['threex', t\.threex, Map\]/,'3X page must be in navigation');
+assert.match(app,/\['threex', t\.threex, MapIcon\]/,'3X page must use the non-conflicting map icon alias');
 assert.match(app,/<ThreeXExperience lang=\{lang\} \/>/,'3X page must be routed');
 for (const phrase of ['10,000 m²','1000 × 1000','FWP','OBS','WBS','PMO','Supply Chain','Work–life balance']) assert.ok(threeX.includes(phrase),'Missing 3X concept: '+phrase);
 for (const phrase of ['100 م²','10,000 م²','1000 × 1000','FWP','OBS','WBS','PMO','سلسلة إمداد']) assert.ok(threeX.includes(phrase),'Missing Arabic 3X concept: '+phrase);

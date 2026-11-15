@@ -10,7 +10,7 @@ import CharacterStudio from './src/components/CharacterStudio.jsx';
 import ThreeXExperience from './src/components/ThreeXExperience.jsx';
 import ThreeXChallengeStudio from './src/components/ThreeXChallengeStudio.jsx';
 import { supabase, configured } from './src/lib/supabase';
-import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3, UserRound, Map } from 'lucide-react';
+import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3, UserRound, Map as MapIcon } from 'lucide-react';
 
 const worlds = [
   { id: 'home', icon: '🏡', ar: 'البيت والمعيشة', en: 'Home & Daily Life', zh: '家庭与日常', desc: 'نشارك المسؤولية ونعتني ببيتنا.', enDesc: 'Share responsibilities and care for home.', zhDesc: '分担责任，一起照顾家。' },
@@ -178,7 +178,7 @@ export default function App() {
     if (error && error.code !== '23505') setNotice(lang === 'ar' ? 'تعذر حفظ نتيجة المباراة: ' + error.message : 'Could not save game result: ' + error.message);
   }
   function completeGame(game) { if (game.available === false) return; if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } if (game.id === 'ludo') { setTab('ludo'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
-  const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['profile', t.profile, UserRound], ['worlds', t.worlds, Globe2], ['threex', t.threex, Map], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
+  const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['profile', t.profile, UserRound], ['worlds', t.worlds, Globe2], ['threex', t.threex, MapIcon], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
   if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (mode === 'recovery') return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><form className="auth-card" onSubmit={saveRecoveredPassword}><span className="mark">🔐</span><p className="eyebrow">THIMAR OSMAR</p><h1>{t.resetTitle}</h1><label>{t.newPassword}<input type="password" autoComplete="new-password" minLength="8" required value={newPassword} onChange={e=>setNewPassword(e.target.value)} /></label><label>{t.confirmPassword}<input type="password" autoComplete="new-password" minLength="8" required value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} /></label><button className="primary wide" disabled={busy}>{busy?'…':t.savePassword}</button>{notice&&<p className="notice" role="status">{notice}</p>}</form><footer>{t.name} © 2026</footer></div>;
   if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><div className="auth-actions">{!isStandalone && <button className="install-button" type="button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></div></header><form className="auth-card" onSubmit={auth}>
@@ -232,6 +232,31 @@ function OSMARAdmin({ supabase, lang }) {
   const [memberFilter, setMemberFilter] = useState('all');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [editingMember, setEditingMember] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editNickname, setEditNickname] = useState('');
+  const [editType, setEditType] = useState('TRU');
+  const label = (ar, en, zh) => lang === 'ar' ? ar : lang === 'zh' ? zh : en;
+  function startMemberEdit(item) {
+    setEditingMember(item.member_id);
+    setEditName(item.display_name || '');
+    setEditNickname(item.nickname || '');
+    setEditType(item.member_type || 'TRU');
+  }
+  async function saveMemberEdit(event) {
+    event.preventDefault(); setBusy(true); setMessage('');
+    try {
+      const { error } = await supabase.rpc('osmar_update_member_profile', {
+        p_member_id: editingMember, p_display_name: editName,
+        p_nickname: editNickname, p_member_type: editType
+      });
+      if (error) throw error;
+      setEditingMember(null);
+      setMessage(label('تم تحديث بيانات العضو وتسجيل التعديل في سجل المراجعة.','Member profile updated and audit event recorded.','会员资料已更新并记录审计事件。'));
+      await refresh();
+    } catch (error) { setMessage(error?.message || 'Could not update this member.'); }
+    finally { setBusy(false); }
+  }
 
   async function refresh() {
     setBusy(true);
@@ -239,7 +264,7 @@ function OSMARAdmin({ supabase, lang }) {
     try {
       const [pendingResult, memberResult, pointsResult, gamesResult] = await Promise.all([
         supabase.rpc('osmar_pending_members'),
-        supabase.rpc('osmar_member_directory'),
+        supabase.rpc('osmar_member_directory_v2'),
         supabase.rpc('osmar_points_directory'),
         supabase.rpc('osmar_game_directory')
       ]);
@@ -330,14 +355,14 @@ function OSMARAdmin({ supabase, lang }) {
     active: members.filter(item => item.membership_status === 'active').length,
     pending: members.filter(item => item.membership_status === 'pending').length,
     suspended: members.filter(item => item.membership_status === 'suspended' || item.membership_status === 'rejected').length,
-    trusted: members.filter(item => item.referral_type === 'TRU').length,
+    trusted: members.filter(item => item.member_type === 'TRU').length,
   };
   const filteredMembers = members.filter(item => {
     const matchesSearch = (item.email || '').toLowerCase().includes(search.toLowerCase()) ||
       (item.member_code || '').toLowerCase().includes(search.toLowerCase());
     const matchesFilter = memberFilter === 'all' || (memberFilter === 'suspended'
       ? ['suspended','rejected'].includes(item.membership_status)
-      : memberFilter === 'TRU' ? item.referral_type === 'TRU' : item.membership_status === memberFilter);
+      : ['TRU','FAM','NET','OSM','TEAM'].includes(memberFilter) ? item.member_type === memberFilter : item.membership_status === memberFilter);
     return matchesSearch && matchesFilter;
   });
 
@@ -364,20 +389,28 @@ function OSMARAdmin({ supabase, lang }) {
       </div>
       <input className="member-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.searchMembers} />
       <div className="member-filters">
-        {[['all',lang==='ar'?'الكل':lang==='zh'?'全部':'All'],['active',lang==='ar'?'نشط':lang==='zh'?'活跃':'Active'],['pending',lang==='ar'?'معلّق':lang==='zh'?'待审核':'Pending'],['TRU','TRU'],['suspended',lang==='ar'?'موقوف':lang==='zh'?'已暂停':'Paused']].map(([value,label])=><button type="button" key={value} className={memberFilter===value?'selected':''} onClick={()=>setMemberFilter(value)}>{label}</button>)}
+        {[['all',lang==='ar'?'الكل':lang==='zh'?'全部':'All'],['active',lang==='ar'?'نشط':lang==='zh'?'活跃':'Active'],['pending',lang==='ar'?'معلّق':lang==='zh'?'待审核':'Pending'],['TRU','TRU'],['FAM','FAM'],['NET','NET'],['OSM','OSM'],['TEAM','TEAM'],['suspended',lang==='ar'?'موقوف':lang==='zh'?'已暂停':'Paused']].map(([value,label])=><button type="button" key={value} className={memberFilter===value?'selected':''} onClick={()=>setMemberFilter(value)}>{label}</button>)}
       </div>
       {filteredMembers.length === 0 ? <p className="muted">{t.noMembers}</p> : <div className="member-list">
         {filteredMembers.map(item => <article className="member-row" key={item.member_id}>
           <div className="member-main">
-            <strong>{item.member_code || '—'}</strong>
+            <strong>{item.member_code ? Number(String(item.member_code).match(/(\d+)$/)?.[1] || 0) || '—' : '—'}</strong>
             <span>{item.email || '—'}</span>
             <small>{t.registeredAt}: {item.registered_at ? new Date(item.registered_at).toLocaleString(lang === 'ar' ? 'ar-EG' : lang === 'zh' ? 'zh-CN' : 'en-US') : '—'}</small>
           </div>
           <div className="member-tags">
             <span className={item.membership_status === 'active' ? 'member-status active' : 'member-status'}>{item.membership_status}</span>
-            <span className="member-type">{item.referral_type || '—'}</span>
+            <span className="member-type">{item.member_type || item.referral_type || '—'}</span>
           </div>
           <small className="member-inviter">{t.invitedBy}: {item.inviter_email || (item.referral_type === 'OSM' ? 'OSMAR' : '—')}</small>
+          <small className="member-contact">{label('الاسم: ','Name: ','姓名：')}{item.display_name || '—'} · {label('اللقب: ','Nickname: ','昵称：')}{item.nickname || '—'} · {label('الهاتف: ','Phone: ','电话：')}{item.phone || '—'}</small>
+          <button type="button" className="member-edit-trigger" onClick={()=>startMemberEdit(item)}>{label('تعديل بيانات العضو','Edit member','编辑会员')}</button>
+          {editingMember === item.member_id && <form className="member-edit-form" onSubmit={saveMemberEdit}>
+            <label>{label('الاسم الظاهر','Display name','显示名称')}<input value={editName} onChange={e=>setEditName(e.target.value)} maxLength={80}/></label>
+            <label>{label('اللقب','Nickname','昵称')}<input value={editNickname} onChange={e=>setEditNickname(e.target.value)} maxLength={50}/></label>
+            <label>{label('تصنيف العضوية','Member type','会员类型')}<select value={editType} onChange={e=>setEditType(e.target.value)}>{['TRU','FAM','NET','OSM','TEAM'].map(v=><option key={v}>{v}</option>)}</select></label>
+            <div><button type="submit" disabled={busy}>{label('حفظ','Save','保存')}</button><button type="button" disabled={busy} onClick={()=>setEditingMember(null)}>{label('إلغاء','Cancel','取消')}</button></div>
+          </form>}
           <small className="member-points">{lang==='ar'?'نقاط الخبرة':'XP'}: <strong>{item.total_points || 0}</strong> · {lang==='ar'?'الإنجازات':'Awards'}: {item.awards_count || 0}</small>
           <small className="member-game-stats">{lang==='ar'?'المباريات':'Games'}: <b>{item.games_played||0}</b> · {lang==='ar'?'فوز':'Wins'}: <b>{item.game_wins||0}</b> · {lang==='ar'?'خسارة':'Losses'}: <b>{item.game_losses||0}</b> · {lang==='ar'?'تعادل':'Draws'}: <b>{item.game_draws||0}</b></small>
         </article>)}
