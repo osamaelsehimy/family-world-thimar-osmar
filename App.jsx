@@ -10,7 +10,7 @@ import CharacterStudio from './src/components/CharacterStudio.jsx';
 import ThreeXExperience from './src/components/ThreeXExperience.jsx';
 import ThreeXChallengeStudio from './src/components/ThreeXChallengeStudio.jsx';
 import { supabase, configured } from './src/lib/supabase';
-import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3, UserRound, Map } from 'lucide-react';
+import { Home, Globe2, Gamepad2, Users, LogOut, Sprout, Star, ShieldCheck, Menu, X, ChevronLeft, BookOpen, ClipboardList, Copy, BarChart3, UserRound, Map as MapIcon } from 'lucide-react';
 
 const worlds = [
   { id: 'home', icon: '🏡', ar: 'البيت والمعيشة', en: 'Home & Daily Life', zh: '家庭与日常', desc: 'نشارك المسؤولية ونعتني ببيتنا.', enDesc: 'Share responsibilities and care for home.', zhDesc: '分担责任，一起照顾家。' },
@@ -178,7 +178,7 @@ export default function App() {
     if (error && error.code !== '23505') setNotice(lang === 'ar' ? 'تعذر حفظ نتيجة المباراة: ' + error.message : 'Could not save game result: ' + error.message);
   }
   function completeGame(game) { if (game.available === false) return; if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } if (game.id === 'ludo') { setTab('ludo'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
-  const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['profile', t.profile, UserRound], ['worlds', t.worlds, Globe2], ['threex', t.threex, Map], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
+  const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['profile', t.profile, UserRound], ['worlds', t.worlds, Globe2], ['threex', t.threex, MapIcon], ['play', t.play, Gamepad2], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
   if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (mode === 'recovery') return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><form className="auth-card" onSubmit={saveRecoveredPassword}><span className="mark">🔐</span><p className="eyebrow">THIMAR OSMAR</p><h1>{t.resetTitle}</h1><label>{t.newPassword}<input type="password" autoComplete="new-password" minLength="8" required value={newPassword} onChange={e=>setNewPassword(e.target.value)} /></label><label>{t.confirmPassword}<input type="password" autoComplete="new-password" minLength="8" required value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} /></label><button className="primary wide" disabled={busy}>{busy?'…':t.savePassword}</button>{notice&&<p className="notice" role="status">{notice}</p>}</form><footer>{t.name} © 2026</footer></div>;
   if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><div className="auth-actions">{!isStandalone && <button className="install-button" type="button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></div></header><form className="auth-card" onSubmit={auth}>
@@ -369,7 +369,7 @@ function OSMARAdmin({ supabase, lang }) {
       {filteredMembers.length === 0 ? <p className="muted">{t.noMembers}</p> : <div className="member-list">
         {filteredMembers.map(item => <article className="member-row" key={item.member_id}>
           <div className="member-main">
-            <strong>{item.member_code || '—'}</strong>
+            <strong>{item.member_code ? Number(String(item.member_code).match(/(\d+)$/)?.[1] || 0) || '—' : '—'}</strong>
             <span>{item.email || '—'}</span>
             <small>{t.registeredAt}: {item.registered_at ? new Date(item.registered_at).toLocaleString(lang === 'ar' ? 'ar-EG' : lang === 'zh' ? 'zh-CN' : 'en-US') : '—'}</small>
           </div>
