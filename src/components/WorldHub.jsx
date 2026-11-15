@@ -77,7 +77,7 @@ export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChall
       </div><div className="wh-plan" aria-hidden="true"><div className="wh-plan-room room-living">LIVING</div><div className="wh-plan-room room-bed">BED</div><div className="wh-plan-room room-kitchen">KITCHEN</div><div className="wh-plan-room room-bath">BATH</div><small>10 m × 10 m · 100 m²</small></div>
     </section>
     <section className="wh-spaces"><div className="wh-section-head"><span>FAMILY WORLD / 01</span><h2>{t.categories}</h2></div>
-      <div className="wh-grid">{spaces.map(([id,Icon,key])=><button className={'wh-card wh-'+id} key={id} onClick={()=>onNavigate(id==='market'?'play':id==='learning'?'worlds':id==='community'?'worlds':id==='projects'?'threex':id)}>
+      <div className="wh-grid">{spaces.map(([id,Icon,key])=><button className={'wh-card wh-'+id} key={id} disabled={!['worlds','play','dashboard','profile','projects'].includes(id)} onClick={()=>onNavigate(id==='projects'?'threex':id)}>
         <span className="wh-card-icon"><Icon size={22}/></span><b>{labels[key]}</b>
         <small>{id==='play'?t.available:t.coming}</small><Arrow size={16} className="wh-card-arrow"/>
       </button>)}</div>
