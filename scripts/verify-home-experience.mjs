@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
 const app=fs.readFileSync('App.jsx','utf8');
-const component=fs.readFileSync('src/components/HomeExperience.jsx','utf8');
-const styles=fs.readFileSync('src/styles/home-experience.css','utf8');
+const component=fs.readFileSync('src/components/WorldHub.jsx','utf8');
+const styles=fs.readFileSync('src/styles/world-hub.css','utf8');
 const threeX=fs.readFileSync('src/components/ThreeXExperience.jsx','utf8');
 const threeXStyles=fs.readFileSync('src/styles/three-x.css','utf8');
 const guide=fs.readFileSync('docs/FAMILY_WORLD_VISION_GUIDE_AR_EN.md','utf8');
@@ -13,16 +13,16 @@ const migration=fs.readFileSync('supabase/migrations/20261114225329_thimar_3x_ch
 const studioMigration=fs.readFileSync('supabase/migrations/20261114225410_thimar_3x_admin_review_and_indexes.sql','utf8');
 const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar_3x_review_decision_validation.sql','utf8');
 
-assert.match(app,/import HomeExperience from ['"]\.\/src\/components\/HomeExperience\.jsx['"]/,'Home experience component must be imported');
-assert.match(app,/import ['"]\.\/src\/styles\/home-experience\.css['"]/,'Home experience stylesheet must be imported');
-assert.match(app,/<HomeExperience[^>]*onExplore=\{\(\) => setTab\(['"]worlds['"]\)\}/,'Home route must render HomeExperience and link to worlds');
+assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
+assert.match(app,/<WorldHub[^>]*onChallenge=\{\(\) => setTab\(['"]threex['"]\)\}/,'Home route must render WorldHub and link to the apartment challenge');
 for (const locale of ['ar','en','zh']) assert.match(component,new RegExp('\\n'+locale+':\\{'),locale+' translation must exist');
-for (const concept of ['SMART','OKR','PMO','star schema','quality','cost','time','value']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing concept: '+concept);
-for (const feature of ['city-water','city-building','city-tree','city-rain']) assert.ok(component.includes(feature),'Missing sponge-city feature: '+feature);
-assert.match(styles,/@media\s*\(max-width:\s*700px\)/,'Mobile layout breakpoint must exist');
-assert.match(styles,/@media\s*\(prefers-reduced-motion:\s*no-preference\)/,'Animations must respect reduced-motion preference');
-assert.match(component,/concept design|تصميم مفاهيمي|概念设计/i,'Concept city must not be presented as measured real-world data');
-console.log('Home experience checks passed: route, 3 locales, sponge-city features, PMO/SMART/OKR/data/value concepts, mobile layout, reduced motion, and honest concept labeling.');
+for (const concept of ['100 m²','WBS','family','market','learning','community','projects','dashboard']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing hub concept: '+concept);
+for (const feature of ['wh-island','wh-house','wh-room','wh-tree','wh-plan']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
+assert.match(styles,/@media\(max-width:700px\)/,'World Hub must have a mobile layout');
+assert.match(component,/OriginalHomeIllustration/,'World Hub must use original in-code artwork, not copied game assets');
+assert.match(component,/lang==='ar'\?'rtl':'ltr'/,'Arabic must use right-to-left layout');
+assert.match(component,/coming:'Introduction space · In development'/,'Unbuilt areas must be clearly labelled');
+console.log('World Hub checks passed: route, 3 locales, original home illustration, 100 m² challenge link, module map, mobile layout, and honest feature status.');
 
 assert.match(app,/import ThreeXExperience/,'3X page must be imported');
 assert.match(app,/\['threex', t\.threex, Map\]/,'3X page must be in navigation');
