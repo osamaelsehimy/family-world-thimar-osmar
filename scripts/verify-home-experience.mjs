@@ -18,13 +18,18 @@ const reviewMigration=fs.readFileSync('supabase/migrations/20261114225518_thimar
 assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
 assert.match(app,/<WorldHub[^>]*onChallenge=\{\(\) => setTab\(['"]threex['"]\)\}/,'Home route must render WorldHub and link to the apartment challenge');
 for (const locale of ['ar','en','zh']) assert.match(component,new RegExp('\\n'+locale+':\\{'),locale+' translation must exist');
-for (const concept of ['100 m²','WBS','family','market','learning','community','projects','dashboard']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing hub concept: '+concept);
-for (const feature of ['wh-island','wh-house','wh-room','wh-tree','wh-plan']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
-assert.match(styles,/@media\(max-width:700px\)/,'World Hub must have a mobile layout');
-assert.match(component,/OriginalHomeIllustration/,'World Hub must use original in-code artwork, not copied game assets');
+for (const concept of ['100 m²','family','market','learning','community','projects','progress']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing hub concept: '+concept);
+for (const feature of ['wh-feature-art','wh-house','wh-grid','wh-card-icon']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
+assert.match(styles,/@media\(max-width:760px\)/,'World Hub must have a mobile layout');
+assert.match(component,/family-world\.svg/,'World Hub must use the original app icon');
 assert.match(component,/lang==='ar'\?'rtl':'ltr'/,'Arabic must use right-to-left layout');
-assert.match(component,/coming:'Introduction space · In development'/,'Unbuilt areas must be clearly labelled');
-console.log('World Hub checks passed: route, 3 locales, original home illustration, 100 m² challenge link, module map, mobile layout, and honest feature status.');
+assert.match(component,/soon:'Coming soon'/,'Unbuilt areas must be clearly labelled');
+assert.match(component,/is-soon/,'Unbuilt areas must be visually distinguished');
+const icon=fs.readFileSync('public/icons/family-world.svg','utf8');
+const manifest=fs.readFileSync('public/manifest.webmanifest','utf8');
+assert.match(icon,/<svg/,'Original app icon must exist');
+assert.match(manifest,/family-world\.svg/,'PWA manifest must register the original icon');
+console.log('World Hub checks passed: route, 3 locales, original brand icon, 100 m² challenge link, clean module map, mobile layout, and honest feature status.');
 
 assert.match(app,/import ThreeXExperience/,'3X page must be imported');
 assert.match(app,/\['threex', t\.threex, Map\]/,'3X page must be in navigation');
