@@ -522,3 +522,15 @@
 .cs-art-locked .cs-badge{display:flex;align-items:center;gap:5px;background:#304e43}
 .cs-art img{image-rendering:auto;object-fit:contain}
 @media(max-width:560px){.cs-level-panel{width:100%;max-width:none}.cs-level-panel>div{min-width:112px}}
+
+
+/* Always-visible logout and compact admin disclosures */
+.topbar-logout{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;padding:9px 12px;border:1px solid #dce7dc;border-radius:11px;background:#fff;color:#245c43;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.topbar-logout:hover{background:#edf5eb}
+.admin-collapsible{grid-column:1/-1;min-width:0;overflow:hidden;border:1px solid #e2eadf;border-radius:17px;background:#fff;box-shadow:0 8px 22px #173c2408}
+.admin-collapsible>summary{display:flex;align-items:center;gap:8px;min-height:54px;padding:14px 17px;color:#294b3b;font-size:13px;font-weight:800;cursor:pointer;list-style:none}
+.admin-collapsible>summary::-webkit-details-marker{display:none}
+.admin-collapsible>summary:after{content:'＋';margin-inline-start:auto;color:#56816a;font-size:18px}
+.admin-collapsible[open]>summary:after{content:'−'}
+.admin-collapsible>.admin-panel{border:0;border-radius:0;box-shadow:none;padding-top:4px}
+@media(max-width:620px){.topbar{gap:7px}.topbar-logout{padding:8px 9px;font-size:11px}.topbar-logout span{display:inline}}
