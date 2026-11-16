@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BarChart3, Trophy, Gamepad2, Target, Clock3, ShieldCheck, RefreshCw } from 'lucide-react';
+import { BarChart3, Trophy, Gamepad2, Target, Clock3, ShieldCheck, RefreshCw, TrendingDown, Handshake, Star } from 'lucide-react';
+
+import '../styles/premium-experience.css';
 
 const words = {
  ar: {
@@ -78,11 +80,11 @@ export default function MemberDashboard({supabase,userId,lang='ar'}){
   {error&&<p className="notice" role="status">{t.error}: {error}</p>}
   {loading?<div className="dashboard-loading">{t.loading}</div>:<>
    <div className="member-kpi-grid">
-    <article><span>🎮</span><small>{t.played}</small><strong>{totals.played}</strong></article>
-    <article><span>🏆</span><small>{t.wins}</small><strong>{totals.wins}</strong></article>
-    <article><span>↘️</span><small>{t.losses}</small><strong>{totals.losses}</strong></article>
-    <article><span>🤝</span><small>{t.draws}</small><strong>{totals.draws}</strong></article>
-    <article><span>⭐</span><small>{t.xp}</small><strong>{Number(points).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US')}</strong></article>
+    <article><span><Gamepad2/></span><small>{t.played}</small><strong>{totals.played}</strong></article>
+    <article><span><Trophy/></span><small>{t.wins}</small><strong>{totals.wins}</strong></article>
+    <article><span><TrendingDown/></span><small>{t.losses}</small><strong>{totals.losses}</strong></article>
+    <article><span><Handshake/></span><small>{t.draws}</small><strong>{totals.draws}</strong></article>
+    <article><span><Star/></span><small>{t.xp}</small><strong>{Number(points).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US')}</strong></article>
    </div>
    <div className="dashboard-performance-grid">
     <section className="dashboard-panel"><div className="dashboard-panel-head"><h2><Gamepad2 size={18}/>{t.games}</h2><span>{t.winRate}: {rate}%</span></div>

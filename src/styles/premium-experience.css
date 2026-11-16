@@ -1,0 +1,133 @@
+/* Family World premium visual layer — shared home, dashboard, characters and games */
+.world-hub{max-width:1240px;padding:14px 0 42px}
+.wh-hero{min-height:clamp(390px,43vw,540px);border:1px solid #ffffff18;background:linear-gradient(115deg,#071b31 0%,#103b50 55%,#1a5360 100%);box-shadow:0 28px 70px #09243a2b}
+.wh-hero:before{opacity:.12;background-size:18px 18px}
+.wh-hero-shade{background:linear-gradient(90deg,#06182bea 0%,#09263bbd 48%,#09263b12 100%),linear-gradient(0deg,#06182b99,transparent 65%)}
+.wh-hero-copy{z-index:2;max-width:590px}
+.wh-hero h1{letter-spacing:-.035em}
+.wh-hero p{max-width:530px}
+.wh-planet-stage{position:absolute;z-index:0;inset:0 0 0 auto;width:58%;height:100%;pointer-events:none;overflow:hidden;mask-image:linear-gradient(90deg,transparent 0%,#000 22%)}
+.wh-planet{position:absolute;width:clamp(190px,25vw,330px);aspect-ratio:1;border-radius:50%;right:15%;top:13%;overflow:hidden;background:radial-gradient(circle at 31% 25%,#8be3d4 0,#3b9f9e 24%,#1c647e 58%,#0b294f 100%);box-shadow:inset -28px -24px 55px #06152e99,inset 12px 10px 30px #d2fff055,0 0 65px #50c8d055}
+.wh-planet:before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(165deg,transparent 0 13px,#c5fff01c 14px 17px,transparent 18px 31px);mix-blend-mode:screen}
+.wh-land{position:absolute;display:block;background:linear-gradient(145deg,#b8d68b,#4c9b79 62%,#2b6e67);filter:drop-shadow(3px 5px 3px #082d3a88);opacity:.95}
+.wh-land-one{width:42%;height:29%;left:14%;top:25%;border-radius:62% 38% 50% 40%;transform:rotate(-28deg);clip-path:polygon(0 20%,25% 0,45% 17%,75% 5%,100% 40%,78% 67%,60% 100%,35% 78%,12% 85%)}
+.wh-land-two{width:33%;height:43%;right:15%;bottom:15%;border-radius:42% 58% 60% 40%;transform:rotate(24deg);clip-path:polygon(18% 0,80% 9%,100% 35%,71% 58%,83% 100%,38% 87%,0 55%)}
+.wh-planet-glow{position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,#fff7 0%,transparent 25%,transparent 70%,#020d3566 100%)}
+.wh-orbit{position:absolute;left:50%;top:49%;border:1px solid #a7e6e2a8;border-radius:50%;transform:translate(-50%,-50%) rotate(-22deg)}
+.wh-orbit-one{width:82%;height:37%}
+.wh-orbit-two{width:102%;height:51%;transform:translate(-50%,-50%) rotate(26deg);border-color:#f4d28b80}
+.wh-orbit-three{width:118%;height:66%;transform:translate(-50%,-50%) rotate(-48deg);border-color:#b9d4f34d}
+.wh-city{position:absolute;bottom:0;left:0;right:0;height:21%;display:flex;align-items:flex-end;justify-content:center;gap:7px;opacity:.7}
+.wh-city i{display:block;width:7%;height:45%;background:linear-gradient(180deg,#a7c9c8,#254e66);border:1px solid #b6d6d355;border-bottom:0;border-radius:4px 4px 0 0}
+.wh-city i:nth-child(2){height:75%;width:5%}.wh-city i:nth-child(3){height:58%}.wh-city i:nth-child(4){height:92%;width:8%}.wh-city i:nth-child(5){height:64%}.wh-city i:nth-child(6){height:80%;width:6%}.wh-city i:nth-child(7){height:48%}
+.wh-star{position:absolute;color:#ffe4a1;text-shadow:0 0 14px #ffe4a1}.wh-star-one{top:18%;right:17%;font-size:25px}.wh-star-two{top:37%;right:7%;font-size:34px}
+.wh-hero-stats{z-index:3}
+.wh-progress{margin-top:14px;border-radius:18px;box-shadow:0 12px 30px #183b2608}
+.wh-feature{border-radius:22px;box-shadow:0 12px 32px #183b2609;transition:transform .2s,box-shadow .2s}
+.wh-feature:hover{transform:translateY(-2px);box-shadow:0 18px 38px #183b2614}
+.wh-card{border-radius:18px;min-height:122px;padding:17px;box-shadow:0 8px 24px #183b2608}
+.wh-card-icon{width:42px;height:42px;border-radius:13px}
+.wh-character-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.wh-character{position:relative;overflow:hidden;border:1px solid #e5e9e3;border-radius:19px;background:linear-gradient(160deg,#fff 0%,#f5f8f3 100%);box-shadow:0 8px 24px #183b2609;transition:transform .2s,box-shadow .2s}
+.wh-character:hover{transform:translateY(-4px);box-shadow:0 16px 32px #183b2615}
+.wh-character-avatar{position:relative;display:grid;place-items:center;width:clamp(58px,6.5vw,78px);height:clamp(58px,6.5vw,78px);border:1px solid #ffffff;border-radius:23px;font-size:initial;box-shadow:0 7px 20px #173c2412}
+.wh-character-avatar svg{position:relative;z-index:1;color:currentColor}
+.wh-character-avatar span{position:absolute;inset-inline-end:5px;bottom:4px;font-size:8px;font-weight:900;opacity:.55;letter-spacing:.5px}
+.role-wise{background:linear-gradient(145deg,#e6f0e8,#c5ddca);color:#3d7552}.role-mentor{background:linear-gradient(145deg,#f7ead6,#e6c48f);color:#8b6534}.role-inspiration{background:linear-gradient(145deg,#f9e6ef,#e8c2d8);color:#a15c83}.role-partner{background:linear-gradient(145deg,#f8e9e7,#edc7bd);color:#a65e55}.role-creator{background:linear-gradient(145deg,#e9e8f8,#cbc9eb);color:#655d9d}.role-explorer{background:linear-gradient(145deg,#e1f0f2,#b6dce0);color:#3e7d88}.role-builder{background:linear-gradient(145deg,#f2ebdf,#d9c7a8);color:#8a7049}.role-hero{background:linear-gradient(145deg,#f9efd7,#e9d18d);color:#99752d}.role-inventor{background:linear-gradient(145deg,#e5effb,#bdd5f2);color:#4d76a5}.role-learner{background:linear-gradient(145deg,#e8f1e3,#c9dfbd);color:#5c8351}.role-analyst{background:linear-gradient(145deg,#e4edf0,#bfd2d9);color:#547786}
+.wh-character b{font-size:12px}.wh-character small{font-size:8px;letter-spacing:.7px;color:#9aa69d}
+.wh-companions{border-radius:24px;box-shadow:0 18px 40px #102d6220}
+.wh-companions article{transition:background .2s,border-color .2s}.wh-companions article:hover{background:#ffffff1d;border-color:#ffffff70}
+.member-dashboard{max-width:1240px;margin:14px auto 40px;color:#20372e}
+.member-dashboard-head{padding:24px 26px;border-radius:22px;background:linear-gradient(120deg,#102d45,#1e5860 70%,#377b70);color:#fff;box-shadow:0 18px 42px #102d4524}
+.member-dashboard-head .dashboard-kicker{color:#e7cf91;letter-spacing:1.5px}
+.member-dashboard-head h1{color:#fff;font-size:clamp(25px,3vw,34px)}
+.member-dashboard-head p{color:#d9e9e5}
+.dashboard-refresh{border:1px solid #ffffff55;background:#ffffff18;color:#fff;border-radius:12px;padding:10px 14px}
+.member-kpi-grid{gap:13px;margin:16px 0}
+.member-kpi-grid article{position:relative;overflow:hidden;min-height:132px;border:1px solid #e5ebe4;border-radius:20px;background:linear-gradient(145deg,#fff,#f6f9f4);box-shadow:0 10px 28px #183b2608}
+.member-kpi-grid article:after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;inset-inline-end:-32px;bottom:-42px;background:radial-gradient(circle,#d8e8d8 0,transparent 70%);opacity:.8}
+.member-kpi-grid article>span{display:grid;place-items:center;width:39px;height:39px;border-radius:13px;background:#e8f1e7;color:#3e7855;font-size:0}
+.member-kpi-grid article>span svg{width:20px;height:20px}
+.member-kpi-grid article:nth-child(2)>span{background:#fff1d6;color:#a67b2f}.member-kpi-grid article:nth-child(3)>span{background:#f8e9e6;color:#a65f52}.member-kpi-grid article:nth-child(4)>span{background:#e8eff7;color:#597da0}.member-kpi-grid article:nth-child(5)>span{background:#f5edda;color:#a17c36}
+.member-kpi-grid article small{margin-top:12px;color:#7c8d82;font-weight:650}
+.member-kpi-grid article strong{font-size:30px;color:#214b3a;font-variant-numeric:tabular-nums}
+.dashboard-panel{border:1px solid #e5ebe4;border-radius:20px;box-shadow:0 10px 28px #183b2607;padding:20px;background:#fff}
+.dashboard-panel-head h2{color:#244a3a}
+.dashboard-panel-head>span{padding:7px 11px;border-radius:999px;background:#edf4e9;color:#3f7854;font-weight:800}
+.game-stat-row{padding:14px 0;border-bottom:1px solid #edf1eb}
+.game-stat-track{height:8px;border-radius:999px;background:#edf1eb;overflow:hidden}
+.game-stat-track i{height:100%;border-radius:inherit;background:linear-gradient(90deg,#75a979,#d5b56a)}
+.recent-game-row{padding:13px 0;border-bottom:1px solid #edf1eb}
+.pmo-panel{background:linear-gradient(145deg,#fff,#f7faf5)}
+.pmo-cycle-grid article{border-radius:16px;background:#f5f8f2;border-color:#e5ece2}
+.ecosystem-link-grid article{border-radius:16px;transition:transform .18s,box-shadow .18s}
+.ecosystem-link-grid article:hover{transform:translateY(-2px);box-shadow:0 8px 18px #173c2410}
+.dashboard-integrity{border-radius:17px}
+.character-studio{max-width:1240px;margin:14px auto 40px}
+.character-studio-head{border-radius:25px;box-shadow:0 20px 46px #102d4520}
+.cs-card{border-radius:20px;box-shadow:0 10px 28px #173c240a}
+.cs-art{height:265px}
+.cs-card-copy{padding:17px}
+.cs-original-art{border-radius:20px}
+.game-card{border-radius:20px;box-shadow:0 10px 28px #173c2409;transition:transform .2s,box-shadow .2s}
+.game-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px #173c2414}
+.game-card button{border-radius:12px;min-height:42px}
+.number-game,.ludo-page{border-radius:22px}
+.number-head{padding:22px;border-radius:20px;background:linear-gradient(120deg,#102d45,#215d5b);color:#fff}
+.number-head h1,.number-head p{color:#fff}
+.number-scorebar>div{border-radius:16px;box-shadow:0 8px 20px #173c2408}
+.number-cell{border-radius:12px}
+@media(max-width:850px){.wh-character-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){.wh-planet-stage{width:100%;opacity:.45;mask-image:linear-gradient(180deg,#000 0%,transparent 100%)}.wh-planet{width:230px;right:0;top:35%}.wh-hero-copy{max-width:100%}.wh-character-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.member-dashboard-head{padding:19px}.member-kpi-grid article{min-height:118px}.cs-art{height:205px}}
+@media(prefers-reduced-motion:reduce){.wh-character,.wh-feature,.game-card{transition:none}}
+
+/* Game catalogue art tiles and premium character cards */
+.game-card{overflow:hidden;padding:18px;min-height:255px}
+.game-card .game-icon{position:relative;display:grid;place-items:center;width:66px;height:66px;margin:0 0 18px;border-radius:21px;font-size:34px;background:linear-gradient(145deg,#f8edcf,#e6d2a2);box-shadow:inset 0 1px 0 #fff,0 8px 18px #173c2410}
+.game-card:nth-child(3n+2) .game-icon{background:linear-gradient(145deg,#dcecf0,#b8d4d9)}
+.game-card:nth-child(3n) .game-icon{background:linear-gradient(145deg,#e6e2f2,#c9c2e3)}
+.game-card h3{font-size:16px;color:#203e36}
+.game-card p{min-height:54px}
+.game-card .score{top:18px;inset-inline-end:18px}
+.game-card.game-coming{background:linear-gradient(155deg,#fff,#f8faf7)}
+.game-card.game-coming .game-icon{filter:saturate(.65);opacity:.82}
+.game-card button:disabled{background:#f0f2ef;color:#9aa59d;cursor:not-allowed}
+.cs-card{overflow:hidden}
+.cs-art{background:radial-gradient(circle at 50% 25%,#fff 0,#f3f4eb 48%,#dfe9e4 100%)}
+.cs-card:nth-child(3n+2) .cs-art{background:radial-gradient(circle at 50% 20%,#fff9e8 0,#f4e8d1 55%,#e8d7bd 100%)}
+.cs-card:nth-child(3n) .cs-art{background:radial-gradient(circle at 50% 20%,#f8fbff 0,#e5edf5 55%,#d7e2eb 100%)}
+.cs-card-copy h3{font-size:16px}
+.cs-kind{letter-spacing:.06em;text-transform:uppercase}
+@media(max-width:560px){.game-card{min-height:230px;padding:15px}.game-card .game-icon{width:56px;height:56px;border-radius:17px;margin-bottom:14px}}
+
+
+/* Character cards: one dedicated portrait slot per canonical Family World role. */
+.wh-character-card { position:relative; overflow:hidden; border:1px solid rgba(190,151,73,.5); border-radius:18px; background:linear-gradient(155deg,rgba(255,255,255,.98),rgba(247,239,220,.96)); box-shadow:0 9px 24px rgba(21,34,52,.09),inset 0 0 0 3px rgba(255,255,255,.8); padding:9px 8px 11px; text-align:center; }
+.wh-character-card .wh-character-avatar { position:relative; display:grid; place-items:center; width:100%; aspect-ratio: .82; min-height:108px; overflow:hidden; border-radius:12px; background:linear-gradient(145deg,#f7e9c5,#e7d5a5 52%,#fff9e9); border:1px solid rgba(177,135,54,.45); }
+.wh-character-card .wh-character-portrait { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; }
+.wh-character-card .wh-character-fallback { display:grid; place-items:center; width:58px; height:58px; border-radius:50%; color:#8b641e; background:rgba(255,255,255,.72); border:1px solid rgba(177,135,54,.45); }
+.wh-character-card .wh-character-level { position:absolute; inset-inline-start:6px; bottom:6px; padding:3px 7px; border-radius:999px; background:#172b45; color:#fff; font-size:10px; font-weight:800; letter-spacing:.02em; }
+.wh-character-card>b { display:block; margin-top:8px; color:#24364c; font-size:clamp(11px,1.1vw,14px); line-height:1.35; }
+.wh-character-card>small { display:block; margin-top:4px; color:#92743b; font-size:9px; letter-spacing:.08em; }
+@media(max-width:560px){.wh-character-card{padding:6px 5px 8px;border-radius:13px}.wh-character-card .wh-character-avatar{min-height:86px}.wh-character-card .wh-character-fallback{width:42px;height:42px}.wh-character-card>small{font-size:8px}}
+
+/* Official portrait sprite: each card selects one preserved portrait frame. */
+.wh-character-card .wh-character-portrait{object-fit:cover;object-position:center top}
+.cs-art img{width:100%;height:100%;object-fit:cover}
+.cs-art img[src*="family-world-character-sprite"]{object-fit:cover}
+
+
+/* OSMAR Orbit City — immersive sustainable orbital-world visual */
+.wh-hero{isolation:isolate;overflow:hidden;min-height:clamp(430px,48vw,610px);background:radial-gradient(ellipse at 76% 45%,#155b68 0%,#0c344c 42%,#071a30 78%);}
+.wh-planet-stage{inset:0 0 0 auto;width:72%;height:100%;mask-image:linear-gradient(90deg,transparent 0%,#000 14%,#000 100%);opacity:1;}
+.wh-orbit-city-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
+.wh-orbit-caption{position:absolute;z-index:2;right:clamp(18px,3vw,42px);bottom:22px;display:flex;align-items:center;gap:12px;padding:9px 13px;border:1px solid #c6ead34d;border-radius:999px;background:#071b31b8;color:#f4e6bf;backdrop-filter:blur(12px);font-size:10px;font-weight:850;letter-spacing:.12em;}
+.wh-orbit-caption b{padding-inline-start:11px;border-inline-start:1px solid #ffffff45;color:#a9e0d0;font-variant-numeric:tabular-nums;}
+.wh-hero-copy{max-width:550px;}
+.wh-hero-shade{background:linear-gradient(90deg,#06182bf2 0%,#09263bd9 36%,#09263b30 70%,transparent 100%),linear-gradient(0deg,#06182b8c,transparent 58%);}
+@media(max-width:700px){.wh-hero{min-height:560px}.wh-planet-stage{width:100%;height:66%;top:0;bottom:auto;mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 100%);opacity:.92}.wh-orbit-city-art{object-position:58% center}.wh-hero-copy{position:relative;margin-top:205px;max-width:100%;}.wh-orbit-caption{right:14px;bottom:12px;font-size:8px;padding:7px 10px;}}
+@media(prefers-reduced-motion:reduce){.wh-orbit-city-art{animation:none;}}
+/* Preserve the official portrait collection in collectible character cards. */
+.cs-card.cs-character .cs-art{position:relative;overflow:hidden;background:linear-gradient(150deg,#f8f1df,#e5e8e0);}
+.cs-card.cs-character .cs-art img[src*="family-world-character-sprite"]{width:100%;height:100%;object-fit:cover;object-position:center var(--sprite-position,0%);}
+.cs-card.cs-character .cs-badge{z-index:2;border:1px solid #e7d3a0;background:#172b45;color:#f8e9bd;}

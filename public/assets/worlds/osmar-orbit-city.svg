@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960" role="img" aria-labelledby="title desc">
+<title id="title">OSMAR Orbit City — Living Sustainable Family World</title>
+<desc id="desc">A vast floating green island city surrounded by six luminous orbital districts, connected by transit bridges and sustainable water and energy systems.</desc>
+<defs>
+ <linearGradient id="space" x2="0" y2="1"><stop stop-color="#06182f"/><stop offset=".55" stop-color="#0b3851"/><stop offset="1" stop-color="#071b31"/></linearGradient>
+ <radialGradient id="nebula"><stop stop-color="#4eac9a" stop-opacity=".32"/><stop offset="1" stop-color="#4eac9a" stop-opacity="0"/></radialGradient>
+ <linearGradient id="land" x2=".2" y2="1"><stop stop-color="#d7e7a2"/><stop offset=".35" stop-color="#79b78c"/><stop offset=".72" stop-color="#347c79"/><stop offset="1" stop-color="#173f61"/></linearGradient>
+ <linearGradient id="cliff" x2="0" y2="1"><stop stop-color="#7bb99b"/><stop offset=".45" stop-color="#2f7180"/><stop offset="1" stop-color="#102b4c"/></linearGradient>
+ <linearGradient id="gold" x2="1"><stop stop-color="#fff0b2"/><stop offset="1" stop-color="#c49b54"/></linearGradient>
+ <linearGradient id="water" x2="0" y2="1"><stop stop-color="#a6e9df"/><stop offset="1" stop-color="#2486a1"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <pattern id="windows" width="15" height="18" patternUnits="userSpaceOnUse"><rect x="4" y="4" width="5" height="7" rx="1" fill="#c9f4e9" opacity=".7"/></pattern>
+</defs>
+<rect width="1600" height="960" fill="url(#space)"/><ellipse cx="900" cy="480" rx="690" ry="470" fill="url(#nebula)"/>
+<g fill="#e7edcc" opacity=".75"><circle cx="115" cy="112" r="2"/><circle cx="250" cy="240" r="1.5"/><circle cx="1435" cy="120" r="2"/><circle cx="1335" cy="310" r="1.5"/><circle cx="108" cy="740" r="2"/><circle cx="1490" cy="760" r="1.7"/><circle cx="430" cy="90" r="1.4"/><circle cx="1230" cy="850" r="2"/><circle cx="720" cy="140" r="1.3"/><circle cx="1540" cy="480" r="1.4"/></g>
+<g fill="none" stroke-width="2"><ellipse cx="910" cy="492" rx="600" ry="220" stroke="#8fe1d0" stroke-opacity=".5" transform="rotate(-17 910 492)"/><ellipse cx="910" cy="492" rx="730" ry="300" stroke="#e7c982" stroke-opacity=".5" transform="rotate(16 910 492)"/><ellipse cx="910" cy="492" rx="820" ry="370" stroke="#7eb7e0" stroke-opacity=".32" transform="rotate(-31 910 492)"/><ellipse cx="910" cy="492" rx="500" ry="390" stroke="#8fe1d0" stroke-opacity=".22" transform="rotate(55 910 492)"/></g>
+<!-- Six orbital districts -->
+<g filter="url(#glow)">
+ <g transform="translate(330 250)"><circle r="72" fill="#0b344e" stroke="#a5e6d2" stroke-width="3"/><circle r="58" fill="#174c5c"/><path d="M-48 12Q-25 -35 0 -30Q35 -45 48 5L35 28 -35 28Z" fill="#73b88e"/><path d="M-30 5v-38h16v30m10-38h18v45m9-25h16v28" fill="#b8e9d5" opacity=".8"/><circle cx="-28" cy="-43" r="7" fill="#f1d38d"/></g>
+ <g transform="translate(1250 225)"><circle r="82" fill="#0b344e" stroke="#e5cb8b" stroke-width="3"/><circle r="67" fill="#16445a"/><path d="M-53 15Q-32 -40 0 -34Q35 -42 52 14L37 37H-39Z" fill="#6bb58b"/><path d="M-34 10v-44h18v38m12-52h18v52m13-37h16v39" fill="#b8e9d5" opacity=".8"/><path d="M-38 -39h76" stroke="#e8d99f" stroke-width="4"/></g>
+ <g transform="translate(1390 600)"><circle r="65" fill="#0b344e" stroke="#90d9d0" stroke-width="3"/><circle r="51" fill="#174c5c"/><path d="M-40 14Q-25 -26 0 -25Q29 -35 42 12L30 27H-32Z" fill="#84c08d"/><path d="M-24 5v-32h14v29m8-40h15v40m8-27h12v27" fill="#b8e9d5" opacity=".8"/></g>
+ <g transform="translate(1010 790)"><circle r="74" fill="#0b344e" stroke="#e5cb8b" stroke-width="3"/><circle r="60" fill="#174c5c"/><path d="M-46 14Q-25 -38 0 -30Q30 -38 46 12L34 30H-35Z" fill="#77b78b"/><path d="M-30 8v-38h16v35m12-48h16v48m12-32h15v32" fill="#b8e9d5" opacity=".8"/></g>
+ <g transform="translate(470 760)"><circle r="66" fill="#0b344e" stroke="#8bd7d0" stroke-width="3"/><circle r="53" fill="#174c5c"/><path d="M-40 13Q-20 -30 0 -25Q27 -32 41 13L30 29H-31Z" fill="#83bd8c"/><path d="M-25 4v-30h14v28m8-40h16v40m8-26h12v26" fill="#b8e9d5" opacity=".8"/></g>
+ <g transform="translate(185 570)"><circle r="58" fill="#0b344e" stroke="#e5cb8b" stroke-width="3"/><circle r="45" fill="#174c5c"/><path d="M-34 12Q-18 -27 0 -22Q24 -30 35 12L26 25H-27Z" fill="#83bd8c"/><path d="M-21 4v-27h12v25m7-36h14v36m8-23h10v23" fill="#b8e9d5" opacity=".8"/></g>
+</g>
+<!-- Transit loops and bridge links -->
+<g fill="none" stroke-linecap="round"><path d="M400 280Q560 120 820 260T1180 235" stroke="#a7e9d6" stroke-width="5" stroke-opacity=".65"/><path d="M1240 310Q1450 410 1375 535" stroke="#f0d18e" stroke-width="5" stroke-opacity=".6"/><path d="M1340 655Q1250 780 1080 790" stroke="#a7e9d6" stroke-width="5" stroke-opacity=".55"/><path d="M940 785Q680 900 525 790" stroke="#e7c982" stroke-width="5" stroke-opacity=".55"/><path d="M410 720Q220 690 205 625" stroke="#a7e9d7" stroke-width="5" stroke-opacity=".55"/></g>
+<!-- Main floating continent -->
+<path d="M370 500Q440 340 620 300Q790 205 990 285Q1160 315 1270 470Q1315 570 1170 630Q1050 700 890 680Q700 750 530 650Q390 620 370 500Z" fill="url(#cliff)" stroke="#9fe0c5" stroke-width="3"/>
+<path d="M390 480Q455 350 630 315Q800 245 990 300Q1150 330 1240 475Q1270 545 1140 590Q1000 660 875 640Q700 700 545 620Q420 590 390 480Z" fill="url(#land)"/>
+<!-- Sponge-city blue-green water corridors -->
+<g fill="none" stroke-linecap="round"><path d="M490 490Q620 390 760 430T1040 410Q1140 425 1190 495" stroke="url(#water)" stroke-width="18"/><path d="M510 550Q650 490 750 535T1000 520Q1100 505 1170 550" stroke="#b4efe2" stroke-width="8" opacity=".8"/><path d="M610 345Q650 430 620 580M800 300Q830 405 790 635M1010 320Q960 430 1040 600" stroke="#e0f4ca" stroke-width="6" opacity=".55"/></g>
+<!-- Terraced skyline -->
+<g stroke="#e1f0d2" stroke-opacity=".5" stroke-width="2">
+ <g transform="translate(565 420)"><path d="M-34 65V-28L-5 -58 24 -28V65Z" fill="#2b6676"/><path d="M-24 50V-18H14V50Z" fill="url(#windows)"/><path d="M-40 -28H31" stroke="#e9dca8" stroke-width="7"/><path d="M-40 66H32" stroke="#7dbb87" stroke-width="12"/></g>
+ <g transform="translate(720 370)"><path d="M-40 100V-62Q0 -105 40 -62V100Z" fill="#28677a"/><path d="M-27 80V-45H27V80Z" fill="url(#windows)"/><path d="M-46 -58Q0 -118 46 -58" fill="none" stroke="#e8d18d" stroke-width="8"/><path d="M-48 100H48" stroke="#77b98b" stroke-width="15"/></g>
+ <g transform="translate(900 400)"><path d="M-43 80V-35L0 -75 43 -35V80Z" fill="#245e76"/><path d="M-28 60V-25H28V60Z" fill="url(#windows)"/><path d="M-50 -35H50" stroke="#e9d89c" stroke-width="7"/><path d="M-52 82H52" stroke="#7dbb87" stroke-width="13"/></g>
+ <g transform="translate(1065 445)"><path d="M-34 55V-15L0 -48 34 -15V55Z" fill="#2b6676"/><path d="M-23 42V-8H23V42Z" fill="url(#windows)"/><path d="M-38 -15H38" stroke="#e9dca8" stroke-width="6"/><path d="M-42 57H42" stroke="#7dbb87" stroke-width="11"/></g>
+</g>
+<!-- Green roofs, solar farms and parks -->
+<g fill="#3b8e70" stroke="#b8e1a2" stroke-width="2"><ellipse cx="565" cy="475" rx="44" ry="10"/><ellipse cx="720" cy="472" rx="51" ry="12"/><ellipse cx="900" cy="482" rx="54" ry="12"/><ellipse cx="1065" cy="500" rx="43" ry="10"/></g>
+<g stroke="#d8e9c3" stroke-width="2" fill="#2e7080"><path d="M640 520l52-14 30 13-52 15Z"/><path d="M845 545l50-15 34 13-50 15Z"/><path d="M1000 560l52-15 30 13-52 15Z"/></g>
+<g transform="translate(835 360)"><path d="M0 60V-18" stroke="#d9d5a3" stroke-width="10"/><circle cy="-38" r="47" fill="#75b77f"/><circle cx="-32" cy="-23" r="28" fill="#9dca8b"/><circle cx="32" cy="-23" r="29" fill="#8cc68a"/><circle cy="-72" r="22" fill="#c2dc9c"/><circle cy="-72" r="7" fill="#f8e5a8" filter="url(#glow)"/></g>
+<g stroke="#d9f2e8" stroke-width="4" stroke-linecap="round"><path d="M470 405v-65m0 0l-22 -20m22 20l20 -25m-20 25l-4 28"/><path d="M1160 420v-70m0 0l-24 -20m24 20l22 -26m-22 26l-4 31"/></g>
+<g fill="#f4d99a" stroke="#fff3c6" stroke-width="2"><rect x="615" y="180" width="42" height="14" rx="7" transform="rotate(16 615 180)"/><rect x="1195" y="680" width="42" height="14" rx="7" transform="rotate(-20 1195 680)"/><rect x="290" y="690" width="42" height="14" rx="7" transform="rotate(22 290 690)"/></g>
+<g fill="#8dc7b4" opacity=".55"><ellipse cx="350" cy="360" rx="52" ry="10"/><ellipse cx="1280" cy="390" rx="58" ry="12"/><ellipse cx="760" cy="850" rx="80" ry="14"/></g>
+<g fill="#f6dfa0" filter="url(#glow)"><circle cx="910" cy="492" r="7"/><circle cx="330" cy="250" r="5"/><circle cx="1250" cy="225" r="5"/><circle cx="1390" cy="600" r="5"/></g>
+</svg>
