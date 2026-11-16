@@ -144,8 +144,7 @@ export default function App() {
     setBusy(true); setNotice('');
     try {
       const { error } = await supabase.auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: authRedirectUrl() } });
-      if (error) throw error;
-      setNotice(t.confirmationResent);
+      if (error) {\n        if (error?.code === 'over_email_send_rate_limit' || /rate limit/i.test(error?.message || '')) { try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_reason: 'confirmation_email_rate_limited' }); } catch {} }\n        throw error;\n      }\n      setNotice(t.confirmationResent);
     } catch (error) {
       const rateLimited = error?.code === 'over_email_send_rate_limit' || /rate limit/i.test(error?.message || '');
       setNotice(rateLimited ? t.emailRateLimited : (error.message || 'Please try again.'));
@@ -178,7 +177,7 @@ export default function App() {
           }
         }
         const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { guardian_attested: true, invite_code: acceptedInvite }, emailRedirectTo: authRedirectUrl() } });
-        if (error) throw error;
+        if (error) { try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_code_hint: normalizedInvite || null, p_reason: 'signup_failed' }); } catch {} throw error; }
         setNotice(inviteWarning || (!data.session ? t.checkEmail : (lang==='ar'?'تم إنشاء الحساب بنجاح.':'Account created successfully.')));
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
