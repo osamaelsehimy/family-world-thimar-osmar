@@ -231,6 +231,7 @@ function OSMARAdmin({ supabase, lang }) {
   const [source, setSource] = useState('');
   const [code, setCode] = useState('');
   const [pending, setPending] = useState([]);
+  const [recentRegistrations, setRecentRegistrations] = useState([]);
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState('');
   const [memberFilter, setMemberFilter] = useState('all');
@@ -267,15 +268,17 @@ function OSMARAdmin({ supabase, lang }) {
     setBusy(true);
     setMessage('');
     try {
-      const [pendingResult, memberResult, pointsResult, gamesResult] = await Promise.all([
+      const [pendingResult, memberResult, pointsResult, gamesResult, recentResult] = await Promise.all([
         supabase.rpc('osmar_pending_members'),
         supabase.rpc('osmar_member_directory_v2'),
         supabase.rpc('osmar_points_directory'),
-        supabase.rpc('osmar_game_directory')
+        supabase.rpc('osmar_game_directory'),
+        supabase.rpc('osmar_recent_registrations', { p_limit: 30 })
       ]);
       const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error;
       if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
       if (!pendingResult.error) setPending(pendingResult.data || []);
+      if (!recentResult.error) setRecentRegistrations(recentResult.data || []);
       if (!memberResult.error) {
         const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
         const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
@@ -425,10 +428,23 @@ function OSMARAdmin({ supabase, lang }) {
     <section className="admin-panel">
       <div className="admin-heading"><h3>{t.pendingTitle}</h3><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       {message && <p className="notice" role="status">{message}</p>}
-      {pending.length === 0 ? <p className="muted">{t.noPending}</p> : pending.map(item=><article className="pending-row" key={item.member_id}>
+      {pending.length === 0 ? <p className="muted">{label('لا توجد طلبات اعتماد معلّقة حاليًا. راجع سجل التسجيلات الحديثة للتأكد من حالة كل حساب.','There are no pending approvals right now. Check recent registrations for each account status.','目前没有待审核申请。请查看最近注册记录以确认每个账户的状态。')}</p> : pending.map(item=><article className="pending-row" key={item.member_id}>
         <div><strong>{item.member_code}</strong><small>{item.referral_type} · {item.inviter_member_code || 'OSMAR'}</small></div>
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
+    </section>
+    <section className="admin-panel recent-registrations">
+      <div className="admin-heading"><div><h3>{label('التسجيلات الحديثة · آخر 30 يومًا','Recent registrations · last 30 days','最近注册 · 过去 30 天')}</h3><p className="muted">{label('السجل ده بيعرض المسجلين حتى لو اتعمدوا بالفعل أو لسه محتاجين تأكيد البريد.','Includes members already approved and accounts still awaiting email confirmation.','包括已批准的会员以及仍待邮箱验证的账户。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
+      <div className="directory-metrics">
+        <div><strong>{recentRegistrations.length}</strong><span>{label('تسجيل حديث','Recent signups','近期注册')}</span></div>
+        <div><strong>{recentRegistrations.filter(item=>item.membership_status==='pending').length}</strong><span>{label('بانتظار الاعتماد','Awaiting approval','等待审核')}</span></div>
+        <div><strong>{recentRegistrations.filter(item=>!item.email_confirmed).length}</strong><span>{label('بريد غير مؤكد','Email unconfirmed','邮箱未验证')}</span></div>
+      </div>
+      {recentRegistrations.length===0?<p className="muted">{label('لا توجد تسجيلات حديثة.','No recent registrations.','暂无近期注册。')}</p>:<div className="member-list">{recentRegistrations.map(item=><article className="member-row" key={item.member_id}>
+        <div className="member-main"><strong>{item.member_code||'—'}</strong><span>{item.email}</span><small>{t.registeredAt}: {item.registered_at?new Date(item.registered_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
+        <div className="member-tags"><span className={item.membership_status==='active'?'member-status active':'member-status'}>{item.membership_status==='active'?label('عضوية معتمدة','Approved','已批准'):item.membership_status==='pending'?label('بانتظار الاعتماد','Pending approval','待审核'):item.membership_status}</span><span className="member-type">{item.referral_type}</span></div>
+        <small className="member-contact">{item.email_confirmed?label('البريد مؤكد','Email confirmed','邮箱已验证'):label('البريد لم يتم تأكيده بعد','Email not confirmed yet','邮箱尚未验证')} · {item.referral_status==='approved'?label('الدعوة معتمدة','Invitation approved','邀请已批准'):item.referral_status==='pending'?label('الدعوة بانتظار المراجعة','Invitation awaiting review','邀请待审核'):label('لا يوجد سجل دعوة مرتبط','No linked invitation record','没有关联的邀请码记录')}</small>
+      </article>)}</div>}
     </section>
     <section className="admin-panel admin-permissions-entry">
       <button type="button" className="admin-permissions-launch" aria-expanded={showPermissions} onClick={() => setShowPermissions(value => !value)}>
