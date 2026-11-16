@@ -275,7 +275,7 @@ function OSMARAdmin({ supabase, lang }) {
         supabase.rpc('osmar_game_directory'),
         supabase.rpc('osmar_recent_registrations', { p_limit: 30 })
       ]);
-      const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error;
+      const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error || recentResult.error;
       if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
       if (!pendingResult.error) setPending(pendingResult.data || []);
       if (!recentResult.error) setRecentRegistrations(recentResult.data || []);
