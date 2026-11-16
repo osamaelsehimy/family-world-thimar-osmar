@@ -208,7 +208,7 @@ export default function App() {
   }
   function completeGame(game) { if (game.available === false) return; if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } if (game.id === 'ludo') { setTab('ludo'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
   const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['profile', t.profile, UserRound], ['worlds', t.worlds, Globe2], ['threex', t.threex, MapIcon], ['play', t.play, Gamepad2], ['entertainment', t.entertainment, Clapperboard], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
-  if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
+  if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><button className="topbar-logout" type="button" onClick={logout}><LogOut size={16}/><span>{t.logout}</span></button><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (mode === 'recovery') return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><form className="auth-card" onSubmit={saveRecoveredPassword}><span className="mark">🔐</span><p className="eyebrow">THIMAR OSMAR</p><h1>{t.resetTitle}</h1><label>{t.newPassword}<input type="password" autoComplete="new-password" minLength="8" required value={newPassword} onChange={e=>setNewPassword(e.target.value)} /></label><label>{t.confirmPassword}<input type="password" autoComplete="new-password" minLength="8" required value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} /></label><button className="primary wide" disabled={busy}>{busy?'…':t.savePassword}</button>{notice&&<p className="notice" role="status">{notice}</p>}</form><footer>{t.name} © 2026</footer></div>;
   if (!session) return <div className="auth-page"><header className="auth-head"><Brand /><div className="auth-actions">{!isStandalone && <button className="install-button" type="button" onClick={installApp}>{t.install}</button>}<Language lang={lang} setLang={setLang} /></div></header><form className="auth-card" onSubmit={auth}>
     <span className="mark">🌱</span><p className="eyebrow">THIMAR OSMAR PRESENTS</p><h1>{t.welcome}</h1><p>{t.intro}</p>
@@ -419,7 +419,7 @@ function OSMARAdmin({ supabase, lang }) {
         <article className="admin-overview-card"><span className="admin-overview-icon">◷</span><small>{label('بانتظار المراجعة','Awaiting approval','等待审核')}</small><strong>{pending.length}</strong><em>{label('طلبات تحتاج قرارًا','requests need a decision','需要处理的申请')}</em></article>
         <article className="admin-overview-card"><span className="admin-overview-icon">✉</span><small>{label('تأكيد البريد مطلوب','Email confirmation needed','需要验证邮箱')}</small><strong>{recentRegistrations.filter(item=>!item.email_confirmed).length}</strong><em>{label('من آخر 30 يومًا','in the last 30 days','最近 30 天')}</em></article>
         <article className="admin-overview-card"><span className="admin-overview-icon">⌁</span><small>{label('تسجيلات آخر 30 يومًا','Signups · last 30 days','近 30 天注册')}</small><strong>{recentRegistrations.length}</strong><em>{label('سجل التسجيلات','registration records','注册记录')}</em></article>
-        <article className="admin-overview-card"><span className="admin-overview-icon">⌑</span><small>{label('بدون سجل دعوة مرتبط','No linked invite record','没有关联邀请记录')}</small><strong>{recentRegistrations.filter(item=>!item.referral_status).length}</strong><em>{label('حسابات قديمة أو مباشرة','legacy or direct accounts','历史或直接注册账户')}</em></article>
+        <article className="admin-overview-card"><span className="admin-overview-icon">⚑</span><small>{label('محاولات تحتاج متابعة','Attempts to review','需要跟进的尝试')}</small><strong>{registrationAttempts.length}</strong><em>{label('أخطاء التسجيل المسجلة','recorded signup issues','已记录的注册问题')}</em></article>
       </div>
       <div className="admin-integrity-strip"><span className="admin-integrity-mark">✓</span><div><strong>{label('سلامة ربط العضويات','Membership record integrity','会员记录完整性')}</strong><p>{label('آخر فحص مباشر: ','Last live directory check: ','最近一次实时检查：')}{members.length}{label(' ملف عضوية ظاهرًا في السجل.',' membership profiles currently visible in the directory.',' 份会员资料显示在目录中。')}</p></div><span className="admin-integrity-count">{label('0 حسابات ناقصة','0 missing profiles','0 个缺失资料')}</span></div>
     </section>
@@ -480,6 +480,7 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
     </section>
+    <details className="admin-collapsible"><<summary>{label('التسجيلات الحديثة','Recent registrations','最近注册')} · {recentRegistrations.length}</summary></summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('التسجيلات الحديثة · آخر 30 يومًا','Recent registrations · last 30 days','最近注册 · 过去 30 天')}</h3><p className="muted">{label('السجل ده بيعرض المسجلين حتى لو اتعمدوا بالفعل أو لسه محتاجين تأكيد البريد.','Includes members already approved and accounts still awaiting email confirmation.','包括已批准的会员以及仍待邮箱验证的账户。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       <div className="directory-metrics">
@@ -492,7 +493,8 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="member-tags"><span className={item.email_confirmed && item.membership_status==='active'?'member-status active':'member-status'}>{!item.email_confirmed?label('بانتظار تأكيد البريد','Awaiting email confirmation','等待邮箱验证'):item.membership_status==='pending'?label('بانتظار اعتماد OSMAR','Awaiting OSMAR approval','等待 OSMAR 审核'):item.membership_status==='active'?label('عضوية معتمدة','Approved','已批准'):item.membership_status}</span><span className="member-type">{item.referral_type}</span></div>
         <small className="member-contact">{item.email_confirmed?label('البريد مؤكد','Email confirmed','邮箱已验证'):label('البريد لم يتم تأكيده بعد','Email not confirmed yet','邮箱尚未验证')} · {item.referral_status==='approved'?label('الدعوة معتمدة','Invitation approved','邀请已批准'):item.referral_status==='pending'?label('الدعوة بانتظار المراجعة','Invitation awaiting review','邀请待审核'):label('لا يوجد سجل دعوة مرتبط','No linked invitation record','没有关联的邀请码记录')}</small>
       </article>)}</div>}
-    </section>
+    </section></details>
+    <details className="admin-collapsible"><<summary>{label('أكواد الدعوة','Invitation codes','邀请码')} · {inviteDirectory.length}</summary></summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('أكواد الدعوة','Invitation codes','邀请码')}</h3><p className="muted">{label('اسم الكود وسعته واستخداماته والمتبقي. الكود الكامل يظهر عند إنشائه فقط حفاظًا على أمانه.','Label, capacity, usage and remaining invitations. Full codes are shown only once at creation for security.','显示名称、容量、使用次数与剩余次数。为安全起见，完整邀请码仅在创建时显示。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       <div className="member-list">{inviteDirectory.map((item,index)=><article className="member-row" key={item.invite_id}>
@@ -501,14 +503,15 @@ function OSMARAdmin({ supabase, lang }) {
         <small className="member-contact">{label('أنشأه: ','Created by: ','创建者：')}{item.created_by_email||'OSMAR'} · {item.revoked_at?label('ملغي','Revoked','已撤销'):item.expires_at && new Date(item.expires_at)<new Date()?label('منتهي','Expired','已过期'):label('ساري','Available','有效')}</small>
       </article>)}</div>
       {inviteDirectory.length===0&&<p className="muted">{label('لا توجد أكواد.','No invitation codes yet.','暂无邀请码。')}</p>}
-    </section>
+    </section></details>
+    <details className="admin-collapsible"><<summary>{label('محاولات تحتاج متابعة','Attempts needing attention','需要跟进的尝试')} · {registrationAttempts.length}</summary></summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('محاولات التسجيل التي واجهت مشكلة','Registration attempts needing attention','需要关注的注册尝试')}</h3><p className="muted">{label('يظهر هنا البريد الذي أدخل كودًا غير صالح أو مستهلكًا. المحاولات القديمة التي لم يسجل النظام بريدها لا يمكن استرجاعها بأثر رجعي.','Emails entered with invalid or exhausted codes appear here. Older attempts whose email was never recorded cannot be reconstructed retroactively.','输入无效或已用完邀请码的邮箱会显示在这里。系统未曾记录邮箱的历史尝试无法追溯恢复。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       {registrationAttempts.length===0?<p className="muted">{label('لا توجد محاولات مسجلة.','No recorded attempts.','暂无记录。')}</p>:<div className="member-list">{registrationAttempts.map((item,index)=><article className="member-row" key={item.attempt_number}>
         <div className="member-main"><strong>{item.attempt_number}</strong><span>{item.email}</span><small>{item.attempted_at?new Date(item.attempted_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
         <div className="member-tags"><span className="member-status">{item.reason}</span><span className="member-type">{item.code_hint||'—'}</span></div>
       </article>)}</div>}
-    </section>
+    </section></details>
     <section className="admin-panel admin-permissions-entry">
       <button type="button" className="admin-permissions-launch" aria-expanded={showPermissions} onClick={() => setShowPermissions(value => !value)}>
         <span className="admin-permissions-icon"><ShieldCheck size={22}/></span>
