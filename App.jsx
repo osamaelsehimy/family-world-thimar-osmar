@@ -251,7 +251,9 @@ function WorldGrid({ lang, worlds: list }) { const status={ar:'قيد التطو
 function GameGrid({ lang, items, done, onPlay }) { const soon={ar:'قيد التطوير',en:'In development',zh:'开发中'}; const beta={ar:'نسخة تجريبية',en:'Beta',zh:'测试版'}; return <div className="game-grid">{items.map(game => <article className={'game-card '+(game.available===false?'game-coming':'')} key={game.id}><span className="game-icon">{game.icon}</span><span className="score">{game.available===false?soon[lang]:game.id==='ludo'?beta[lang]:lang==='ar'?'متاح':lang==='zh'?'可用':'Available'}</span><h3>{translated(game, '', lang)}</h3><p>{translated(game, 'Desc', lang)}</p><button disabled={game.available===false} onClick={() => onPlay(game)}>{game.available===false?soon[lang]:done.includes(game.id) ? copy[lang].completed : copy[lang].playNow}</button></article>)}</div>; }
 function WorldDetail({ lang, world, onPlay }) { return <section className="world-detail"><span>{world.icon}</span><h1>{translated(world, '', lang)}</h1><p>{translated(world, 'Desc', lang)}</p><button className="primary" onClick={onPlay}>{copy[lang].playNow}</button></section>; }
 
-const displayMemberNumber = value => { const match = String(value || '').match(/(\\d+)$/); return match ? String(Number(match[1])) : '—'; };\n\nfunction OSMARAdmin({ supabase, lang }) {
+const displayMemberNumber = value => { const match = String(value || '').match(/(\d+)$/); return match ? String(Number(match[1])) : '—'; };
+
+function OSMARAdmin({ supabase, lang }) {
   const t = copy[lang];
   const [type, setType] = useState('TRU');
   const [uses, setUses] = useState(1);
