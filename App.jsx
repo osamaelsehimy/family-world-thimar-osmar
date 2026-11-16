@@ -171,11 +171,10 @@ export default function App() {
         let inviteWarning = '';
         if (normalizedInvite) {
           const { data: inviteCheck, error: inviteCheckError } = await supabase.rpc('osmar_validate_invite_code', { p_code: normalizedInvite });
-          if (inviteCheckError) throw inviteCheckError;
-          if (inviteCheck?.[0]?.is_valid) acceptedInvite = normalizedInvite;
+          if (!inviteCheckError && inviteCheck?.[0]?.is_valid) acceptedInvite = normalizedInvite;
           else {
             inviteWarning = lang==='ar' ? 'الكود غير صالح أو انتهت دعواته؛ تم تسجيلك بدون ربط دعوة، والإدارة ستراجع المحاولة.' : lang==='zh' ? '邀请码无效或已用完；账户将继续创建，不关联邀请，管理员可查看此记录。' : 'That code is invalid or full; your account will still be created without an invite link, and the admin can review the attempt.';
-            try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_code_hint: normalizedInvite, p_reason: 'invalid_or_full_invite' }); } catch {}
+            try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_code_hint: normalizedInvite, p_reason: inviteCheckError ? 'invite_check_unavailable' : 'invalid_or_full_invite' }); } catch {}
           }
         }
         const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { guardian_attested: true, invite_code: acceptedInvite }, emailRedirectTo: authRedirectUrl() } });
