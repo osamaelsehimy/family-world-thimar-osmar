@@ -7,7 +7,7 @@ const words = {
  zh: { kicker:'FAMILY WORLD · MEMBER IDENTITY', title:'我的个人资料', intro:'这是你在 Family World 的个人空间。可设置显示名称和昵称，头像为可选。', display:'显示名称', nickname:'昵称', email:'注册邮箱', member:'永久会员编号', status:'会员状态', joined:'加入日期', save:'保存更改', saving:'正在保存…', upload:'添加 / 更换头像', uploading:'正在上传头像…', photoHint:'JPG、PNG 或 WebP · 最大 2 MB', private:'邮箱和会员编号来自系统，不能在此修改。你的邮箱不会向其他会员显示。', active:'正常', pending:'审核中', suspended:'已暂停', rejected:'已拒绝', saved:'个人资料已保存。', uploaded:'头像已更新。', noProfile:'未找到会员资料。请联系支持人员，不要重新创建会员编号。', error:'操作失败：', required:'请先填写显示名称。', placeholderName:'输入你希望显示的名称', placeholderNick:'例如：Abu Yusuf 或 Captain', fallback:'Family World 会员' }
 };
 
-export default function MemberProfile({ supabase, user, lang='ar' }) {
+const displayMemberNumber = value => { const match = String(value || '').match(/(\\d+)$/); return match ? String(Number(match[1])) : '—'; };\n\nexport default function MemberProfile({ supabase, user, lang='ar' }) {
  const t = words[lang] || words.ar;
  const [profile,setProfile] = useState(null);
  const [displayName,setDisplayName] = useState('');
@@ -72,7 +72,7 @@ export default function MemberProfile({ supabase, user, lang='ar' }) {
      <label className="profile-photo-button"><Camera size={15}/>{t.upload}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadPhoto} disabled={busy}/></label>
      <small>{t.photoHint}</small>
     </div>
-    <div className="profile-identity"><h2>{displayName||t.fallback}</h2>{nickname&&<span className="profile-nickname">{nickname}</span>}<div className="profile-member-code"><Hash size={16}/><strong>{profile.member_code}</strong></div><span className={'profile-status '+status}><BadgeCheck size={14}/>{t[status]||status}</span></div>
+    <div className="profile-identity"><h2>{displayName||t.fallback}</h2>{nickname&&<span className="profile-nickname">{nickname}</span>}<div className="profile-member-code"><Hash size={16}/><strong>{displayMemberNumber(profile.member_code)}</strong></div><span className={'profile-status '+status}><BadgeCheck size={14}/>{t[status]||status}</span></div>
    </div>
    <form className="profile-form" onSubmit={save}>
     <label>{t.display}<input value={displayName} onChange={e=>setDisplayName(e.target.value)} maxLength={60} required placeholder={t.placeholderName}/></label>
