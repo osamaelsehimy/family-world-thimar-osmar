@@ -9,7 +9,19 @@ const copy={
  zh:{eyebrow:'FAMILY WORLD · THIMAR OSMAR',title:'家庭世界',intro:'融合家庭、学习、游戏与有益工作的虚拟生活社区。一起学习、协作、建设、分享与成就。',start:'开启旅程',featured:'精选挑战',apartment:'家庭住宅 · 100 平方米',apartmentDesc:'规划住宅布局，了解家庭需求，合理安排空间。',open:'打开住宅挑战',sections:'选择你的世界',games:'游戏与挑战',worlds:'家庭与生活',projects:'工作与项目',learning:'学习与成长',market:'虚拟市场',community:'社区与公益',travel:'旅行与探索',progress:'我的进度',profile:'我的账户',ready:'现已开放',soon:'即将推出',points:'我的积分',awards:'成就',foot:'学习 · 协作 · 建设 · 分享 · 成就 · Developed by OSMAR Ecosystems',motto:'学习 · 协作 · 建设 · 分享 · 成就',art:'Family World by OSMAR · 官方视觉形象',companionLabel:'智能伙伴',assistantLabel:'智能助手',roles:'认识家庭世界角色',rolesSub:'社区角色与技能，选择启发你旅程的角色。',companion:'智能伙伴',thimmy:'Thimmy · AI 智能伙伴',robot:'智能助手',wise:'智慧导师',mentor:'家庭引导者',inspiration:'灵感创造者',partner:'生活伙伴',creator:'数字创作者',explorer:'探索者',builder:'项目建设者',hero:'挑战达人',inventor:'少年发明家',learner:'学习伙伴',analyst:'数据分析师',family:'家庭与生活',learn:'学习与成长',work:'工作与项目',play:'游戏与挑战',give:'社区与公益',journey:'旅行与探索'}
 };
 const items=[['play',Gamepad2,'games',true],['worlds',Home,'worlds',true],['threex',BriefcaseBusiness,'projects',true],['learning',BookOpen,'learning',false],['market',Store,'market',false],['community',Users,'community',true],['travel',Plane,'travel',false],['dashboard',Trophy,'progress',true]];
-const roles=[['wise','wise',ShieldCheck],['mentor','mentor',HeartHandshake],['inspiration','inspiration',Sparkles],['partner','partner',Heart],['creator','creator',Palette],['explorer','explorer',Compass],['builder','builder',Wrench],['hero','hero',Trophy],['inventor','inventor',Lightbulb],['learner','learner',GraduationCap],['analyst','analyst',ChartNoAxesCombined]];
+const roles=[
+ ['wise','wise',ShieldCheck,'wise-grandfather','18'],
+ ['mentor','mentor',HeartHandshake,'family-leader','24'],
+ ['inspiration','inspiration',Sparkles,'inspiring-mother','22'],
+ ['partner','partner',Heart,'life-partner','22'],
+ ['creator','creator',Palette,'digital-creator','21'],
+ ['explorer','explorer',Compass,'explorer','17'],
+ ['builder','builder',Wrench,'project-builder','23'],
+ ['hero','hero',Trophy,'challenge-hero','19'],
+ ['inventor','inventor',Lightbulb,'young-inventor','15'],
+ ['learner','learner',GraduationCap,'learning-buddy','16'],
+ ['analyst','analyst',ChartNoAxesCombined,'data-analyst','20']
+];
 export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChallenge}){
  const t=copy[lang]||copy.ar,rtl=lang==='ar',Arrow=rtl?ArrowUpLeft:ArrowUpRight;
  return <main className="world-hub" dir={rtl?'rtl':'ltr'}>
@@ -22,7 +34,7 @@ export default function WorldHub({lang='ar',points=0,awards=0,onNavigate,onChall
   <section className="wh-progress"><div><span>{t.points}</span><b>{points}</b></div><i/><div><span>{t.awards}</span><b>{awards}</b></div><button onClick={()=>onNavigate('dashboard')}><span>{t.start}</span><Arrow size={16}/></button></section>
   <section className="wh-feature" onClick={onChallenge} role="button" tabIndex="0" onKeyDown={e=>e.key==='Enter'&&onChallenge?.()}><div className="wh-feature-art"><div className="wh-sun"/><div className="wh-house"><span/><span/><b/></div><div className="wh-plant">✦</div><small>100 m²</small></div><div className="wh-feature-copy"><span>{t.featured}</span><h2>{t.apartment}</h2><p>{t.apartmentDesc}</p><strong>{t.open}<Arrow size={16}/></strong></div></section>
   <section className="wh-spaces"><div className="wh-section-head"><h2>{t.sections}</h2><span>01 — 08</span></div><div className="wh-grid">{items.map(([id,Icon,key,active])=><button key={id} className={'wh-card '+(active?'':'is-soon')} onClick={()=>active&&onNavigate(id==='threex'?'threex':id==='worlds'?'worlds':id)} disabled={!active}><span className={'wh-card-icon tone-'+id}><Icon size={21}/></span><b>{t[key]}</b><small>{active?t.ready:t.soon}</small>{active&&<Arrow size={15} className="wh-card-arrow"/>}</button>)}</div></section>
-  <section className="wh-characters"><div className="wh-section-head"><div><h2>{t.roles}</h2><p>{t.rolesSub}</p></div><span>11 ROLES</span></div><div className="wh-character-grid">{roles.map(([id,key,Icon],i)=><article className="wh-character" key={id}><div className={'wh-character-avatar role-'+id}><Icon size={29} strokeWidth={1.7}/><span>{String(i+1).padStart(2,'0')}</span></div><b>{t[key]}</b><small>FAMILY WORLD · {String(i+1).padStart(2,'0')}</small></article>)}</div></section>
+  <section className="wh-characters"><div className="wh-section-head"><div><h2>{t.roles}</h2><p>{t.rolesSub}</p></div><span>11 ROLES</span></div><div className="wh-character-grid">{roles.map(([id,key,Icon,artwork,level],i)=><article className={'wh-character wh-character-card role-card-'+id} key={id}><div className={'wh-character-avatar role-'+id} role="img" aria-label={t[key]} style={{'--character-index':i}}><span className="wh-character-fallback"><Icon size={25} strokeWidth={1.7}/></span><span className="wh-character-level">Lv.{level}</span></div><b>{t[key]}</b><small>FAMILY WORLD · {String(i+1).padStart(2,'0')}</small></article>)}</div></section>
   <section className="wh-companions"><h2>{t.companion}</h2><div><article><span className="wh-thimmy">🐥</span><b>{t.thimmy}</b><small><Bot size={13}/> {t.companionLabel}</small></article><article><span className="wh-robot">🤖</span><b>{t.robot}</b><small><Sparkles size={13}/> {t.assistantLabel}</small></article></div></section>
   <footer className="wh-foot"><Sprout size={15}/>{t.foot}</footer>
  </main>;
