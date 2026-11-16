@@ -500,7 +500,7 @@ function OSMARAdmin({ supabase, lang }) {
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('محاولات التسجيل التي واجهت مشكلة','Registration attempts needing attention','需要关注的注册尝试')}</h3><p className="muted">{label('يظهر هنا البريد الذي أدخل كودًا غير صالح أو مستهلكًا. المحاولات القديمة التي لم يسجل النظام بريدها لا يمكن استرجاعها بأثر رجعي.','Emails entered with invalid or exhausted codes appear here. Older attempts whose email was never recorded cannot be reconstructed retroactively.','输入无效或已用完邀请码的邮箱会显示在这里。系统未曾记录邮箱的历史尝试无法追溯恢复。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       {registrationAttempts.length===0?<p className="muted">{label('لا توجد محاولات مسجلة.','No recorded attempts.','暂无记录。')}</p>:<div className="member-list">{registrationAttempts.map((item,index)=><article className="member-row" key={item.attempt_number}>
-        <div className="member-main"><strong>{registrationAttempts.length-index}</strong><span>{item.email}</span><small>{item.attempted_at?new Date(item.attempted_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
+        <div className="member-main"><strong>{item.attempt_number}</strong><span>{item.email}</span><small>{item.attempted_at?new Date(item.attempted_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
         <div className="member-tags"><span className="member-status">{item.reason}</span><span className="member-type">{item.code_hint||'—'}</span></div>
       </article>)}</div>}
     </section>
