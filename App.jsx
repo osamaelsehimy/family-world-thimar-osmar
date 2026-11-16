@@ -309,7 +309,8 @@ function OSMARAdmin({ supabase, lang }) {
       if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
       if (!pendingResult.error) setPending(pendingResult.data || []);
       if (!recentResult.error) setRecentRegistrations(recentResult.data || []);
-      if (!inviteResult.error) setInviteDirectory(inviteResult.data || []);\n      if (!attemptResult.error) setRegistrationAttempts(attemptResult.data || []);
+      if (!inviteResult.error) setInviteDirectory(inviteResult.data || []);
+      if (!attemptResult.error) setRegistrationAttempts(attemptResult.data || []);
       if (!memberResult.error) {
         const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
         const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
