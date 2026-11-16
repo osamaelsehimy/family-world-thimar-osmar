@@ -298,12 +298,15 @@ function OSMARAdmin({ supabase, lang }) {
         supabase.rpc('osmar_member_directory_v2'),
         supabase.rpc('osmar_points_directory'),
         supabase.rpc('osmar_game_directory'),
-        supabase.rpc('osmar_recent_registrations', { p_limit: 30 }),\n        supabase.rpc('osmar_invite_directory'),\n        supabase.rpc('osmar_registration_attempts', { p_limit: 100 })
+        supabase.rpc('osmar_recent_registrations', { p_limit: 30 }),
+        supabase.rpc('osmar_invite_directory'),
+        supabase.rpc('osmar_registration_attempts', { p_limit: 100 })
       ]);
       const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error || recentResult.error || inviteResult.error || attemptResult.error;
       if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
       if (!pendingResult.error) setPending(pendingResult.data || []);
-      if (!recentResult.error) setRecentRegistrations(recentResult.data || []);\n      if (!inviteResult.error) setInviteDirectory(inviteResult.data || []);\n      if (!attemptResult.error) setRegistrationAttempts(attemptResult.data || []);
+      if (!recentResult.error) setRecentRegistrations(recentResult.data || []);
+      if (!inviteResult.error) setInviteDirectory(inviteResult.data || []);\n      if (!attemptResult.error) setRegistrationAttempts(attemptResult.data || []);
       if (!memberResult.error) {
         const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
         const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
