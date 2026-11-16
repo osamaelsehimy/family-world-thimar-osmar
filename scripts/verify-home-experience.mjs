@@ -101,6 +101,15 @@ for(let index=1;index<=11;index++){
 }
 assert.match(app,/<CharacterStudio lang=\{lang\} points=\{/,'Character Studio must receive member FWP progress');
 assert.doesNotMatch(component,/wh-characters/,'Home screen must not render character cards');
+
+const ludo=fs.readFileSync('src/components/LudoGame.jsx','utf8');
+assert.match(ludo,/onResult=\{onResult\}/,'Ludo must expose a completed-match result callback');
+assert.match(ludo,/sessionKey:crypto\.randomUUID\(\)/,'Each Ludo match must have a unique idempotency key');
+assert.match(ludo,/reported\.current===game\.sessionKey/,'Ludo must not report the same match more than once');
+assert.match(ludo,/gameId:'ludo'/,'Ludo results must use the registered game id');
+assert.match(app,/<LudoGame lang=\{lang\} onBack=\{\(\) => setTab\('play'\)\} onResult=\{recordGameResult\} \/>/,'Ludo must persist its result through the shared member game history handler');
+console.log('Ludo history checks passed: unique match key, one-time completion report, and member history integration.');
+
 console.log('Character progression checks passed: 11 standalone vector portraits, mystery locks, level-based reveal, FWP integration, and character-free home.');
 const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
 assert.doesNotMatch(component,/wh-art-gallery|family-world-character-sprite/,'Home must stay free of character and world artwork tiles.');
