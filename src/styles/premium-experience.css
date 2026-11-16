@@ -80,3 +80,22 @@
 @media(max-width:850px){.wh-character-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:560px){.wh-planet-stage{width:100%;opacity:.45;mask-image:linear-gradient(180deg,#000 0%,transparent 100%)}.wh-planet{width:230px;right:0;top:35%}.wh-hero-copy{max-width:100%}.wh-character-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.member-dashboard-head{padding:19px}.member-kpi-grid article{min-height:118px}.cs-art{height:205px}}
 @media(prefers-reduced-motion:reduce){.wh-character,.wh-feature,.game-card{transition:none}}
+
+/* Game catalogue art tiles and premium character cards */
+.game-card{overflow:hidden;padding:18px;min-height:255px}
+.game-card .game-icon{position:relative;display:grid;place-items:center;width:66px;height:66px;margin:0 0 18px;border-radius:21px;font-size:34px;background:linear-gradient(145deg,#f8edcf,#e6d2a2);box-shadow:inset 0 1px 0 #fff,0 8px 18px #173c2410}
+.game-card:nth-child(3n+2) .game-icon{background:linear-gradient(145deg,#dcecf0,#b8d4d9)}
+.game-card:nth-child(3n) .game-icon{background:linear-gradient(145deg,#e6e2f2,#c9c2e3)}
+.game-card h3{font-size:16px;color:#203e36}
+.game-card p{min-height:54px}
+.game-card .score{top:18px;inset-inline-end:18px}
+.game-card.game-coming{background:linear-gradient(155deg,#fff,#f8faf7)}
+.game-card.game-coming .game-icon{filter:saturate(.65);opacity:.82}
+.game-card button:disabled{background:#f0f2ef;color:#9aa59d;cursor:not-allowed}
+.cs-card{overflow:hidden}
+.cs-art{background:radial-gradient(circle at 50% 25%,#fff 0,#f3f4eb 48%,#dfe9e4 100%)}
+.cs-card:nth-child(3n+2) .cs-art{background:radial-gradient(circle at 50% 20%,#fff9e8 0,#f4e8d1 55%,#e8d7bd 100%)}
+.cs-card:nth-child(3n) .cs-art{background:radial-gradient(circle at 50% 20%,#f8fbff 0,#e5edf5 55%,#d7e2eb 100%)}
+.cs-card-copy h3{font-size:16px}
+.cs-kind{letter-spacing:.06em;text-transform:uppercase}
+@media(max-width:560px){.game-card{min-height:230px;padding:15px}.game-card .game-icon{width:56px;height:56px;border-radius:17px;margin-bottom:14px}}
