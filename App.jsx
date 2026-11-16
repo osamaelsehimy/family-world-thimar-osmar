@@ -239,7 +239,7 @@ export default function App() {
       {tab === 'profile' && <MemberProfile supabase={supabase} user={session.user} lang={lang} />}
        {tab === 'domino' && <DominoGame lang={lang} onBack={() => setTab('play')} onOnline={() => setTab('domino-online')} onResult={recordGameResult} />}
       {tab === '1024' && <Number1024Game lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
-      {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} />}
+      {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
       {tab === 'characters' && <CharacterStudio lang={lang} points={Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0)} level={Math.floor(Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0) / 100) + 1} />}
       {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
