@@ -37,7 +37,9 @@ const expectedMigrationFiles = [
   "20261115155051_osmar_least_privilege_admin_rbac.sql",
   "20261115155251_enforce_core_admin_permissions.sql",
   "20261116153000_osmar_recent_registration_monitor.sql",
-  "20261116154000_osmar_invite_code_preflight_validation.sql"
+  "20261116154000_osmar_invite_code_preflight_validation.sql",
+  "20261116161500_osmar_open_signup_invite_audit_and_admin_code_directory.sql",
+  "20261116161600_fix_registration_attempt_email_validation.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
@@ -59,7 +61,18 @@ assert.match(app, /supabase\.rpc\('osmar_review_member'/, 'Membership decisions 
 assert.match(app, /guardian_attested: true/, 'Signup must record adult guardian affirmation');
 assert.match(app, /osmar_validate_invite_code/, 'Signup must preflight invitation codes before creating Auth users');
 assert.match(inviteValidationMigration, /grant execute on function public\.osmar_validate_invite_code\(text\) to anon, authenticated/i, 'Invite preflight must be callable before authentication');
-assert.match(app, /invite_code: normalizedInvite/, 'Signup must pass the validated invitation code to the server-side trigger');
+assert.match(app, /invite_code: acceptedInvite/, 'Only a valid invitation code is linked to the server-side trigger');
+assert.match(app, /osmar_record_registration_attempt/, 'Invalid invite attempts must be recorded without blocking signup');
+assert.match(app, /osmar_invite_directory/, 'Admin must display invitation capacity and usage');
+assert.match(app, /osmar_registration_attempts/, 'Admin must display numbered registration attempts');
+assert.match(app, /inviteDirectory\.map/, 'Admin must render the invitation code directory');
+assert.match(app, /registrationAttempts\.map/, 'Admin must render registration attempts');
+assert.match(app, /optional/, 'Invitation code must be optional at signup');
+const openSignupMigration = fs.readFileSync('supabase/migrations/20261116161500_osmar_open_signup_invite_audit_and_admin_code_directory.sql', 'utf8');
+assert.match(openSignupMigration, /if raw_invite_code <> ''/, 'Signup must support optional invitation codes');
+assert.match(openSignupMigration, /membership_status\)\s*values \(new\.id, new_member_code, 'pending'\)/, 'Uninvited members must be registered pending review');
+assert.match(openSignupMigration, /osmar_invite_directory/, 'Owner-only invitation directory RPC must exist');
+assert.match(openSignupMigration, /osmar_registration_attempts/, 'Owner-only registration attempt RPC must exist');
 assert.match(app, /Number\.isInteger\(maxUses\).*maxUses < 1.*maxUses > 500/s, 'Admin must validate invitation usage limits');
 assert.match(app, /async function copyInviteCode\(\)/, 'Invite copy must report clipboard success/failure');
 assert.match(app, /finally \{\s*setBusy\(false\);\s*\}/, 'Admin actions must release the busy state on errors');
