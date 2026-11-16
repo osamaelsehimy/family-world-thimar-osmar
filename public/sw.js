@@ -1,10 +1,12 @@
-const CACHE_NAME = 'family-world-shell-v4';
+const CACHE_NAME = 'family-world-shell-v5';
 const APP_ROOT = new URL('./', self.registration.scope);
 const APP_SHELL = [
   APP_ROOT.href,
   new URL('manifest.webmanifest', APP_ROOT).href,
   new URL('icons/icon-192.png', APP_ROOT).href,
   new URL('icons/icon-512.png', APP_ROOT).href,
+  new URL('assets/characters/family-world-character-sprite.webp', APP_ROOT).href,
+  new URL('assets/ideas/world-map.jpg', APP_ROOT).href,
 ];
 
 self.addEventListener('install', (event) => {
