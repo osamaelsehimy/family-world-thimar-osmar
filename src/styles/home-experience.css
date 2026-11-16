@@ -33,3 +33,16 @@
 @media(max-width:1050px){.fw-cinematic-hero{grid-template-columns:1fr 1fr;padding:25px}.thimar-city-art{transform:scale(.9);transform-origin:center}.fw-framework-grid{grid-template-columns:1fr 1fr}.fw-value-card{grid-column:span 2}}
 @media(max-width:700px){.fw-cinematic-hero{grid-template-columns:1fr;min-height:0;padding:24px 20px}.fw-hero-copy h1{font-size:28px}.thimar-city-art{height:260px;transform:scale(.88);transform-origin:center top;margin-bottom:-24px}.fw-city-caption{align-items:flex-start;flex-direction:column}.fw-framework-grid{grid-template-columns:1fr}.fw-value-card{grid-column:auto}.fw-framework-card{min-height:230px}.fw-principles{align-items:flex-start;flex-direction:column}.fw-live-stats{margin-top:20px}}
 @media(prefers-reduced-motion:no-preference){.fw-cinematic-hero .city-orbit{animation:fw-orbit 18s linear infinite}.fw-cinematic-hero .city-glow{animation:fw-pulse 5s ease-in-out infinite alternate}@keyframes fw-orbit{to{transform:rotate(342deg)}}@keyframes fw-pulse{to{opacity:.7;transform:scale(1.12)}}}
+
+
+/* Family World signature: living planetary orbit */
+@media(prefers-reduced-motion:no-preference){
+ .thimar-city-art .city-orbit{transform-origin:50% 50%;will-change:transform}
+ .thimar-city-art .orbit-one{animation:fw-planetary-orbit 22s linear infinite}
+ .thimar-city-art .orbit-two{animation:fw-planetary-orbit-reverse 30s linear infinite}
+ .thimar-city-art .city-orbit:after{content:"";position:absolute;left:50%;top:-5px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#a8ffe8 45%,#31b9d0);box-shadow:0 0 12px #8effe8,0 0 25px #37e5d1;}
+ .thimar-city-art .orbit-two:after{left:12%;top:auto;bottom:8%;width:7px;height:7px;background:radial-gradient(circle at 35% 30%,#fff,#e5c8ff 48%,#a16bff);box-shadow:0 0 12px #caa5ff,0 0 22px #9c6cff;}
+}
+@keyframes fw-planetary-orbit{from{transform:rotate(-18deg)}to{transform:rotate(342deg)}}
+@keyframes fw-planetary-orbit-reverse{from{transform:rotate(18deg)}to{transform:rotate(-342deg)}}
+@media(prefers-reduced-motion:reduce){.thimar-city-art .city-orbit{animation:none!important}}
