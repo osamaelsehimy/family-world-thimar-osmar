@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const I18N = {
  ar:{title:'ليدو العائلية',subtitle:'لعبة محلية بالتناوب على نفس الجهاز · 2 إلى 4 لاعبين',players:'عدد اللاعبين',start:'ابدأ لعبة جديدة',roll:'ارمِ النرد',turn:'الدور على',dice:'نتيجة النرد',choose:'اختار الحجر الذي تريد تحريكه',home:'في البيت',finish:'وصل للبيت',safe:'مربع آمن',six:'ستة! لك رمية إضافية',blocked:'لا توجد حركة متاحة',win:'فاز اللاعب',again:'لعبة جديدة',rules:'تحتاج 6 لإخراج الحجر من البيت. تحرك حسب نتيجة النرد، والوقوف على خصم في مربع غير آمن يعيده للبيت. تحتاج الرقم المناسب للوصول إلى خط النهاية.',back:'العودة للألعاب',skip:'تخطي الدور',p:['الأحمر','الأزرق','الأخضر','الأصفر']},
@@ -7,14 +7,20 @@ const I18N = {
 };
 const COLORS=['#d94b4b','#3984d6','#3d9a69','#e0ae35'];
 const SAFE=new Set([0,8,13,21,26,34,39,47]);
-function fresh(players){return {players,tokens:Array.from({length:players},()=>[-1,-1,-1,-1]),turn:0,dice:null,rolled:false,winner:null,log:'',sixCount:0};}
-export default function LudoGame({lang='ar',onBack}){
+function fresh(players){return {players,tokens:Array.from({length:players},()=>[-1,-1,-1,-1]),turn:0,dice:null,rolled:false,winner:null,log:'',sixCount:0,sessionKey:crypto.randomUUID(),startedAt:Date.now()};}
+export default function LudoGame({lang='ar',onBack,onResult}){
  const t=I18N[lang]||I18N.ar;
  const [count,setCount]=useState(4);
  const [game,setGame]=useState(null);
  const [busy,setBusy]=useState(false);
  const [message,setMessage]=useState('');
+ const reported=useRef(null);
  const current=game?.turn||0;
+ useEffect(()=>{
+  if(game?.winner===null||game?.winner===undefined||!game.sessionKey||reported.current===game.sessionKey)return;
+  reported.current=game.sessionKey;
+  onResult?.({gameId:'ludo',sessionKey:game.sessionKey,outcome:game.winner===0?'won':'lost',score:game.winner===0?1:0,durationSeconds:Math.max(0,Math.round((Date.now()-(game.startedAt||Date.now()))/1000))});
+ },[game?.winner,game?.sessionKey,game?.startedAt,onResult]);
  const roll=()=>{
   if(!game||game.winner!==null||game.rolled)return;
   const value=Math.floor(Math.random()*6)+1;
