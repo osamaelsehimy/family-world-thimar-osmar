@@ -7,7 +7,7 @@ en:{eyebrow:'OSMAR ECOSYSTEMS · FAMILY WORLD',title:'A world that grows through
 zh:{eyebrow:'OSMAR ECOSYSTEMS · FAMILY WORLD',title:'以善成长，以智慧规划的世界',intro:'一个融合家庭、学习、游戏与有益工作的活力城市。每一步都有影响，每一份成就都结出果实。',cta:'探索世界',city:'Thimar 智慧城市',citySub:'成长 · 学习 · 游戏 · 成就',rain:'收集雨水',green:'绿色空间',water:'储存水资源',homes:'互联家庭',blueprint:'从愿景到影响',blueprintSub:'把想法转化为可衡量的目标',star:'数据星型模型',starSub:'事实居中，维度环绕',objective:'明确目标',key:'关键结果',smart:'SMART',specific:'具体',measurable:'可衡量',achievable:'可实现',relevant:'相关',timebound:'有时限',okr:'OKR',okrSub:'目标 + 关键结果 + 复盘',balance:'价值方程',quality:'质量',cost:'成本',time:'时间',value:'价值',pmo:'PMO 循环',plan:'计划',execute:'执行',measure:'衡量',improve:'改进',principles:'价值观引领决策',principlesSub:'诚信 · 卓越 · 协商 · 仁爱 · 可持续',note:'城市为概念设计；连接经验证的数据后，将显示真实活动与成果指标。'}
 };
 function CityArtwork({t}){return <div className="thimar-city-art" role="img" aria-label={t.city}>
- <div className="city-orbit orbit-one"/><div className="city-orbit orbit-two"/>
+ <div className="city-orbit orbit-one"/><div className="city-orbit orbit-two"/><div className="city-orbit orbit-three"/>
  <div className="city-sun"/><div className="city-cloud cloud-a"/><div className="city-cloud cloud-b"/>
  <div className="city-rain rain-a">⋮ ⋮ ⋮</div><div className="city-rain rain-b">⋮ ⋮ ⋮</div>
  <div className="city-ground"><div className="city-road road-back"/><div className="city-road road-front"/>
