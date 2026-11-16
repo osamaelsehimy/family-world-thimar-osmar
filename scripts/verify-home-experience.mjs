@@ -26,6 +26,10 @@ for (const concept of ['100 m²','family','market','learning','community','proje
 for (const feature of ['wh-feature-art','wh-house','wh-grid','wh-card-icon']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
 assert.match(styles,/@media\(max-width:760px\)/,'World Hub must have a mobile layout');
 assert.match(component,/family-world\.svg/,'World Hub must use the original app icon');
+assert.match(component,/wh-art-gallery/,'Home must visibly surface the artwork gallery');
+assert.match(component,/family-world-character-sprite\.webp/,'Home gallery must use the checked-in character artwork');
+assert.match(component,/assets\/ideas\/world-map\.jpg/,'Home gallery must use the checked-in world map artwork');
+assert.match(fs.readFileSync('public/sw.js','utf8'),/family-world-shell-v5/,'PWA shell cache must be versioned when artwork is added');
 assert.match(component,/rtl=lang==='ar'/,'Arabic must use right-to-left layout');
 assert.match(component,/soon:'Coming soon'/,'Unbuilt areas must be clearly labelled');
 assert.match(component,/is-soon/,'Unbuilt areas must be visually distinguished');
