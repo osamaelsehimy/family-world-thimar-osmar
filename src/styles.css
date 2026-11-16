@@ -449,7 +449,7 @@
 .admin-overview-head small{color:#a17b3b;font-size:10px;font-weight:900;letter-spacing:1.7px}
 .admin-overview-head h3{margin:5px 0 0;color:#203f35;font-size:18px}
 .admin-overview-head button{border:1px solid #dce7dc;border-radius:10px;background:#fff;padding:9px 13px;color:#245c43;font-weight:750;font-size:11px}
-.admin-overview-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.admin-overview-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
 .admin-overview-card{position:relative;display:grid;gap:4px;min-width:0;overflow:hidden;padding:14px;border:1px solid #e6ede5;border-radius:16px;background:#fff}
 .admin-overview-card:after{content:"";position:absolute;width:80px;height:80px;inset-inline-end:-28px;bottom:-38px;border-radius:50%;background:#eaf2e8}
 .admin-overview-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#edf4e9;color:#397653;font-size:18px;font-weight:900}
