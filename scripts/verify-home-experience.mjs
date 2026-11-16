@@ -88,6 +88,17 @@ assert.match(authSource,/authRedirectUrl/,'Recovery and confirmation links must 
 console.log('Account recovery checks passed: email reset, recovery session handling, password update, resend confirmation, 3 locales, and minimum password length.');
 
 const characterStudio=fs.readFileSync('src/components/CharacterStudio.jsx','utf8');
+assert.match(characterStudio,/unlockLevel:2/,'First premium character must unlock at level 2');
+assert.match(characterStudio,/card\.unlockLevel/,'Character visibility must be gated by unlock level');
+assert.match(characterStudio,/cs-lock-art/,'Locked characters must use mystery artwork, not reveal the portrait');
+assert.match(characterStudio,/family-world-character-01\.svg/,'Character portraits must use standalone high-resolution vector assets');
+for(let index=1;index<=11;index++){
+  const asset='public/assets/characters/family-world-character-'+String(index).padStart(2,'0')+'.svg';
+  assert.ok(fs.existsSync(asset),'Missing standalone character portrait: '+asset);
+}
+assert.match(app,/<CharacterStudio lang=\{lang\} points=\{/,'Character Studio must receive member FWP progress');
+assert.doesNotMatch(component,/wh-characters/,'Home screen must not render character cards');
+console.log('Character progression checks passed: 11 standalone vector portraits, mystery locks, level-based reveal, FWP integration, and character-free home.');
 const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
 assert.ok(!component.includes('assets/ideas/world-map.jpg'),'Home hero must not use the unrelated map image.');
 assert.match(styles,/linear-gradient\(125deg,#102b45/,'Home hero must use the branded gradient fallback until official cover assets are installed.');
