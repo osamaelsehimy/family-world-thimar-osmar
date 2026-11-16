@@ -145,3 +145,18 @@
 .cs-skill-chips{display:flex;flex-wrap:wrap;gap:7px}.cs-skill-chips button{padding:7px 10px;border:1px solid #dce7dc;border-radius:99px;background:#fff;color:#52685f;font-size:11px}.cs-skill-chips button.selected{background:#1f5b43;border-color:#1f5b43;color:#fff}
 .cs-mission-list{display:grid;gap:8px}.cs-mission-list label{display:flex;align-items:center;gap:8px;font-weight:500;line-height:1.5}.cs-mission-list input{accent-color:#28734d}
 @media(max-width:560px){.cs-progression{padding:15px}.cs-progression-grid{grid-template-columns:1fr}}
+
+
+/* Official Family World poster presentation */
+.entertainment-hub{max-width:1120px;margin:0 auto;padding:12px 0 38px;color:#233b31}
+.entertainment-heading{padding:24px 26px;margin:0 0 18px;border-radius:20px;background:linear-gradient(125deg,#142d4b,#3a4d65 58%,#916d3e);color:#fff}
+.entertainment-heading>span{display:flex;align-items:center;gap:8px;color:#f4d99c;font-size:11px;font-weight:850;letter-spacing:.1em}
+.entertainment-heading h1{margin:10px 0 5px;color:#fff;font-size:clamp(26px,4vw,40px)}
+.entertainment-heading p{margin:0 0 8px;color:#ffe2a4;font-weight:800}
+.entertainment-heading small{display:block;max-width:760px;color:#e6edf0;font-size:13px;line-height:1.8}
+.entertainment-poster{overflow:hidden;border:1px solid #e8dfc8;border-radius:20px;background:#fff;box-shadow:0 14px 38px #172e3517}
+.entertainment-poster>img{display:block;width:100%;height:auto;max-height:680px;object-fit:contain;background:#18253b}
+.entertainment-poster-caption{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;color:#315244}
+.entertainment-poster-caption strong{color:#946b2d}
+.entertainment-poster-caption span{margin-inline-start:auto;color:#829087;font-size:11px}
+@media(max-width:600px){.entertainment-heading{padding:18px}.entertainment-poster{border-radius:14px}.entertainment-poster-caption span{width:100%;margin-inline-start:0}}
