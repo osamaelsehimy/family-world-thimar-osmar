@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 const app = fs.readFileSync('App.jsx', 'utf8');
 const directoryMigration = fs.readFileSync('supabase/migrations/20261114184945_trusted_member_directory_and_legacy_tru_classification.sql', 'utf8');
+const inviteValidationMigration = fs.readFileSync('supabase/migrations/20261116154000_osmar_invite_code_preflight_validation.sql', 'utf8');
 const recentMigration = fs.readFileSync('supabase/migrations/20261116153000_osmar_recent_registration_monitor.sql', 'utf8');
 const fixMigration = fs.readFileSync('supabase/migrations/20261115153321_fix_referral_directory_and_rls_performance.sql', 'utf8');
 
@@ -35,7 +36,8 @@ const expectedMigrationFiles = [
   "20261115153321_fix_referral_directory_and_rls_performance.sql",
   "20261115155051_osmar_least_privilege_admin_rbac.sql",
   "20261115155251_enforce_core_admin_permissions.sql",
-  "20261116153000_osmar_recent_registration_monitor.sql"
+  "20261116153000_osmar_recent_registration_monitor.sql",
+  "20261116154000_osmar_invite_code_preflight_validation.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
@@ -55,7 +57,9 @@ assert.match(app, /member_type/, 'Admin directory must use the owner-controlled 
 assert.match(app, /supabase\.rpc\('osmar_create_invite'/, 'Invite creation must call the protected RPC');
 assert.match(app, /supabase\.rpc\('osmar_review_member'/, 'Membership decisions must call the protected RPC');
 assert.match(app, /guardian_attested: true/, 'Signup must record adult guardian affirmation');
-assert.match(app, /invite_code: inviteCode\.trim\(\)\.toUpperCase\(\)/, 'Signup must pass the invitation code to the server-side trigger');
+assert.match(app, /osmar_validate_invite_code/, 'Signup must preflight invitation codes before creating Auth users');
+assert.match(inviteValidationMigration, /grant execute on function public\.osmar_validate_invite_code\(text\) to anon, authenticated/i, 'Invite preflight must be callable before authentication');
+assert.match(app, /invite_code: normalizedInvite/, 'Signup must pass the validated invitation code to the server-side trigger');
 assert.match(app, /Number\.isInteger\(maxUses\).*maxUses < 1.*maxUses > 500/s, 'Admin must validate invitation usage limits');
 assert.match(app, /async function copyInviteCode\(\)/, 'Invite copy must report clipboard success/failure');
 assert.match(app, /finally \{\s*setBusy\(false\);\s*\}/, 'Admin actions must release the busy state on errors');
