@@ -251,7 +251,7 @@ function WorldGrid({ lang, worlds: list }) { const status={ar:'قيد التطو
 function GameGrid({ lang, items, done, onPlay }) { const soon={ar:'قيد التطوير',en:'In development',zh:'开发中'}; const beta={ar:'نسخة تجريبية',en:'Beta',zh:'测试版'}; return <div className="game-grid">{items.map(game => <article className={'game-card '+(game.available===false?'game-coming':'')} key={game.id}><span className="game-icon">{game.icon}</span><span className="score">{game.available===false?soon[lang]:game.id==='ludo'?beta[lang]:lang==='ar'?'متاح':lang==='zh'?'可用':'Available'}</span><h3>{translated(game, '', lang)}</h3><p>{translated(game, 'Desc', lang)}</p><button disabled={game.available===false} onClick={() => onPlay(game)}>{game.available===false?soon[lang]:done.includes(game.id) ? copy[lang].completed : copy[lang].playNow}</button></article>)}</div>; }
 function WorldDetail({ lang, world, onPlay }) { return <section className="world-detail"><span>{world.icon}</span><h1>{translated(world, '', lang)}</h1><p>{translated(world, 'Desc', lang)}</p><button className="primary" onClick={onPlay}>{copy[lang].playNow}</button></section>; }
 
-function OSMARAdmin({ supabase, lang }) {
+const displayMemberNumber = value => { const match = String(value || '').match(/(\\d+)$/); return match ? String(Number(match[1])) : '—'; };\n\nfunction OSMARAdmin({ supabase, lang }) {
   const t = copy[lang];
   const [type, setType] = useState('TRU');
   const [uses, setUses] = useState(1);
@@ -474,7 +474,7 @@ function OSMARAdmin({ supabase, lang }) {
       <div className="admin-heading"><h3>{t.pendingTitle}</h3><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       {message && <p className="notice" role="status">{message}</p>}
       {pending.length === 0 ? <p className="muted">{label('لا توجد طلبات اعتماد معلّقة حاليًا. راجع سجل التسجيلات الحديثة للتأكد من حالة كل حساب.','There are no pending approvals right now. Check recent registrations for each account status.','目前没有待审核申请。请查看最近注册记录以确认每个账户的状态。')}</p> : pending.map(item=><article className="pending-row" key={item.member_id}>
-        <div><strong>{item.member_code}</strong><small>{item.referral_type} · {item.inviter_member_code || 'OSMAR'}</small></div>
+        <div><strong>{displayMemberNumber(item.member_code)}</strong><small>{item.referral_type} · {item.inviter_member_code ? displayMemberNumber(item.inviter_member_code) : 'OSMAR'}</small></div>
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
     </section>
@@ -486,7 +486,7 @@ function OSMARAdmin({ supabase, lang }) {
         <div><strong>{recentRegistrations.filter(item=>!item.email_confirmed).length}</strong><span>{label('بانتظار تأكيد البريد','Awaiting email confirmation','等待邮箱验证')}</span></div>
       </div>
       {recentRegistrations.length===0?<p className="muted">{label('لا توجد تسجيلات حديثة.','No recent registrations.','暂无近期注册。')}</p>:<div className="member-list">{recentRegistrations.map(item=><article className="member-row" key={item.member_id}>
-        <div className="member-main"><strong>{item.member_code||'—'}</strong><span>{item.email}</span><small>{t.registeredAt}: {item.registered_at?new Date(item.registered_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
+        <div className="member-main"><strong>{displayMemberNumber(item.member_code)}</strong><span>{item.email}</span><small>{t.registeredAt}: {item.registered_at?new Date(item.registered_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
         <div className="member-tags"><span className={item.email_confirmed && item.membership_status==='active'?'member-status active':'member-status'}>{!item.email_confirmed?label('بانتظار تأكيد البريد','Awaiting email confirmation','等待邮箱验证'):item.membership_status==='pending'?label('بانتظار اعتماد OSMAR','Awaiting OSMAR approval','等待 OSMAR 审核'):item.membership_status==='active'?label('عضوية معتمدة','Approved','已批准'):item.membership_status}</span><span className="member-type">{item.referral_type}</span></div>
         <small className="member-contact">{item.email_confirmed?label('البريد مؤكد','Email confirmed','邮箱已验证'):label('البريد لم يتم تأكيده بعد','Email not confirmed yet','邮箱尚未验证')} · {item.referral_status==='approved'?label('الدعوة معتمدة','Invitation approved','邀请已批准'):item.referral_status==='pending'?label('الدعوة بانتظار المراجعة','Invitation awaiting review','邀请待审核'):label('لا يوجد سجل دعوة مرتبط','No linked invitation record','没有关联的邀请码记录')}</small>
       </article>)}</div>}
