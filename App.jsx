@@ -210,7 +210,7 @@ export default function App() {
       {tab === '1024' && <Number1024Game lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
-      {tab === 'characters' && <CharacterStudio lang={lang} level={Math.floor(Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0) / 100) + 1} />}
+      {tab === 'characters' && <CharacterStudio lang={lang} points={Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0)} level={Math.floor(Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0) / 100) + 1} />}
       {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
       {tab === 'guide' && <section className="guide-download"><BookOpen size={38} /><h1>{t.guide}</h1><p className="muted">{t.guideHint}</p><a className="primary guide-link" href={`${import.meta.env.BASE_URL}OG01-Game-Guide-AR-EN.pdf`} target="_blank" rel="noreferrer">{lang === 'ar' ? 'فتح دليل اللعبة PDF' : lang === 'zh' ? '打开 PDF 游戏指南' : 'Open the PDF game guide'}</a></section>}
       <footer>{t.name} © 2026</footer></main></div>;
