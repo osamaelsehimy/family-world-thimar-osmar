@@ -435,14 +435,37 @@
 .cs-original-art{display:grid;grid-template-columns:1.15fr 1fr;gap:10px;margin:14px 0 18px}.cs-original-art img{width:100%;height:clamp(120px,22vw,230px);object-fit:cover;border-radius:15px;border:1px solid #e8e0c8;box-shadow:0 8px 24px #1c315014}.cs-original-art img[hidden]{display:none}@media(max-width:560px){.cs-original-art{grid-template-columns:1fr}.cs-original-art img{height:180px}}
 
 /* OSMAR Admin Console v2 — clear hierarchy, live member cards and compact controls */
-.admin-page{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(0,1.6fr);gap:18px;align-items:start;max-width:1440px;margin:0 auto;padding:8px 0 40px}
-.admin-page>.section{grid-column:1/-1;padding:clamp(20px,3vw,34px);border-radius:22px;background:linear-gradient(125deg,#123f35,#286b55 62%,#548b68);color:#fff}
-.admin-page>.section small{letter-spacing:2px;color:#d4e7d7;font-weight:800}
-.admin-page>.section h2{margin:8px 0;font-size:clamp(25px,4vw,38px);color:#fff}
-.admin-page>.section .muted{color:#e0eee4}
-.admin-panel{border:1px solid #e2eadf;border-radius:20px;padding:clamp(15px,2vw,23px);box-shadow:0 12px 32px #173c240c;min-width:0}
-.admin-panel.member-directory{grid-column:2;grid-row:2 / span 2}
-.admin-panel:has(.pending-row){grid-column:1}
+.admin-page{display:grid;grid-template-columns:minmax(290px,.82fr) minmax(0,1.8fr);gap:18px;align-items:start;max-width:1480px;margin:0 auto;padding:8px 0 44px}
+.admin-page>.section{grid-column:1/-1;padding:clamp(22px,3.4vw,38px);border-radius:26px;background:radial-gradient(circle at 88% 12%,#ffffff22,transparent 28%),linear-gradient(120deg,#0d233b 0%,#164b55 54%,#39785f 100%);color:#fff;box-shadow:0 22px 55px #102d4528;position:relative;overflow:hidden}
+.admin-page>.section:after{content:"";position:absolute;width:280px;height:280px;border:1px solid #ffffff20;border-radius:50%;inset-inline-end:-70px;bottom:-190px;box-shadow:0 0 0 26px #ffffff08,0 0 0 54px #ffffff06}
+.admin-page>.section small{letter-spacing:2px;color:#e4d19b;font-weight:850}
+.admin-page>.section h2{margin:8px 0;font-size:clamp(28px,4vw,42px);color:#fff}
+.admin-page>.section .muted{color:#e0eee9;max-width:760px;line-height:1.8}
+.admin-hero-meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.admin-hero-meta span{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #ffffff2e;border-radius:999px;background:#ffffff12;color:#f0f5ed;font-size:10px;font-weight:750}
+.admin-hero-meta i{width:7px;height:7px;border-radius:50%;background:#8fe0ad;box-shadow:0 0 0 4px #8fe0ad20}
+.admin-overview{grid-column:1/-1;padding:20px;border:1px solid #e3eae1;border-radius:22px;background:linear-gradient(145deg,#fff,#f7faf6);box-shadow:0 14px 36px #173c240a}
+.admin-overview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.admin-overview-head small{color:#a17b3b;font-size:10px;font-weight:900;letter-spacing:1.7px}
+.admin-overview-head h3{margin:5px 0 0;color:#203f35;font-size:18px}
+.admin-overview-head button{border:1px solid #dce7dc;border-radius:10px;background:#fff;padding:9px 13px;color:#245c43;font-weight:750;font-size:11px}
+.admin-overview-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.admin-overview-card{position:relative;display:grid;gap:4px;min-width:0;overflow:hidden;padding:14px;border:1px solid #e6ede5;border-radius:16px;background:#fff}
+.admin-overview-card:after{content:"";position:absolute;width:80px;height:80px;inset-inline-end:-28px;bottom:-38px;border-radius:50%;background:#eaf2e8}
+.admin-overview-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#edf4e9;color:#397653;font-size:18px;font-weight:900}
+.admin-overview-card:nth-child(3) .admin-overview-icon{background:#fff3dc;color:#a77a30}.admin-overview-card:nth-child(4) .admin-overview-icon{background:#f9eae7;color:#a75e52}.admin-overview-card:nth-child(5) .admin-overview-icon{background:#e9eff8;color:#597da0}
+.admin-overview-card small{margin-top:7px;color:#77877d;font-size:10px;font-weight:750}
+.admin-overview-card strong{color:#214c3b;font-size:29px;line-height:1.1;font-variant-numeric:tabular-nums}
+.admin-overview-card em{color:#99a39b;font-size:9px;font-style:normal}
+.admin-integrity-strip{display:flex;align-items:center;gap:12px;margin-top:13px;padding:12px 14px;border:1px solid #dceade;border-radius:14px;background:#f2f8f0}
+.admin-integrity-mark{display:grid;place-items:center;flex:0 0 30px;height:30px;border-radius:50%;background:#dcefe0;color:#287247;font-weight:900}
+.admin-integrity-strip strong{display:block;color:#28543e;font-size:12px}.admin-integrity-strip p{margin:3px 0 0;color:#728477;font-size:10px;line-height:1.6}
+.admin-integrity-count{margin-inline-start:auto;white-space:nowrap;color:#287247;font-size:10px;font-weight:850}
+.admin-panel{border:1px solid #e2eadf;border-radius:20px;padding:clamp(15px,2vw,23px);box-shadow:0 12px 32px #173c240c;min-width:0;background:#fff}
+.admin-panel.admin-invite{grid-column:1;grid-row:auto}
+.admin-panel.member-directory{grid-column:2;grid-row:span 2}
+.admin-panel.admin-pending{grid-column:1}
+.admin-panel.recent-registrations,.admin-panel.admin-permissions-entry{grid-column:1/-1}
 .admin-panel h3{font-size:17px;letter-spacing:-.2px}
 .admin-panel label{font-size:12px;font-weight:650}
 .admin-panel input,.admin-panel select{min-height:42px;border-radius:11px;border-color:#dce7dc}
@@ -471,8 +494,8 @@
 .member-edit-form>div{grid-column:1/-1;display:flex;gap:8px}
 .member-edit-form button{padding:8px 13px;border-radius:9px;background:#245c43;color:white;font-size:11px}
 .member-edit-form button+button{background:#fff;color:#52665a;border:1px solid #dfe8dc}
-@media(max-width:1050px){.admin-page{grid-template-columns:1fr}.admin-panel.member-directory,.admin-panel:has(.pending-row){grid-column:1;grid-row:auto}.member-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.admin-page{gap:12px}.directory-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.directory-metrics>div{padding:11px}.directory-metrics strong{font-size:22px}.member-list{grid-template-columns:1fr}.member-row{padding:12px}.member-edit-form{grid-template-columns:1fr}.member-edit-form label:last-of-type{grid-column:1}}
+@media(max-width:1050px){.admin-page{grid-template-columns:1fr}.admin-panel.admin-invite,.admin-panel.member-directory,.admin-panel.admin-pending,.admin-panel.recent-registrations,.admin-panel.admin-permissions-entry,.admin-overview{grid-column:1;grid-row:auto}.admin-overview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.member-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.admin-page{gap:12px}.admin-overview{padding:14px}.admin-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-integrity-strip{align-items:flex-start;flex-wrap:wrap}.admin-integrity-count{margin-inline-start:42px}.admin-hero-meta span{font-size:9px}.directory-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.directory-metrics>div{padding:11px}.directory-metrics strong{font-size:22px}.member-list{grid-template-columns:1fr}.member-row{padding:12px}.member-edit-form{grid-template-columns:1fr}.member-edit-form label:last-of-type{grid-column:1}}
 
 
 /* Dedicated, initially closed permissions area inside OSMAR Admin */
