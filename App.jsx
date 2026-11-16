@@ -165,15 +165,22 @@ export default function App() {
     try {
       if (!configured) { setNotice(t.noBackend); return; }
       if (mode === 'signup') {
-        if (!inviteCode.trim()) { setNotice(t.inviteRequired); return; }
         if (!guardian) { setNotice(t.guardian); return; }
         const normalizedInvite = inviteCode.trim().toUpperCase();
-        const { data: inviteCheck, error: inviteCheckError } = await supabase.rpc('osmar_validate_invite_code', { p_code: normalizedInvite });
-        if (inviteCheckError) throw inviteCheckError;
-        if (!inviteCheck?.[0]?.is_valid) { setNotice(t.invalidInvite); return; }
-        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { guardian_attested: true, invite_code: normalizedInvite }, emailRedirectTo: authRedirectUrl() } });
+        let acceptedInvite = null;
+        let inviteWarning = '';
+        if (normalizedInvite) {
+          const { data: inviteCheck, error: inviteCheckError } = await supabase.rpc('osmar_validate_invite_code', { p_code: normalizedInvite });
+          if (inviteCheckError) throw inviteCheckError;
+          if (inviteCheck?.[0]?.is_valid) acceptedInvite = normalizedInvite;
+          else {
+            inviteWarning = lang==='ar' ? 'الكود غير صالح أو انتهت دعواته؛ تم تسجيلك بدون ربط دعوة، والإدارة ستراجع المحاولة.' : lang==='zh' ? '邀请码无效或已用完；账户将继续创建，不关联邀请，管理员可查看此记录。' : 'That code is invalid or full; your account will still be created without an invite link, and the admin can review the attempt.';
+            try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_code_hint: normalizedInvite, p_reason: 'invalid_or_full_invite' }); } catch {}
+          }
+        }
+        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { guardian_attested: true, invite_code: acceptedInvite }, emailRedirectTo: authRedirectUrl() } });
         if (error) throw error;
-        if (!data.session) setNotice(t.checkEmail);
+        setNotice(inviteWarning || (!data.session ? t.checkEmail : (lang==='ar'?'تم إنشاء الحساب بنجاح.':'Account created successfully.')));
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw error;
@@ -206,7 +213,7 @@ export default function App() {
     <div className="auth-tabs"><button type="button" className={mode === 'login' ? 'selected' : ''} onClick={() => setMode('login')}>{t.login}</button><button type="button" className={mode === 'signup' ? 'selected' : ''} onClick={() => setMode('signup')}>{t.signup}</button></div>
     <label>{t.email}<input type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} /></label>
     <label>{t.password}<input type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength="8" required value={password} onChange={e => setPassword(e.target.value)} /></label>
-    {mode === 'signup' && <label>{t.inviteCode}<input type="text" autoComplete="off" required value={inviteCode} onChange={e => setInviteCode(e.target.value.toUpperCase())} maxLength="40" /></label>}
+    {mode === 'signup' && <label>{t.inviteCode} <small>{lang==='ar'?'(اختياري)':'(optional)'}</small><input type="text" autoComplete="off" value={inviteCode} onChange={e => setInviteCode(e.target.value.toUpperCase())} maxLength="40" /></label>}
     {mode === 'login' && <button className="auth-text-button" type="button" disabled={busy} onClick={requestPasswordReset}>{t.forgotPassword}</button>}
     {mode === 'signup' && <label className="guardian-check"><input type="checkbox" required checked={guardian} onChange={e => setGuardian(e.target.checked)} />{t.guardian}</label>}
     <button className="primary wide" disabled={busy}>{busy ? '…' : mode === 'login' ? t.submitLogin : t.submitSignup}</button>
@@ -249,7 +256,7 @@ function OSMARAdmin({ supabase, lang }) {
   const [source, setSource] = useState('');
   const [code, setCode] = useState('');
   const [pending, setPending] = useState([]);
-  const [recentRegistrations, setRecentRegistrations] = useState([]);
+  const [recentRegistrations, setRecentRegistrations] = useState([]);\n  const [inviteDirectory, setInviteDirectory] = useState([]);\n  const [registrationAttempts, setRegistrationAttempts] = useState([]);
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState('');
   const [memberFilter, setMemberFilter] = useState('all');
@@ -286,17 +293,17 @@ function OSMARAdmin({ supabase, lang }) {
     setBusy(true);
     setMessage('');
     try {
-      const [pendingResult, memberResult, pointsResult, gamesResult, recentResult] = await Promise.all([
+      const [pendingResult, memberResult, pointsResult, gamesResult, recentResult, inviteResult, attemptResult] = await Promise.all([
         supabase.rpc('osmar_pending_members'),
         supabase.rpc('osmar_member_directory_v2'),
         supabase.rpc('osmar_points_directory'),
         supabase.rpc('osmar_game_directory'),
-        supabase.rpc('osmar_recent_registrations', { p_limit: 30 })
+        supabase.rpc('osmar_recent_registrations', { p_limit: 30 }),\n        supabase.rpc('osmar_invite_directory'),\n        supabase.rpc('osmar_registration_attempts', { p_limit: 100 })
       ]);
-      const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error || recentResult.error;
+      const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error || recentResult.error || inviteResult.error || attemptResult.error;
       if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
       if (!pendingResult.error) setPending(pendingResult.data || []);
-      if (!recentResult.error) setRecentRegistrations(recentResult.data || []);
+      if (!recentResult.error) setRecentRegistrations(recentResult.data || []);\n      if (!inviteResult.error) setInviteDirectory(inviteResult.data || []);\n      if (!attemptResult.error) setRegistrationAttempts(attemptResult.data || []);
       if (!memberResult.error) {
         const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
         const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
@@ -474,6 +481,22 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="member-main"><strong>{item.member_code||'—'}</strong><span>{item.email}</span><small>{t.registeredAt}: {item.registered_at?new Date(item.registered_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
         <div className="member-tags"><span className={item.email_confirmed && item.membership_status==='active'?'member-status active':'member-status'}>{!item.email_confirmed?label('بانتظار تأكيد البريد','Awaiting email confirmation','等待邮箱验证'):item.membership_status==='pending'?label('بانتظار اعتماد OSMAR','Awaiting OSMAR approval','等待 OSMAR 审核'):item.membership_status==='active'?label('عضوية معتمدة','Approved','已批准'):item.membership_status}</span><span className="member-type">{item.referral_type}</span></div>
         <small className="member-contact">{item.email_confirmed?label('البريد مؤكد','Email confirmed','邮箱已验证'):label('البريد لم يتم تأكيده بعد','Email not confirmed yet','邮箱尚未验证')} · {item.referral_status==='approved'?label('الدعوة معتمدة','Invitation approved','邀请已批准'):item.referral_status==='pending'?label('الدعوة بانتظار المراجعة','Invitation awaiting review','邀请待审核'):label('لا يوجد سجل دعوة مرتبط','No linked invitation record','没有关联的邀请码记录')}</small>
+      </article>)}</div>}
+    </section>
+    <section className="admin-panel recent-registrations">
+      <div className="admin-heading"><div><h3>{label('أكواد الدعوة','Invitation codes','邀请码')}</h3><p className="muted">{label('اسم الكود وسعته واستخداماته والمتبقي. الكود الكامل يظهر عند إنشائه فقط حفاظًا على أمانه.','Label, capacity, usage and remaining invitations. Full codes are shown only once at creation for security.','显示名称、容量、使用次数与剩余次数。为安全起见，完整邀请码仅在创建时显示。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
+      <div className="member-list">{inviteDirectory.map((item,index)=><article className="member-row" key={item.invite_id}>
+        <div className="member-main"><strong>{index+1}</strong><span>{item.source_label || item.invite_type}</span><small>{item.invite_type} · {item.code_prefix}</small><small>{item.created_at?new Date(item.created_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
+        <div className="member-tags"><span className="member-status">{label('السعة','Capacity','容量')}: {item.max_uses}</span><span className="member-status active">{label('استخدم','Used','已用')}: {item.uses_count}</span><span className="member-type">{label('متبقي','Left','剩余')}: {item.uses_remaining}</span></div>
+        <small className="member-contact">{label('أنشأه: ','Created by: ','创建者：')}{item.created_by_email||'OSMAR'} · {item.revoked_at?label('ملغي','Revoked','已撤销'):item.expires_at && new Date(item.expires_at)<new Date()?label('منتهي','Expired','已过期'):label('ساري','Available','有效')}</small>
+      </article>)}</div>
+      {inviteDirectory.length===0&&<p className="muted">{label('لا توجد أكواد.','No invitation codes yet.','暂无邀请码。')}</p>}
+    </section>
+    <section className="admin-panel recent-registrations">
+      <div className="admin-heading"><div><h3>{label('محاولات التسجيل التي واجهت مشكلة','Registration attempts needing attention','需要关注的注册尝试')}</h3><p className="muted">{label('يظهر هنا البريد الذي أدخل كودًا غير صالح أو مستهلكًا. المحاولات القديمة التي لم يسجل النظام بريدها لا يمكن استرجاعها بأثر رجعي.','Emails entered with invalid or exhausted codes appear here. Older attempts whose email was never recorded cannot be reconstructed retroactively.','输入无效或已用完邀请码的邮箱会显示在这里。系统未曾记录邮箱的历史尝试无法追溯恢复。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
+      {registrationAttempts.length===0?<p className="muted">{label('لا توجد محاولات مسجلة.','No recorded attempts.','暂无记录。')}</p>:<div className="member-list">{registrationAttempts.map((item,index)=><article className="member-row" key={item.attempt_number}>
+        <div className="member-main"><strong>{registrationAttempts.length-index}</strong><span>{item.email}</span><small>{item.attempted_at?new Date(item.attempted_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
+        <div className="member-tags"><span className="member-status">{item.reason}</span><span className="member-type">{item.code_hint||'—'}</span></div>
       </article>)}</div>}
     </section>
     <section className="admin-panel admin-permissions-entry">
