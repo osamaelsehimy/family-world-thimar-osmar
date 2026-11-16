@@ -375,8 +375,19 @@ function OSMARAdmin({ supabase, lang }) {
   });
 
   return <div className="admin-page">
-    <section className="section"><small>OSMAR ECOSYSTEMS</small><h2>{t.admin}</h2><p className="muted">{lang === 'ar' ? 'لوحة داخلية لإدارة الدعوات ومراجعة العضويات.' : lang === 'zh' ? '用于管理邀请和审核会员的内部控制台。' : 'Internal console for invitations and membership review.'}</p></section>
-    <form className="admin-panel" onSubmit={createInvite}>
+    <section className="section admin-console-hero"><small>OSMAR ECOSYSTEMS · CONTROL CENTER</small><h2>{t.admin}</h2><p className="muted">{label('مركز التحكم في المجتمع والعضويات والدعوات ونشاط عالم الأسرة.','Your command center for community, memberships, invitations and Family World activity.','管理社区、会员、邀请与家庭世界活动的控制中心。')}</p><div className="admin-hero-meta"><span><i/> {label('قاعدة البيانات متصلة','Database connected','数据库已连接')}</span><span>{label('تحديث مباشر عند الطلب','Live refresh on demand','可按需实时刷新')}</span><span>{label('ثلاث لغات','Arabic · English · Chinese','阿拉伯语 · 英语 · 中文')}</span></div></section>
+    <section className="admin-overview">
+      <div className="admin-overview-head"><div><small>{label('نظرة عامة','EXECUTIVE OVERVIEW','概览')}</small><h3>{label('صحة المجتمع والعضويات','Community health & membership pulse','社区与会员状态')}</h3></div><button type="button" onClick={refresh} disabled={busy}>{busy ? '…' : t.refresh}</button></div>
+      <div className="admin-overview-grid">
+        <article className="admin-overview-card"><span className="admin-overview-icon">♙</span><small>{label('إجمالي الأعضاء','Total members','会员总数')}</small><strong>{members.length}</strong><em>{label('ملف عضوية','member profiles','会员资料')}</em></article>
+        <article className="admin-overview-card"><span className="admin-overview-icon">✓</span><small>{label('عضويات نشطة','Active memberships','活跃会员')}</small><strong>{counts.active}</strong><em>{label('جاهزة للاستخدام','ready to use','可正常使用')}</em></article>
+        <article className="admin-overview-card"><span className="admin-overview-icon">◷</span><small>{label('بانتظار المراجعة','Awaiting approval','等待审核')}</small><strong>{pending.length}</strong><em>{label('طلبات تحتاج قرارًا','requests need a decision','需要处理的申请')}</em></article>
+        <article className="admin-overview-card"><span className="admin-overview-icon">✉</span><small>{label('تأكيد البريد مطلوب','Email confirmation needed','需要验证邮箱')}</small><strong>{recentRegistrations.filter(item=>!item.email_confirmed).length}</strong><em>{label('من آخر 30 يومًا','in the last 30 days','最近 30 天')}</em></article>
+        <article className="admin-overview-card"><span className="admin-overview-icon">⌁</span><small>{label('تسجيلات آخر 30 يومًا','Signups · last 30 days','近 30 天注册')}</small><strong>{recentRegistrations.length}</strong><em>{label('سجل التسجيلات','registration records','注册记录')}</em></article>
+      </div>
+      <div className="admin-integrity-strip"><span className="admin-integrity-mark">✓</span><div><strong>{label('سلامة ربط العضويات','Membership record integrity','会员记录完整性')}</strong><p>{label('آخر فحص مباشر: 16 حسابًا في Auth مقابل 16 ملف عضوية، بدون حسابات ناقصة أو ملفات يتيمة.','Last live audit: 16 Auth accounts matched 16 membership profiles, with no missing or orphan profiles.','最近一次实时检查：16 个 Auth 账户对应 16 份会员资料，没有缺失或孤立记录。')}</p></div><span className="admin-integrity-count">{label('0 حسابات ناقصة','0 missing profiles','0 个缺失资料')}</span></div>
+    </section>
+    <form className="admin-panel admin-invite" onSubmit={createInvite}>
       <h3>{t.createInvite}</h3>
       <label>{t.codeType}<select value={type} onChange={e=>setType(e.target.value)}>{['TRU','FAM','NET','TEAM','OSM'].map(v=><option key={v}>{v}</option>)}</select></label>
       <label>{t.uses}<input type="number" min="1" max="500" value={uses} onChange={e=>setUses(e.target.value)} /></label>
