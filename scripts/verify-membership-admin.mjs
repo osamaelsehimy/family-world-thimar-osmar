@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 const app = fs.readFileSync('App.jsx', 'utf8');
 const directoryMigration = fs.readFileSync('supabase/migrations/20261114184945_trusted_member_directory_and_legacy_tru_classification.sql', 'utf8');
+const recentMigration = fs.readFileSync('supabase/migrations/20261116153000_osmar_recent_registration_monitor.sql', 'utf8');
 const fixMigration = fs.readFileSync('supabase/migrations/20261115153321_fix_referral_directory_and_rls_performance.sql', 'utf8');
 
 const migrationFiles = fs.readdirSync('supabase/migrations').filter(name => name.endsWith('.sql')).sort();
@@ -33,7 +34,8 @@ const expectedMigrationFiles = [
   "20261115153213_member_profiles_and_avatars.sql",
   "20261115153321_fix_referral_directory_and_rls_performance.sql",
   "20261115155051_osmar_least_privilege_admin_rbac.sql",
-  "20261115155251_enforce_core_admin_permissions.sql"
+  "20261115155251_enforce_core_admin_permissions.sql",
+  "20261116153000_osmar_recent_registration_monitor.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
@@ -43,6 +45,10 @@ for (const file of expectedMigrationFiles) {
 assert.match(app, /session\?\.user\?\.app_metadata\?\.role === 'osmar_admin'/, 'Admin navigation must use trusted app_metadata role');
 assert.match(app, /Map as MapIcon/, 'Lucide map icon must not shadow the native Map constructor');
 assert.match(app, /new Map\(/, 'Directory aggregation must use the native Map constructor');
+assert.match(app, /osmar_recent_registrations/, 'Admin must load the owner-only recent registration monitor');
+assert.match(app, /Awaiting email confirmation/, 'Recent registrations must distinguish unconfirmed email from admin approval');
+assert.match(recentMigration, /private\.osmar_is_owner\(\)/, 'Recent registration monitor must be owner-only');
+assert.match(recentMigration, /email_confirmed_at is not null/, 'Recent registration monitor must expose email confirmation state');
 assert.match(app, /osmar_member_directory_v2/, 'Admin directory must load the live member directory v2');
 assert.match(app, /osmar_update_member_profile/, 'Owner must be able to edit member profiles');
 assert.match(app, /member_type/, 'Admin directory must use the owner-controlled member type');
