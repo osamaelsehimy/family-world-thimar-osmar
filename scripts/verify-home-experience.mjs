@@ -103,7 +103,7 @@ assert.match(app,/<CharacterStudio lang=\{lang\} points=\{/,'Character Studio mu
 assert.doesNotMatch(component,/wh-characters/,'Home screen must not render character cards');
 
 const ludo=fs.readFileSync('src/components/LudoGame.jsx','utf8');
-assert.match(ludo,/onResult=\{onResult\}/,'Ludo must expose a completed-match result callback');
+assert.match(ludo,/onBack,onResult/,'Ludo must expose a completed-match result callback');
 assert.match(ludo,/sessionKey:crypto\.randomUUID\(\)/,'Each Ludo match must have a unique idempotency key');
 assert.match(ludo,/reported\.current===game\.sessionKey/,'Ludo must not report the same match more than once');
 assert.match(ludo,/gameId:'ludo'/,'Ludo results must use the registered game id');
