@@ -534,3 +534,10 @@
 .admin-collapsible[open]>summary:after{content:'−'}
 .admin-collapsible>.admin-panel{border:0;border-radius:0;box-shadow:none;padding-top:4px}
 @media(max-width:620px){.topbar{gap:7px}.topbar-logout{padding:8px 9px;font-size:11px}.topbar-logout span{display:inline}}
+
+/* Keep sign-out in its original sidebar location and visible at all viewport heights. */
+.sidebar{overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.sidebar nav{flex:1 0 auto}
+.sidebar-bottom{flex:0 0 auto;margin-top:auto;padding-top:10px;background:#164b3b}
+.sidebar-bottom p{margin-top:0;margin-bottom:8px;padding:8px 10px}
+.sidebar-bottom .logout{min-height:44px;border:1px solid #ffffff30;background:#ffffff12;font-weight:700}
