@@ -144,7 +144,8 @@ export default function App() {
     setBusy(true); setNotice('');
     try {
       const { error } = await supabase.auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: authRedirectUrl() } });
-      if (error) {\n        if (error?.code === 'over_email_send_rate_limit' || /rate limit/i.test(error?.message || '')) { try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_reason: 'confirmation_email_rate_limited' }); } catch {} }
+      if (error) {
+        if (error?.code === 'over_email_send_rate_limit' || /rate limit/i.test(error?.message || '')) { try { await supabase.rpc('osmar_record_registration_attempt', { p_email: email.trim(), p_reason: 'confirmation_email_rate_limited' }); } catch {} }
         throw error;
       }
       setNotice(t.confirmationResent);
