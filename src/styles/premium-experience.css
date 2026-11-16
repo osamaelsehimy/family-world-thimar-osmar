@@ -115,3 +115,19 @@
 .wh-character-card .wh-character-portrait{object-fit:cover;object-position:center top}
 .cs-art img{width:100%;height:100%;object-fit:cover}
 .cs-art img[src*="family-world-character-sprite"]{object-fit:cover}
+
+
+/* OSMAR Orbit City — immersive sustainable orbital-world visual */
+.wh-hero{isolation:isolate;overflow:hidden;min-height:clamp(430px,48vw,610px);background:radial-gradient(ellipse at 76% 45%,#155b68 0%,#0c344c 42%,#071a30 78%);}
+.wh-planet-stage{inset:0 0 0 auto;width:72%;height:100%;mask-image:linear-gradient(90deg,transparent 0%,#000 14%,#000 100%);opacity:1;}
+.wh-orbit-city-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
+.wh-orbit-caption{position:absolute;z-index:2;right:clamp(18px,3vw,42px);bottom:22px;display:flex;align-items:center;gap:12px;padding:9px 13px;border:1px solid #c6ead34d;border-radius:999px;background:#071b31b8;color:#f4e6bf;backdrop-filter:blur(12px);font-size:10px;font-weight:850;letter-spacing:.12em;}
+.wh-orbit-caption b{padding-inline-start:11px;border-inline-start:1px solid #ffffff45;color:#a9e0d0;font-variant-numeric:tabular-nums;}
+.wh-hero-copy{max-width:550px;}
+.wh-hero-shade{background:linear-gradient(90deg,#06182bf2 0%,#09263bd9 36%,#09263b30 70%,transparent 100%),linear-gradient(0deg,#06182b8c,transparent 58%);}
+@media(max-width:700px){.wh-hero{min-height:560px}.wh-planet-stage{width:100%;height:66%;top:0;bottom:auto;mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 100%);opacity:.92}.wh-orbit-city-art{object-position:58% center}.wh-hero-copy{position:relative;margin-top:205px;max-width:100%;}.wh-orbit-caption{right:14px;bottom:12px;font-size:8px;padding:7px 10px;}}
+@media(prefers-reduced-motion:reduce){.wh-orbit-city-art{animation:none;}}
+/* Preserve the official portrait collection in collectible character cards. */
+.cs-card.cs-character .cs-art{position:relative;overflow:hidden;background:linear-gradient(150deg,#f8f1df,#e5e8e0);}
+.cs-card.cs-character .cs-art img[src*="family-world-character-sprite"]{width:100%;height:100%;object-fit:cover;object-position:center var(--sprite-position,0%);}
+.cs-card.cs-character .cs-badge{z-index:2;border:1px solid #e7d3a0;background:#172b45;color:#f8e9bd;}
