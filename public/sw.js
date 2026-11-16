@@ -1,4 +1,4 @@
-const CACHE_NAME = 'family-world-shell-v3';
+const CACHE_NAME = 'family-world-shell-v4';
 const APP_ROOT = new URL('./', self.registration.scope);
 const APP_SHELL = [
   APP_ROOT.href,
