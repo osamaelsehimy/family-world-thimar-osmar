@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
 const app = fs.readFileSync('App.jsx', 'utf8');
+const memberProfile = fs.readFileSync('src/components/MemberProfile.jsx', 'utf8');
+const chronologyMigration = fs.readFileSync('supabase/migrations/20261116170000_osmar_chronological_member_and_invite_ordering.sql', 'utf8');
 const directoryMigration = fs.readFileSync('supabase/migrations/20261114184945_trusted_member_directory_and_legacy_tru_classification.sql', 'utf8');
 const inviteValidationMigration = fs.readFileSync('supabase/migrations/20261116154000_osmar_invite_code_preflight_validation.sql', 'utf8');
 const recentMigration = fs.readFileSync('supabase/migrations/20261116153000_osmar_recent_registration_monitor.sql', 'utf8');
@@ -39,7 +41,8 @@ const expectedMigrationFiles = [
   "20261116153000_osmar_recent_registration_monitor.sql",
   "20261116154000_osmar_invite_code_preflight_validation.sql",
   "20261116161500_osmar_open_signup_invite_audit_and_admin_code_directory.sql",
-  "20261116161600_fix_registration_attempt_email_validation.sql"
+  "20261116161600_fix_registration_attempt_email_validation.sql",
+  "20261116170000_osmar_chronological_member_and_invite_ordering.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
@@ -85,3 +88,10 @@ for (const index of ['member_referrals_invite_code_id_idx','member_referrals_rev
 assert.match(fixMigration, /Members and OSMAR admins can read profiles/, 'Profile read policies must be combined');
 assert.match(fixMigration, /Owners and OSMAR admins read apartment designs/, 'Apartment read policies must be combined');
 console.log('Membership/admin checks passed: trusted admin role, invitation flow, guardian affirmation, safe limits, resilient UI, referral attribution, and RLS/performance migration.');
+
+assert.match(app, /displayMemberNumber/, 'Admin must render member numbers without the FW prefix or leading zeroes');
+assert.match(memberProfile, /displayMemberNumber/, 'Member profile must render compact member numbers');
+assert.match(chronologyMigration, /order by p\.created_at asc,p\.id asc/i, 'Member directory must prioritize original registration time');
+assert.match(chronologyMigration, /order by i\.created_at asc,i\.id asc/i, 'Invitation directory must prioritize creation time');
+assert.match(chronologyMigration, /order by recent\.created_at asc,recent\.id asc/i, 'Registration attempts must be shown chronologically');
+assert.match(chronologyMigration, /order by recent\.registered_at asc,recent\.member_id asc/i, 'Recent signups must be shown chronologically');
