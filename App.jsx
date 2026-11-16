@@ -480,7 +480,7 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
     </section>
-    <details className="admin-collapsible"><<summary>{label('التسجيلات الحديثة','Recent registrations','最近注册')} · {recentRegistrations.length}</summary></summary>
+    <details className="admin-collapsible"><summary>{label('التسجيلات الحديثة','Recent registrations','最近注册')} · {recentRegistrations.length}</summary></summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('التسجيلات الحديثة · آخر 30 يومًا','Recent registrations · last 30 days','最近注册 · 过去 30 天')}</h3><p className="muted">{label('السجل ده بيعرض المسجلين حتى لو اتعمدوا بالفعل أو لسه محتاجين تأكيد البريد.','Includes members already approved and accounts still awaiting email confirmation.','包括已批准的会员以及仍待邮箱验证的账户。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       <div className="directory-metrics">
@@ -494,7 +494,7 @@ function OSMARAdmin({ supabase, lang }) {
         <small className="member-contact">{item.email_confirmed?label('البريد مؤكد','Email confirmed','邮箱已验证'):label('البريد لم يتم تأكيده بعد','Email not confirmed yet','邮箱尚未验证')} · {item.referral_status==='approved'?label('الدعوة معتمدة','Invitation approved','邀请已批准'):item.referral_status==='pending'?label('الدعوة بانتظار المراجعة','Invitation awaiting review','邀请待审核'):label('لا يوجد سجل دعوة مرتبط','No linked invitation record','没有关联的邀请码记录')}</small>
       </article>)}</div>}
     </section></details>
-    <details className="admin-collapsible"><<summary>{label('أكواد الدعوة','Invitation codes','邀请码')} · {inviteDirectory.length}</summary></summary>
+    <details className="admin-collapsible"><summary>{label('أكواد الدعوة','Invitation codes','邀请码')} · {inviteDirectory.length}</summary></summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('أكواد الدعوة','Invitation codes','邀请码')}</h3><p className="muted">{label('اسم الكود وسعته واستخداماته والمتبقي. الكود الكامل يظهر عند إنشائه فقط حفاظًا على أمانه.','Label, capacity, usage and remaining invitations. Full codes are shown only once at creation for security.','显示名称、容量、使用次数与剩余次数。为安全起见，完整邀请码仅在创建时显示。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       <div className="member-list">{inviteDirectory.map((item,index)=><article className="member-row" key={item.invite_id}>
@@ -504,7 +504,7 @@ function OSMARAdmin({ supabase, lang }) {
       </article>)}</div>
       {inviteDirectory.length===0&&<p className="muted">{label('لا توجد أكواد.','No invitation codes yet.','暂无邀请码。')}</p>}
     </section></details>
-    <details className="admin-collapsible"><<summary>{label('محاولات تحتاج متابعة','Attempts needing attention','需要跟进的尝试')} · {registrationAttempts.length}</summary></summary>
+    <details className="admin-collapsible"><summary>{label('محاولات تحتاج متابعة','Attempts needing attention','需要跟进的尝试')} · {registrationAttempts.length}</summary></summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('محاولات التسجيل التي واجهت مشكلة','Registration attempts needing attention','需要关注的注册尝试')}</h3><p className="muted">{label('يظهر هنا البريد الذي أدخل كودًا غير صالح أو مستهلكًا. المحاولات القديمة التي لم يسجل النظام بريدها لا يمكن استرجاعها بأثر رجعي.','Emails entered with invalid or exhausted codes appear here. Older attempts whose email was never recorded cannot be reconstructed retroactively.','输入无效或已用完邀请码的邮箱会显示在这里。系统未曾记录邮箱的历史尝试无法追溯恢复。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       {registrationAttempts.length===0?<p className="muted">{label('لا توجد محاولات مسجلة.','No recorded attempts.','暂无记录。')}</p>:<div className="member-list">{registrationAttempts.map((item,index)=><article className="member-row" key={item.attempt_number}>
