@@ -46,3 +46,20 @@
 @keyframes fw-planetary-orbit{from{transform:rotate(-18deg)}to{transform:rotate(342deg)}}
 @keyframes fw-planetary-orbit-reverse{from{transform:rotate(18deg)}to{transform:rotate(-342deg)}}
 @media(prefers-reduced-motion:reduce){.thimar-city-art .city-orbit{animation:none!important}}
+
+
+/* Restore the unmistakable living-world orbit motif from the original hero */
+@media(prefers-reduced-motion:no-preference){
+ .fw-cinematic-hero .city-orbit{transform-origin:50% 50%;will-change:transform}
+ .fw-cinematic-hero .orbit-one{animation:fw-orbit-one 24s linear infinite}
+ .fw-cinematic-hero .orbit-two{animation:fw-orbit-two 32s linear infinite}
+ .fw-cinematic-hero .orbit-three{position:absolute;inset:23% 17% 17%;border:1px dashed #a8f7e788;border-radius:50%;transform:rotate(58deg);animation:fw-orbit-three 19s linear infinite}
+ .fw-cinematic-hero .orbit-one:after,.fw-cinematic-hero .orbit-two:after,.fw-cinematic-hero .orbit-three:after{content:"";position:absolute;display:block;border-radius:50%;width:12px;height:12px;box-shadow:0 0 12px currentColor,0 0 28px currentColor}
+ .fw-cinematic-hero .orbit-one:after{left:50%;top:-6px;background:#8fffee;color:#8fffee}
+ .fw-cinematic-hero .orbit-two:after{right:12%;bottom:8%;width:10px;height:10px;background:#d5b2ff;color:#c69cff}
+ .fw-cinematic-hero .orbit-three:after{left:14%;top:12%;width:8px;height:8px;background:#ffd88a;color:#ffd88a}
+}
+@keyframes fw-orbit-one{from{transform:rotate(-18deg)}to{transform:rotate(342deg)}}
+@keyframes fw-orbit-two{from{transform:rotate(18deg)}to{transform:rotate(-342deg)}}
+@keyframes fw-orbit-three{from{transform:rotate(58deg)}to{transform:rotate(418deg)}}
+@media(prefers-reduced-motion:reduce){.fw-cinematic-hero .city-orbit{animation:none!important}}
