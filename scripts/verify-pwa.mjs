@@ -33,7 +33,7 @@ for (const icon of manifest.icons || []) {
     }
   }
 }
-if (!sw.includes('family-world-shell-v4')) fail('Service worker cache version was not bumped');
+if (!sw.includes('family-world-shell-v5')) fail('Service worker cache version was not bumped');
 if (!sw.includes('self.registration.scope')) fail('Service worker does not derive its root from its registration scope');
 if (process.exitCode) process.exit(1);
 console.log('PWA smoke checks passed: manifest, GitHub Pages-relative paths, service worker, and SVG and PNG icons.');
