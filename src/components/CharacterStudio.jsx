@@ -35,7 +35,7 @@ function readSaved(){
 }
 function makeId(){ return globalThis.crypto?.randomUUID?.() || `card-${Date.now()}-${Math.random().toString(36).slice(2)}`; }
 
-export default function CharacterStudio({lang='ar',level=1}){
+export default function CharacterStudio({lang='ar',level=1,points=0}){
  const t=labels[lang]||labels.ar;
  const [saved,setSaved]=useState(readSaved);
  const [filter,setFilter]=useState('all');
@@ -79,7 +79,7 @@ export default function CharacterStudio({lang='ar',level=1}){
  }
  function removeCard(id){setSaved(current=>current.filter(card=>card.id!==id));}
  return <section className="character-studio" dir={rtl?'rtl':'ltr'}>
-  <header className="character-studio-head"><div><span className="cs-eyebrow"><Sparkles size={14}/>{t.eyebrow}</span><h2>{t.title}</h2><p>{t.intro}</p><small className="cs-expand">{t.expand}</small><div className="cs-level-panel"><div><b><Unlock size={14}/>{t.levelLabel} {level}</b><small>{t.levelRule}</small></div><span className="cs-level-track"><i style={{width:`${Math.max(0,Math.min(100,((Number(level)||1)-1)%1*100))}%`}}/></span></div></div><button className="cs-add" onClick={()=>setShowForm(v=>!v)}><Plus size={17}/>{t.add}</button></header>
+  <header className="character-studio-head"><div><span className="cs-eyebrow"><Sparkles size={14}/>{t.eyebrow}</span><h2>{t.title}</h2><p>{t.intro}</p><small className="cs-expand">{t.expand}</small><div className="cs-level-panel"><div><b><Unlock size={14}/>{t.levelLabel} {level}</b><small>{t.levelRule}</small></div><span className="cs-level-track"><i style={{width:`${Math.max(0,Math.min(100,Number(points)||0)%100)}%`}}/></span></div></div><button className="cs-add" onClick={()=>setShowForm(v=>!v)}><Plus size={17}/>{t.add}</button></header>
   <div className="cs-original-art" aria-label="Official Family World character artwork"><img src={`${import.meta.env.BASE_URL}assets/brand/family-world-character-board.webp`} alt="Official Family World character and card visual reference" onError={e=>{e.currentTarget.hidden=true;}}/><img src={`${import.meta.env.BASE_URL}assets/brand/family-world-game-board.webp`} alt="Official Family World game experience visual reference" onError={e=>{e.currentTarget.hidden=true;}}/></div>
   <div className="cs-toolbar"><label className="cs-search"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search}/></label><div className="cs-filters">{[['all',t.all],['character',t.character],['family',t.family],['thimmy-pet',t.pet],['thimmy-bot',t.bot],['skill',t.skill]].map(([value,label])=><button key={value} className={filter===value?'active':''} onClick={()=>setFilter(value)}>{label}</button>)}</div></div>
   {showForm&&<form className="cs-form" onSubmit={addCard}>
