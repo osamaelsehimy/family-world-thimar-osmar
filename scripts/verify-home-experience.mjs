@@ -26,7 +26,6 @@ for (const concept of ['100 m²','family','market','learning','community','proje
 for (const feature of ['wh-feature-art','wh-house','wh-grid','wh-card-icon']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
 assert.match(styles,/@media\(max-width:760px\)/,'World Hub must have a mobile layout');
 assert.match(component,/family-world\.svg/,'World Hub must use the original app icon');
-assert.match(component,/wh-art-gallery/,'Home must visibly surface the artwork gallery');
 assert.match(component,/family-world-character-sprite\.webp/,'Home gallery must use the checked-in character artwork');
 assert.match(component,/assets\/ideas\/world-map\.jpg/,'Home gallery must use the checked-in world map artwork');
 assert.match(fs.readFileSync('public/sw.js','utf8'),/family-world-shell-v5/,'PWA shell cache must be versioned when artwork is added');
@@ -104,7 +103,9 @@ assert.match(app,/<CharacterStudio lang=\{lang\} points=\{/,'Character Studio mu
 assert.doesNotMatch(component,/wh-characters/,'Home screen must not render character cards');
 console.log('Character progression checks passed: 11 standalone vector portraits, mystery locks, level-based reveal, FWP integration, and character-free home.');
 const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
-assert.doesNotMatch(component,/wh-art-gallery|assets\\/ideas\\/world-map/,'Home must stay free of character and world artwork tiles.');
+assert.doesNotMatch(component,/wh-art-gallery|family-world-character-sprite|assets\\/ideas\\/world-map/,'Home must stay free of character and world artwork tiles.');
+assert.match(app,/tab === 'worlds'.*assets\\/ideas\\/world-map\\.jpg/s,'World map must remain in the dedicated worlds section.');
+assert.match(app,/tab === 'characters'.*CharacterStudio/s,'Characters must remain in the dedicated characters section.');
 assert.match(styles,/linear-gradient\(125deg,#102b45/,'Home hero must use the branded gradient fallback until official cover assets are installed.');
 for (const asset of ['family-world-cover.webp','family-world-character-board.webp','family-world-game-board.webp']) {
   if (asset !== 'family-world-cover.webp') assert.ok(characterStudio.includes(asset),'Approved character/game board must be wired into Character Studio: '+asset);
