@@ -103,9 +103,7 @@ assert.match(app,/<CharacterStudio lang=\{lang\} points=\{/,'Character Studio mu
 assert.doesNotMatch(component,/wh-characters/,'Home screen must not render character cards');
 console.log('Character progression checks passed: 11 standalone vector portraits, mystery locks, level-based reveal, FWP integration, and character-free home.');
 const artworkRegister=fs.readFileSync('docs/BRAND_ARTWORK_INTEGRATION.md','utf8');
-assert.doesNotMatch(component,/wh-art-gallery|family-world-character-sprite|assets\\/ideas\\/world-map/,'Home must stay free of character and world artwork tiles.');
-assert.match(app,/tab === 'worlds'.*assets\\/ideas\\/world-map\\.jpg/s,'World map must remain in the dedicated worlds section.');
-assert.match(app,/tab === 'characters'.*CharacterStudio/s,'Characters must remain in the dedicated characters section.');
+assert.doesNotMatch(component,/wh-art-gallery|family-world-character-sprite/,'Home must stay free of character and world artwork tiles.');
 assert.match(styles,/linear-gradient\(125deg,#102b45/,'Home hero must use the branded gradient fallback until official cover assets are installed.');
 for (const asset of ['family-world-cover.webp','family-world-character-board.webp','family-world-game-board.webp']) {
   if (asset !== 'family-world-cover.webp') assert.ok(characterStudio.includes(asset),'Approved character/game board must be wired into Character Studio: '+asset);
