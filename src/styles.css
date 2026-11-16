@@ -483,3 +483,19 @@
 .admin-permissions-launch small { color: var(--muted, #6b7280); line-height: 1.5; }
 .admin-permissions-toggle { font-size: 24px; font-weight: 700; }
 .admin-permissions-entry > .osmar-access-manager { margin: 0 16px 16px; }
+
+/* Character progression and crisp, individually cropped SVG portraits */
+.cs-level-panel{display:flex;align-items:center;gap:14px;max-width:460px;margin-top:13px;padding:11px 13px;border:1px solid #dce9e1;border-radius:14px;background:linear-gradient(120deg,#f3f8f3,#f7f4e9)}
+.cs-level-panel>div{display:flex;flex-direction:column;gap:3px;min-width:130px}
+.cs-level-panel b{display:flex;align-items:center;gap:6px;color:#244f45;font-size:12px}
+.cs-level-panel small{color:#7a8b80;font-size:10px}
+.cs-level-track{height:7px;flex:1;overflow:hidden;border-radius:99px;background:#dce6df}
+.cs-level-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#4c8c6d,#d3a85b);transition:width .25s ease}
+.cs-art-locked{background:radial-gradient(circle at 50% 28%,#e7e9e1,#cfd8d4 70%,#bcc9c3)}
+.cs-lock-art{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#49645a;background:repeating-linear-gradient(135deg,#ffffff18 0 12px,#173c2408 12px 24px)}
+.cs-lock-art svg{width:42px;height:42px;stroke-width:1.5}
+.cs-lock-art b{font-size:15px}
+.cs-lock-art span{padding:6px 10px;border-radius:99px;background:#fff9;color:#36594c;font-size:11px;font-weight:800}
+.cs-art-locked .cs-badge{display:flex;align-items:center;gap:5px;background:#304e43}
+.cs-art img{image-rendering:auto;object-fit:contain}
+@media(max-width:560px){.cs-level-panel{width:100%;max-width:none}.cs-level-panel>div{min-width:112px}}
