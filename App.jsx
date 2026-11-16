@@ -256,7 +256,8 @@ function OSMARAdmin({ supabase, lang }) {
   const [source, setSource] = useState('');
   const [code, setCode] = useState('');
   const [pending, setPending] = useState([]);
-  const [recentRegistrations, setRecentRegistrations] = useState([]);\n  const [inviteDirectory, setInviteDirectory] = useState([]);\n  const [registrationAttempts, setRegistrationAttempts] = useState([]);
+  const [recentRegistrations, setRecentRegistrations] = useState([]);
+  const [inviteDirectory, setInviteDirectory] = useState([]);\n  const [registrationAttempts, setRegistrationAttempts] = useState([]);
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState('');
   const [memberFilter, setMemberFilter] = useState('all');
