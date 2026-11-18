@@ -253,7 +253,7 @@ export default function App() {
       {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><figure className="concept-map"><img src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.mapCaption} /><figcaption>{t.mapCaption}</figcaption></figure><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
       {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
       {tab === 'entertainment' && <EntertainmentHub lang={lang} />}
-      {tab === 'threex' && <><ThreeXExperience lang={lang} onGuide={() => setTab('threex-guide')} onStart={() => document.getElementById('threex-studio')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} /><div id="threex-studio"><ThreeXChallengeStudio supabase={supabase} user={session.user} lang={lang} isAdmin={isAdmin} /></div></>}
+      {tab === 'threex' && <><ThreeXExperience lang={lang} onGuide={() => setTab('threex-guide')} onStart={() => document.getElementById('threex-studio')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} /><div id="threex-studio"><ThreeXChallengeStudio supabase={supabase} user={session.user} lang={lang} isAdmin={isOwner || can('rewards.review')} /></div></>}
       {tab === 'threex-guide' && <><button className="back" onClick={() => setTab('threex')}>‹ {lang === 'ar' ? 'العودة إلى ثلاثي الأثر' : lang === 'zh' ? '返回 3X' : 'Back to Thimar 3X'}</button><ThreeXGuide lang={lang} /></>}
       {tab === 'dashboard' && <MemberDashboard supabase={supabase} userId={session.user.id} lang={lang} />}
       {tab === 'profile' && <MemberProfile supabase={supabase} user={session.user} lang={lang} />}
@@ -573,7 +573,6 @@ const OSMAR_PERMISSION_LABELS = {
   'members.approve': {ar:'اعتماد العضويات',en:'Approve memberships',zh:'审核会员'},
   'members.edit': {ar:'تعديل بيانات الأعضاء',en:'Edit member profiles',zh:'编辑会员资料'},
   'invites.manage': {ar:'إدارة أكواد الدعوة',en:'Manage invitation codes',zh:'管理邀请码'},
-  'code.read': {ar:'عرض سجل الأكواد',en:'View invitation code log',zh:'查看邀请码记录'},
   'game.configure': {ar:'إعدادات اللعبة',en:'Configure game',zh:'配置游戏'},
   'events.manage': {ar:'إدارة الفعاليات',en:'Manage events',zh:'管理活动'},
   'rewards.review': {ar:'مراجعة المكافآت',en:'Review rewards',zh:'审核奖励'},
