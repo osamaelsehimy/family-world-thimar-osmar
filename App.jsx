@@ -523,7 +523,7 @@ function OSMARAdmin({ supabase, lang, isOwner = false, permissions = [] }) {
         <div className="member-tags"><span className={item.email_confirmed && item.membership_status==='active'?'member-status active':'member-status'}>{!item.email_confirmed?label('بانتظار تأكيد البريد','Awaiting email confirmation','等待邮箱验证'):item.membership_status==='pending'?label('بانتظار اعتماد OSMAR','Awaiting OSMAR approval','等待 OSMAR 审核'):item.membership_status==='active'?label('عضوية معتمدة','Approved','已批准'):item.membership_status}</span><span className="member-type">{item.referral_type}</span></div>
         <small className="member-contact">{item.email_confirmed?label('البريد مؤكد','Email confirmed','邮箱已验证'):label('البريد لم يتم تأكيده بعد','Email not confirmed yet','邮箱尚未验证')} · {item.referral_status==='approved'?label('الدعوة معتمدة','Invitation approved','邀请已批准'):item.referral_status==='pending'?label('الدعوة بانتظار المراجعة','Invitation awaiting review','邀请待审核'):label('لا يوجد سجل دعوة مرتبط','No linked invitation record','没有关联的邀请码记录')}</small>
       </article>)}</div>}
-    </section></details>
+    </section></details>}
     <details className="admin-collapsible"><summary>{label('أكواد الدعوة','Invitation codes','邀请码')} · {inviteDirectory.length}</summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('أكواد الدعوة','Invitation codes','邀请码')}</h3><p className="muted">{label('اسم الكود وسعته واستخداماته والمتبقي. الكود الكامل يظهر عند إنشائه فقط حفاظًا على أمانه.','Label, capacity, usage and remaining invitations. Full codes are shown only once at creation for security.','显示名称、容量、使用次数与剩余次数。为安全起见，完整邀请码仅在创建时显示。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
@@ -533,7 +533,7 @@ function OSMARAdmin({ supabase, lang, isOwner = false, permissions = [] }) {
         <small className="member-contact">{label('أنشأه: ','Created by: ','创建者：')}{item.created_by_email||'OSMAR'} · {item.revoked_at?label('ملغي','Revoked','已撤销'):item.expires_at && new Date(item.expires_at)<new Date()?label('منتهي','Expired','已过期'):label('ساري','Available','有效')}</small>
       </article>)}</div>
       {inviteDirectory.length===0&&<p className="muted">{label('لا توجد أكواد.','No invitation codes yet.','暂无邀请码。')}</p>}
-    </section></details>}
+    </section></details>
     {isOwner && <details className="admin-collapsible"><summary>{label('محاولات تحتاج متابعة','Attempts needing attention','需要跟进的尝试')} · {registrationAttempts.length}</summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('محاولات التسجيل التي واجهت مشكلة','Registration attempts needing attention','需要关注的注册尝试')}</h3><p className="muted">{label('يظهر هنا البريد الذي أدخل كودًا غير صالح أو مستهلكًا. المحاولات القديمة التي لم يسجل النظام بريدها لا يمكن استرجاعها بأثر رجعي.','Emails entered with invalid or exhausted codes appear here. Older attempts whose email was never recorded cannot be reconstructed retroactively.','输入无效或已用完邀请码的邮箱会显示在这里。系统未曾记录邮箱的历史尝试无法追溯恢复。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
