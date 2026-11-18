@@ -542,14 +542,14 @@ function OSMARAdmin({ supabase, lang, isOwner = false, permissions = [] }) {
         <div className="member-tags"><span className="member-status">{item.reason}</span><span className="member-type">{item.code_hint||'—'}</span></div>
       </article>)}</div>}
     </section></details>}
-    <section className="admin-panel admin-permissions-entry">
+    {isOwner && <section className="admin-panel admin-permissions-entry">
       <button type="button" className="admin-permissions-launch" aria-expanded={showPermissions} onClick={() => setShowPermissions(value => !value)}>
         <span className="admin-permissions-icon"><ShieldCheck size={22}/></span>
         <span><strong>{label('إدارة الصلاحيات','Permissions management','权限管理')}</strong><small>{label('قسم مستقل — لا توجد صلاحيات مفوضة إلا إذا أضفتها بنفسك.','Separate area — no delegated access unless you assign it yourself.','独立区域 — 只有您主动分配才会授予委派权限。')}</small></span>
         <span className="admin-permissions-toggle">{showPermissions ? '−' : '+'}</span>
       </button>
       {showPermissions && <OSMARAccessManager supabase={supabase} lang={lang} />}
-    </section>
+    </section>}
   </div>;
 }
 
@@ -558,7 +558,7 @@ const OSMAR_PERMISSION_GROUPS = [
   { key: 'engineering', label: { ar: 'هندسة البرمجيات', en: 'Software engineering', zh: '软件工程' }, items: ['code.read','code.write','deploy.manage'] },
   { key: 'infrastructure_security', label: { ar: 'البنية التحتية والأمان', en: 'Infrastructure & security', zh: '基础设施与安全' }, items: ['infrastructure.manage','security.audit'] },
   { key: 'game_operations', label: { ar: 'تشغيل اللعبة', en: 'Game operations', zh: '游戏运营' }, items: ['game.configure','events.manage'] },
-  { key: 'membership_support', label: { ar: 'العضويات والمجتمع', en: 'Membership & community', zh: '会员与社区' }, items: ['members.read','members.approve','invites.manage'] },
+  { key: 'membership_support', label: { ar: 'العضويات والمجتمع', en: 'Membership & community', zh: '会员与社区' }, items: ['members.read','members.approve','members.edit','invites.manage','code.read'] },
   { key: 'rewards_moderator', label: { ar: 'النقاط والمكافآت', en: 'Points & rewards', zh: '积分与奖励' }, items: ['rewards.review','rewards.award'] },
   { key: 'content_moderator', label: { ar: 'المحتوى واللغات', en: 'Content & languages', zh: '内容与语言' }, items: ['content.manage'] },
   { key: 'auditor', label: { ar: 'المراجعة والتدقيق', en: 'Audit & reporting', zh: '审计与报告' }, items: ['reports.read','audit.read'] }
@@ -571,7 +571,9 @@ const OSMAR_PERMISSION_LABELS = {
   'security.audit': {ar:'مراجعة الأمان',en:'Security audit',zh:'安全审计'},
   'members.read': {ar:'قراءة بيانات العضويات',en:'Read membership records',zh:'查看会员记录'},
   'members.approve': {ar:'اعتماد العضويات',en:'Approve memberships',zh:'审核会员'},
+  'members.edit': {ar:'تعديل بيانات الأعضاء',en:'Edit member profiles',zh:'编辑会员资料'},
   'invites.manage': {ar:'إدارة أكواد الدعوة',en:'Manage invitation codes',zh:'管理邀请码'},
+  'code.read': {ar:'عرض سجل الأكواد',en:'View invitation code log',zh:'查看邀请码记录'},
   'game.configure': {ar:'إعدادات اللعبة',en:'Configure game',zh:'配置游戏'},
   'events.manage': {ar:'إدارة الفعاليات',en:'Manage events',zh:'管理活动'},
   'rewards.review': {ar:'مراجعة المكافآت',en:'Review rewards',zh:'审核奖励'},
