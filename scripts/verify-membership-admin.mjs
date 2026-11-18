@@ -42,14 +42,20 @@ const expectedMigrationFiles = [
   "20261116154000_osmar_invite_code_preflight_validation.sql",
   "20261116161500_osmar_open_signup_invite_audit_and_admin_code_directory.sql",
   "20261116161600_fix_registration_attempt_email_validation.sql",
-  "20261116170000_osmar_chronological_member_and_invite_ordering.sql"
+  "20261116170000_osmar_chronological_member_and_invite_ordering.sql",
+  "20261118084350_delegate_member_and_invite_directory_access.sql",
+  "20261118084400_permission_scoped_osmar_admin_dashboard.sql",
+  "20261118084420_restrict_osmar_admin_rpc_to_authenticated.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
   assert.ok(migrationFiles.includes(file), 'Missing or misnamed Supabase migration: ' + file);
 }
 
-assert.match(app, /session\?\.user\?\.app_metadata\?\.role === 'osmar_admin'/, 'Admin navigation must use trusted app_metadata role');
+assert.match(app, /supabase\.rpc\('osmar_my_admin_access'\)/, 'Admin navigation must load server-authorized owner and delegated permissions');
+assert.match(app, /const isOwner = Boolean\(adminAccess\.is_owner\)/, 'Only the owner identity receives full owner controls');
+assert.match(app, /isOwner \|\| adminPermissions\.includes\(permission\)/, 'Delegated access must be permission-scoped');
+assert.match(app, /isAdmin=\{isOwner \|\| can\('rewards\.review'\)\}/, 'Membership assistants must not inherit 3X challenge review access');
 assert.match(app, /Map as MapIcon/, 'Lucide map icon must not shadow the native Map constructor');
 assert.match(app, /new Map\(/, 'Directory aggregation must use the native Map constructor');
 assert.match(app, /osmar_recent_registrations/, 'Admin must load the owner-only recent registration monitor');
@@ -57,7 +63,9 @@ assert.match(app, /Awaiting email confirmation/, 'Recent registrations must dist
 assert.match(recentMigration, /private\.osmar_is_owner\(\)/, 'Recent registration monitor must be owner-only');
 assert.match(recentMigration, /email_confirmed_at is not null/, 'Recent registration monitor must expose email confirmation state');
 assert.match(app, /osmar_member_directory_v2/, 'Admin directory must load the live member directory v2');
-assert.match(app, /osmar_update_member_profile/, 'Owner must be able to edit member profiles');
+assert.match(app, /osmar_update_member_profile/, 'Authorized membership staff must be able to edit member profiles');
+assert.match(app, /can\('members\.edit'\)/, 'Member profile edit controls must be permission-gated');
+assert.match(app, /isOwner && <section className=\"admin-panel admin-permissions-entry\"/, 'Only the owner may manage administrator assignments');
 assert.match(app, /member_type/, 'Admin directory must use the owner-controlled member type');
 assert.match(app, /supabase\.rpc\('osmar_create_invite'/, 'Invite creation must call the protected RPC');
 assert.match(app, /supabase\.rpc\('osmar_review_member'/, 'Membership decisions must call the protected RPC');
@@ -70,6 +78,15 @@ assert.match(app, /osmar_invite_directory/, 'Admin must display invitation capac
 assert.match(app, /osmar_registration_attempts/, 'Admin must display numbered registration attempts');
 assert.match(app, /inviteDirectory\.map/, 'Admin must render the invitation code directory');
 assert.match(app, /registrationAttempts\.map/, 'Admin must render registration attempts');
+assert.match(app, /if \(isOwner\) requests\.push/, 'Owner-only monitoring RPCs must not be called by membership assistants');
+const delegatedMigration = fs.readFileSync('supabase/migrations/20261118084400_permission_scoped_osmar_admin_dashboard.sql', 'utf8');
+const directoryAccessMigration = fs.readFileSync('supabase/migrations/20261118084350_delegate_member_and_invite_directory_access.sql', 'utf8');
+const rpcGrantMigration = fs.readFileSync('supabase/migrations/20261118084420_restrict_osmar_admin_rpc_to_authenticated.sql', 'utf8');
+assert.match(delegatedMigration, /private\.osmar_is_owner\(\)/, 'Owner identity remains the sole source of full owner privileges');
+assert.match(delegatedMigration, /members\.edit/, 'Member profile edits must be permission controlled');
+assert.match(directoryAccessMigration, /private\.osmar_has_permission\('members\.read'\)/, 'Member directory must require members.read');
+assert.match(directoryAccessMigration, /private\.osmar_has_permission\('code\.read'\)/, 'Invite directory must require code.read');
+assert.match(rpcGrantMigration, /revoke execute on function public\.osmar_set_admin_assignment.*from public, anon/s, 'Only authenticated owner sessions may invoke assignment administration');
 assert.match(app, /optional/, 'Invitation code must be optional at signup');
 const openSignupMigration = fs.readFileSync('supabase/migrations/20261116161500_osmar_open_signup_invite_audit_and_admin_code_directory.sql', 'utf8');
 assert.match(openSignupMigration, /if raw_invite_code <> ''/, 'Signup must support optional invitation codes');
