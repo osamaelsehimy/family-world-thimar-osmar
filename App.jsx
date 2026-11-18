@@ -82,9 +82,13 @@ export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeWorld, setActiveWorld] = useState(null);
   const [authReady, setAuthReady] = useState(!configured);
+  const [adminAccess, setAdminAccess] = useState({ is_owner: false, permissions: [] });
   const [installPrompt, setInstallPrompt] = useState(null);
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  const isAdmin = session?.user?.app_metadata?.role === 'osmar_admin';
+  const isOwner = Boolean(adminAccess.is_owner);
+  const adminPermissions = adminAccess.permissions || [];
+  const isAdmin = isOwner || adminPermissions.length > 0;
+  const can = permission => isOwner || adminPermissions.includes(permission);
   useEffect(() => {
     if (resendCooldown <= 0) return undefined;
     const timer = window.setTimeout(() => setResendCooldown(value => Math.max(0, value - 1)), 1000);
@@ -100,6 +104,22 @@ export default function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, value) => { if (event === 'PASSWORD_RECOVERY') setMode('recovery'); setSession(value); });
     return () => subscription.unsubscribe();
   }, []);
+  useEffect(() => {
+    let alive = true;
+    async function loadAdminAccess() {
+      if (!session || session.user.id === 'demo' || !supabase) {
+        setAdminAccess({ is_owner: false, permissions: [] });
+        return;
+      }
+      const { data, error } = await supabase.rpc('osmar_my_admin_access');
+      if (alive) setAdminAccess(!error && data ? {
+        is_owner: Boolean(data.is_owner),
+        permissions: Array.isArray(data.permissions) ? data.permissions : []
+      } : { is_owner: false, permissions: [] });
+    }
+    loadAdminAccess();
+    return () => { alive = false; };
+  }, [session]);
   useEffect(() => {
     let alive = true;
     async function loadPoints() {
@@ -242,7 +262,7 @@ export default function App() {
       {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
       {tab === 'characters' && <CharacterStudio lang={lang} points={Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0)} level={Math.floor(Math.max(0, Number(session.user.id === 'demo' ? points : accountPoints.total_points) || 0) / 100) + 1} />}
-      {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} />}
+      {tab === 'admin' && isAdmin && <OSMARAdmin supabase={supabase} lang={lang} isOwner={isOwner} permissions={adminPermissions} />}
       {tab === 'guide' && <section className="guide-download"><BookOpen size={38} /><h1>{t.guide}</h1><p className="muted">{t.guideHint}</p><a className="primary guide-link" href={`${import.meta.env.BASE_URL}OG01-Game-Guide-AR-EN.pdf`} target="_blank" rel="noreferrer">{lang === 'ar' ? 'فتح دليل اللعبة PDF' : lang === 'zh' ? '打开 PDF 游戏指南' : 'Open the PDF game guide'}</a></section>}
       <footer>{t.name} © 2026</footer></main></div>;
 }
@@ -255,7 +275,7 @@ function WorldDetail({ lang, world, onPlay }) { return <section className="world
 
 const displayMemberNumber = value => { const match = String(value || '').match(/(\d+)$/); return match ? String(Number(match[1])) : '—'; };
 
-function OSMARAdmin({ supabase, lang }) {
+function OSMARAdmin({ supabase, lang, isOwner = false, permissions = [] }) {
   const t = copy[lang];
   const [type, setType] = useState('TRU');
   const [uses, setUses] = useState(1);
@@ -275,6 +295,7 @@ function OSMARAdmin({ supabase, lang }) {
   const [editNickname, setEditNickname] = useState('');
   const [editType, setEditType] = useState('TRU');
   const [showPermissions, setShowPermissions] = useState(false);
+  const can = permission => isOwner || permissions.includes(permission);
   const label = (ar, en, zh) => lang === 'ar' ? ar : lang === 'zh' ? zh : en;
   function startMemberEdit(item) {
     setEditingMember(item.member_id);
@@ -301,24 +322,31 @@ function OSMARAdmin({ supabase, lang }) {
     setBusy(true);
     setMessage('');
     try {
-      const [pendingResult, memberResult, pointsResult, gamesResult, recentResult, inviteResult, attemptResult] = await Promise.all([
+      const requests = [
         supabase.rpc('osmar_pending_members'),
         supabase.rpc('osmar_member_directory_v2'),
+        supabase.rpc('osmar_invite_directory')
+      ];
+      if (isOwner) requests.push(
         supabase.rpc('osmar_points_directory'),
         supabase.rpc('osmar_game_directory'),
         supabase.rpc('osmar_recent_registrations', { p_limit: 30 }),
-        supabase.rpc('osmar_invite_directory'),
         supabase.rpc('osmar_registration_attempts', { p_limit: 100 })
-      ]);
-      const firstError = pendingResult.error || memberResult.error || pointsResult.error || gamesResult.error || recentResult.error || inviteResult.error || attemptResult.error;
+      );
+      const results = await Promise.all(requests);
+      const [pendingResult, memberResult, inviteResult, pointsResult, gamesResult, recentResult, attemptResult] = results;
+      const firstError = pendingResult.error || memberResult.error || inviteResult.error ||
+        (isOwner && (pointsResult?.error || gamesResult?.error || recentResult?.error || attemptResult?.error));
       if (firstError) setMessage(firstError.message || 'Could not load the member directory.');
       if (!pendingResult.error) setPending(pendingResult.data || []);
-      if (!recentResult.error) setRecentRegistrations(recentResult.data || []);
       if (!inviteResult.error) setInviteDirectory(inviteResult.data || []);
-      if (!attemptResult.error) setRegistrationAttempts(attemptResult.data || []);
+      if (isOwner) {
+        if (!recentResult?.error) setRecentRegistrations(recentResult?.data || []);
+        if (!attemptResult?.error) setRegistrationAttempts(attemptResult?.data || []);
+      }
       if (!memberResult.error) {
-        const pointsByMember = new Map((pointsResult.data || []).map(item => [item.member_id, item]));
-        const gamesByMember = new Map((gamesResult.data || []).map(item => [item.member_id, item]));
+        const pointsByMember = new Map((pointsResult?.data || []).map(item => [item.member_id, item]));
+        const gamesByMember = new Map((gamesResult?.data || []).map(item => [item.member_id, item]));
         setMembers((memberResult.data || []).map(item => ({
           ...item,
           total_points: pointsByMember.get(item.member_id)?.total_points || 0,
@@ -347,7 +375,7 @@ function OSMARAdmin({ supabase, lang }) {
       window.clearInterval(refreshTimer);
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [supabase, isOwner]);
 
   async function createInvite(event) {
     event.preventDefault();
@@ -461,15 +489,15 @@ function OSMARAdmin({ supabase, lang }) {
           </div>
           <small className="member-inviter">{t.invitedBy}: {item.inviter_email || (item.referral_type === 'OSM' ? 'OSMAR' : '—')}</small>
           <small className="member-contact">{label('الاسم: ','Name: ','姓名：')}{item.display_name || '—'} · {label('اللقب: ','Nickname: ','昵称：')}{item.nickname || '—'} · {label('الهاتف: ','Phone: ','电话：')}{item.phone || '—'}</small>
-          <button type="button" className="member-edit-trigger" onClick={()=>startMemberEdit(item)}>{label('تعديل بيانات العضو','Edit member','编辑会员')}</button>
-          {editingMember === item.member_id && <form className="member-edit-form" onSubmit={saveMemberEdit}>
+          {can('members.edit') && <button type="button" className="member-edit-trigger" onClick={()=>startMemberEdit(item)}>{label('تعديل بيانات العضو','Edit member','编辑会员')}</button>}
+          {can('members.edit') && editingMember === item.member_id && <form className="member-edit-form" onSubmit={saveMemberEdit}>
             <label>{label('الاسم الظاهر','Display name','显示名称')}<input value={editName} onChange={e=>setEditName(e.target.value)} maxLength={80}/></label>
             <label>{label('اللقب','Nickname','昵称')}<input value={editNickname} onChange={e=>setEditNickname(e.target.value)} maxLength={50}/></label>
             <label>{label('تصنيف العضوية','Member type','会员类型')}<select value={editType} onChange={e=>setEditType(e.target.value)}>{['TRU','FAM','NET','OSM','TEAM'].map(v=><option key={v}>{v}</option>)}</select></label>
             <div><button type="submit" disabled={busy}>{label('حفظ','Save','保存')}</button><button type="button" disabled={busy} onClick={()=>setEditingMember(null)}>{label('إلغاء','Cancel','取消')}</button></div>
           </form>}
-          <small className="member-points">{lang==='ar'?'نقاط الخبرة':'XP'}: <strong>{item.total_points || 0}</strong> · {lang==='ar'?'الإنجازات':'Awards'}: {item.awards_count || 0}</small>
-          <small className="member-game-stats">{lang==='ar'?'المباريات':'Games'}: <b>{item.games_played||0}</b> · {lang==='ar'?'فوز':'Wins'}: <b>{item.game_wins||0}</b> · {lang==='ar'?'خسارة':'Losses'}: <b>{item.game_losses||0}</b> · {lang==='ar'?'تعادل':'Draws'}: <b>{item.game_draws||0}</b></small>
+          {isOwner && <><small className="member-points">{lang==='ar'?'نقاط الخبرة':'XP'}: <strong>{item.total_points || 0}</strong> · {lang==='ar'?'الإنجازات':'Awards'}: {item.awards_count || 0}</small>
+          <small className="member-game-stats">{lang==='ar'?'المباريات':'Games'}: <b>{item.games_played||0}</b> · {lang==='ar'?'فوز':'Wins'}: <b>{item.game_wins||0}</b> · {lang==='ar'?'خسارة':'Losses'}: <b>{item.game_losses||0}</b> · {lang==='ar'?'تعادل':'Draws'}: <b>{item.game_draws||0}</b></small></>}
         </article>)}
       </div>}
     </section>
@@ -482,7 +510,7 @@ function OSMARAdmin({ supabase, lang }) {
         <div className="pending-actions"><button disabled={busy} onClick={()=>review(item.member_id,'approved')}>{t.approve}</button><button disabled={busy} onClick={()=>review(item.member_id,'rejected')}>{t.reject}</button></div>
       </article>)}
     </section>
-    <details className="admin-collapsible"><summary>{label('التسجيلات الحديثة','Recent registrations','最近注册')} · {recentRegistrations.length}</summary>
+    {isOwner && <details className="admin-collapsible"><summary>{label('التسجيلات الحديثة','Recent registrations','最近注册')} · {recentRegistrations.length}</summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('التسجيلات الحديثة · آخر 30 يومًا','Recent registrations · last 30 days','最近注册 · 过去 30 天')}</h3><p className="muted">{label('السجل ده بيعرض المسجلين حتى لو اتعمدوا بالفعل أو لسه محتاجين تأكيد البريد.','Includes members already approved and accounts still awaiting email confirmation.','包括已批准的会员以及仍待邮箱验证的账户。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       <div className="directory-metrics">
@@ -505,15 +533,15 @@ function OSMARAdmin({ supabase, lang }) {
         <small className="member-contact">{label('أنشأه: ','Created by: ','创建者：')}{item.created_by_email||'OSMAR'} · {item.revoked_at?label('ملغي','Revoked','已撤销'):item.expires_at && new Date(item.expires_at)<new Date()?label('منتهي','Expired','已过期'):label('ساري','Available','有效')}</small>
       </article>)}</div>
       {inviteDirectory.length===0&&<p className="muted">{label('لا توجد أكواد.','No invitation codes yet.','暂无邀请码。')}</p>}
-    </section></details>
-    <details className="admin-collapsible"><summary>{label('محاولات تحتاج متابعة','Attempts needing attention','需要跟进的尝试')} · {registrationAttempts.length}</summary>
+    </section></details>}
+    {isOwner && <details className="admin-collapsible"><summary>{label('محاولات تحتاج متابعة','Attempts needing attention','需要跟进的尝试')} · {registrationAttempts.length}</summary>
     <section className="admin-panel recent-registrations">
       <div className="admin-heading"><div><h3>{label('محاولات التسجيل التي واجهت مشكلة','Registration attempts needing attention','需要关注的注册尝试')}</h3><p className="muted">{label('يظهر هنا البريد الذي أدخل كودًا غير صالح أو مستهلكًا. المحاولات القديمة التي لم يسجل النظام بريدها لا يمكن استرجاعها بأثر رجعي.','Emails entered with invalid or exhausted codes appear here. Older attempts whose email was never recorded cannot be reconstructed retroactively.','输入无效或已用完邀请码的邮箱会显示在这里。系统未曾记录邮箱的历史尝试无法追溯恢复。')}</p></div><button type="button" onClick={refresh} disabled={busy}>{t.refresh}</button></div>
       {registrationAttempts.length===0?<p className="muted">{label('لا توجد محاولات مسجلة.','No recorded attempts.','暂无记录。')}</p>:<div className="member-list">{registrationAttempts.map((item,index)=><article className="member-row" key={item.attempt_number}>
         <div className="member-main"><strong>{item.attempt_number}</strong><span>{item.email}</span><small>{item.attempted_at?new Date(item.attempted_at).toLocaleString(lang==='ar'?'ar-EG':lang==='zh'?'zh-CN':'en-US'):'—'}</small></div>
         <div className="member-tags"><span className="member-status">{item.reason}</span><span className="member-type">{item.code_hint||'—'}</span></div>
       </article>)}</div>}
-    </section></details>
+    </section></details>}
     <section className="admin-panel admin-permissions-entry">
       <button type="button" className="admin-permissions-launch" aria-expanded={showPermissions} onClick={() => setShowPermissions(value => !value)}>
         <span className="admin-permissions-icon"><ShieldCheck size={22}/></span>
