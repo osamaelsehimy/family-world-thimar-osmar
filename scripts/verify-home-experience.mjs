@@ -54,7 +54,7 @@ assert.doesNotMatch(styles,/Sponge City/i,'Public-facing stylesheet must not use
 console.log('3X checks passed: route, challenge areas, safeguards, supply chain, OBS/WBS/PMO, bilingual guide and responsive layout.');
 
 assert.match(app,/import ThreeXChallengeStudio/,'3X studio must be imported');
-assert.match(app,/<ThreeXChallengeStudio supabase=\\{supabase\\} user=\\{session\\.user\\} lang=\\{lang\\} isAdmin=\\{isOwner \\|\\| can\\('rewards\\.review'\\)\\} \\/>/,'3X studio must receive authenticated user and permission-scoped admin context');
+assert.match(app,/<ThreeXChallengeStudio supabase=\{supabase\} user=\{session\.user\} lang=\{lang\} isAdmin=\{isOwner \|\| can\('rewards\.review'\)\} \/>/,'3X studio must receive authenticated user and permission-scoped admin context');
 for (const rpc of ['submit_3x_challenge','osmar_review_3x_submission']) assert.ok(studio.includes(rpc),'Missing secure workflow: '+rpc);
 for (const field of ['family_needs','space_layout','privacy_access','climate_energy','materials_budget']) assert.ok(migration.includes(field),'Missing required home design task: '+field);
 for (const table of ['challenge_catalog','challenge_tasks','challenge_projects','challenge_task_progress','challenge_submissions']) assert.ok(migration.includes('public.'+table),'Missing challenge data table: '+table);
