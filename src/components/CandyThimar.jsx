@@ -96,10 +96,12 @@ export default function CandyThimar({lang='ar',onBack=()=>{},onResult=()=>{}}){
     const nextHarvest=harvest+result.cleared;
     const nextMoves=moves-1;
     const nextScore=score+gained;
-    setBoard(playableBoard);setSelected(null);setMoves(nextMoves);setScore(nextScore);setHarvest(nextHarvest);\n    setNotice(playableBoard===result.board?'':t.noMove);
+    const nextBoard=hasPossibleMove(result.board)?result.board:makeBoard();
+    setBoard(nextBoard);setSelected(null);setMoves(nextMoves);setScore(nextScore);setHarvest(nextHarvest);
+    setNotice(nextBoard===result.board?'':t.noMove);
     if(nextHarvest>=config.target){
       setPhase('won');
-      if(level===LEVELS.length-1) finish('won',nextScore);
+      finish('won',nextScore);
     }else if(nextMoves<=0){
       setPhase('lost');
       finish('lost',nextScore);
