@@ -15,6 +15,8 @@ const familyHome=fs.readFileSync('src/components/MyFamilyHome.jsx','utf8');
 const familyHomeStyles=fs.readFileSync('src/styles/family-home.css','utf8');
 const orbitCity=fs.readFileSync('src/components/OSMAROrbitCity.jsx','utf8');
 const orbitCityStyles=fs.readFileSync('src/styles/orbit-city.css','utf8');
+const entertainment=fs.readFileSync('src/components/EntertainmentHub.jsx','utf8');
+const entertainmentStyles=fs.readFileSync('src/styles/premium-experience.css','utf8');
 const studioStyles=fs.readFileSync('src/styles/three-x-studio.css','utf8');
 const migration=fs.readFileSync('supabase/migrations/20261114225329_thimar_3x_challenge_engine.sql','utf8');
 const studioMigration=fs.readFileSync('supabase/migrations/20261114225434_thimar_3x_admin_review_and_indexes.sql','utf8');
@@ -127,6 +129,14 @@ assert.match(orbitCity,/OSMAR Orbit City/,'City experience must use the OSMAR Or
 assert.match(orbitCity,/osmar-orbit-city\.svg/,'City experience must use existing Orbit City artwork');
 for(const locale of ['ar','en','zh']) assert.match(orbitCity,new RegExp('\\n\\s*'+locale+': \\{'),`Orbit City must include ${locale} copy`);
 assert.match(orbitCityStyles,/@media\(max-width:520px\)/,'Orbit City must be responsive');
+assert.match(app,/<EntertainmentHub lang=\{lang\} \/>/,'Series section must render the updated entertainment experience');
+assert.match(entertainment,/family-world-series-poster\.png/,'Series section must open with the supplied poster');
+assert.match(entertainment,/fw-series-episode-01\.mp4/,'The first introductory video must be present');
+assert.match(entertainment,/fw-series-episode-02\.mp4/,'The second introductory video must be present');
+assert.match(entertainment,/controls playsInline preload="metadata"/,'Introductory videos must be accessible and not autoplay');
+assert.match(entertainment,/onPlay=\{event=>videos\.current\.forEach/,'Starting one episode must pause the other video');
+assert.match(entertainmentStyles,/\.entertainment-episode-grid/,'Intro videos must have a dedicated responsive layout');
+for(const asset of ['public/assets/brand/family-world-series-poster.png','public/assets/brand/fw-series-episode-01.mp4','public/assets/brand/fw-series-episode-02.mp4']) assert.ok(fs.existsSync(asset),'Missing supplied series media: '+asset);
 console.log('Family Home and OSMAR Orbit City checks passed: private circle integration, persistent member character, 3 locales, artwork, and responsive routes.');
 
 const ludo=fs.readFileSync('src/components/LudoGame.jsx','utf8');

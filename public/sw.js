@@ -1,4 +1,4 @@
-const CACHE_NAME = 'family-world-shell-v5';
+const CACHE_NAME = 'family-world-shell-v7';
 const APP_ROOT = new URL('./', self.registration.scope);
 const APP_SHELL = [
   APP_ROOT.href,
@@ -29,6 +29,8 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  // Media elements use byte-range requests; CacheStorage cannot store 206 responses.
+  if (request.headers.has('range')) return;
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);

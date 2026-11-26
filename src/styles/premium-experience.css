@@ -160,6 +160,18 @@
 .entertainment-poster-caption strong{color:#946b2d}
 .entertainment-poster-caption span{margin-inline-start:auto;color:#829087;font-size:11px}
 @media(max-width:600px){.entertainment-heading{padding:18px}.entertainment-poster{border-radius:14px}.entertainment-poster-caption span{width:100%;margin-inline-start:0}}
+.entertainment-episodes{margin-top:24px;padding:clamp(16px,3vw,26px);border:1px solid #e4eadf;border-radius:22px;background:linear-gradient(150deg,#fff,#f6f9f3);box-shadow:0 14px 34px #1c3c2d0b}
+.entertainment-episodes-heading>span{display:flex;align-items:center;gap:7px;color:#9a7537;font-size:10px;font-weight:900;letter-spacing:.08em}
+.entertainment-episodes-heading h2{margin:9px 0 4px;color:#214b3b;font-size:clamp(20px,3vw,28px)}
+.entertainment-episodes-heading p{margin:0;color:#748579;font-size:12px;line-height:1.75}
+.entertainment-episode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:17px}
+.entertainment-episode{min-width:0;overflow:hidden;border:1px solid #e3e9df;border-radius:16px;background:#fff;box-shadow:0 8px 20px #193a2e0a}
+.entertainment-episode-title{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.entertainment-episode-title>span{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:11px;background:#eaf3e9;color:#347352}
+.entertainment-episode-title h3{display:flex;align-items:baseline;gap:8px;margin:0;color:#294b3b;font-size:13px;line-height:1.5}
+.entertainment-episode-title h3 small{color:#ae8950;font-size:10px;letter-spacing:.08em}
+.entertainment-episode video{display:block;width:100%;aspect-ratio:16/9;background:#101b29;object-fit:contain}
+@media(max-width:720px){.entertainment-episode-grid{grid-template-columns:1fr}.entertainment-episode-title h3{font-size:12px}}
 
 
 /* Recent registration monitor */
