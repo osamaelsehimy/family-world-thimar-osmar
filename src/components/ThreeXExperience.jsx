@@ -20,10 +20,10 @@ const copy={
  ],note:'先从 100 平方米住宅挑战开始，其他路线将分阶段开放。'}
 };
 export default function ThreeXExperience({lang='ar',onGuide,onStart}){
- const t=copy[lang]||copy.en,rtl=lang==='ar';
+ const t=copy[lang]||copy.en,rtl=lang==='ar',sectionTitle=lang==='ar'?'اختار رحلتك':lang==='zh'?'选择你的挑战':'Choose your challenge',sectionEyebrow=lang==='ar'?'ثلاثة عوالم · هدف واحد':lang==='zh'?'三个世界 · 一个目标':'THREE WORLDS · ONE PURPOSE';
  return <main className="threex-page threex-landing" dir={rtl?'rtl':'ltr'}>
   <header className="threex-hero"><span><Sparkles size={13}/> {t.kicker}</span><h1>{t.title}</h1><p>{t.intro}</p><button className="threex-guide-button" onClick={onGuide}><BookOpen size={17}/>{t.guide}<ArrowUpRight size={16}/></button></header>
-  <section className="threex-section"><div className="threex-heading"><span>THREE WORLDS · ONE PURPOSE</span><h2>{lang==='ar'?'اختار رحلتك':'Choose your challenge'}</h2></div><div className="threex-grid">{t.tracks.map((x,i)=>{const Icon=x.icon;return <article className="threex-card threex-short-card" key={x.n}><div className="threex-card-head"><span>{x.n}</span><Icon/><small>{x.tag}</small></div><h3>{x.name}</h3><p>{x.desc}</p><button className="threex-card-action" onClick={()=>i===0&&onStart?.()} disabled={i!==0}>{x.cta}</button></article>})}</div></section>
+  <section className="threex-section"><div className="threex-heading"><span>{sectionEyebrow}</span><h2>{sectionTitle}</h2></div><div className="threex-grid">{t.tracks.map((x,i)=>{const Icon=x.icon;return <article className="threex-card threex-short-card" key={x.n}><div className="threex-card-head"><span>{x.n}</span><Icon/><small>{x.tag}</small></div><h3>{x.name}</h3><p>{x.desc}</p><button className="threex-card-action" onClick={()=>i===0&&onStart?.()} disabled={i!==0}>{x.cta}</button></article>})}</div></section>
   <p className="threex-note">{t.note}</p>
  </main>;
 }

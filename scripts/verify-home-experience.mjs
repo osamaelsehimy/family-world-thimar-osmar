@@ -11,6 +11,10 @@ const guide=fs.readFileSync('docs/FAMILY_WORLD_VISION_GUIDE_AR_EN.md','utf8');
 const studio=fs.readFileSync('src/components/ThreeXChallengeStudio.jsx','utf8');
 const planner=fs.readFileSync('src/components/ApartmentPlanner.jsx','utf8');
 const plannerStyles=fs.readFileSync('src/styles/apartment-planner.css','utf8');
+const familyHome=fs.readFileSync('src/components/MyFamilyHome.jsx','utf8');
+const familyHomeStyles=fs.readFileSync('src/styles/family-home.css','utf8');
+const orbitCity=fs.readFileSync('src/components/OSMAROrbitCity.jsx','utf8');
+const orbitCityStyles=fs.readFileSync('src/styles/orbit-city.css','utf8');
 const studioStyles=fs.readFileSync('src/styles/three-x-studio.css','utf8');
 const migration=fs.readFileSync('supabase/migrations/20261114225329_thimar_3x_challenge_engine.sql','utf8');
 const studioMigration=fs.readFileSync('supabase/migrations/20261114225434_thimar_3x_admin_review_and_indexes.sql','utf8');
@@ -20,7 +24,7 @@ const designReviewMigration=fs.readFileSync('supabase/migrations/20261115104713_
 const designValidationMigration=fs.readFileSync('supabase/migrations/20261115104809_apartment_design_json_validation.sql','utf8');
 
 assert.match(app,/import WorldHub from ['"]\.\/src\/components\/WorldHub\.jsx['"]/,'World Hub component must be imported');
-assert.ok(app.includes('<WorldHub lang={lang}') && app.includes("onChallenge={() => setTab('threex')}") ,'Home route must render WorldHub and link to the apartment challenge');
+assert.ok(app.includes('<WorldHub lang={lang}') && app.includes("onChallenge={() => { setTab('threex');") && app.includes("document.getElementById('threex-studio')?.scrollIntoView"),'Home route must open and focus the apartment challenge');
 for (const locale of ['ar','en','zh']) assert.match(component,new RegExp('\\n\\s*'+locale+':\\{'),locale+' translation must exist');
 for (const concept of ['100 m²','family','market','learning','community','projects','progress']) assert.ok(component.toLowerCase().includes(concept.toLowerCase()),'Missing hub concept: '+concept);
 for (const feature of ['wh-feature-art','wh-house','wh-grid','wh-card-icon']) assert.ok(component.includes(feature),'Missing original illustration feature: '+feature);
@@ -43,6 +47,7 @@ assert.match(app,/import ThreeXGuide/,'Dedicated 3X guide page must be imported'
 assert.match(app,/tab === 'threex-guide'/,'3X guide must have its own route');
 assert.match(threeXLanding,/onGuide/,'3X landing must link to the separate guide page');
 assert.match(threeXLanding,/threex-short-card/,'3X landing must use concise challenge cards');
+assert.match(threeXLanding,/lang==='zh'\?'选择你的挑战'/,'3X landing challenge heading must be localized in Chinese');
 assert.match(app,/\['threex', t\.threex, MapIcon\]/,'3X page must use the non-conflicting map icon alias');
 assert.match(app,/<ThreeXExperience lang=\{lang\} onGuide=\{\(\) => setTab\('threex-guide'\)\}/,'3X page must be routed with its separate guide action');
 for (const phrase of ['10,000 m²','1000 × 1000','FWP','OBS','WBS','PMO','Supply Chain','Work–life balance']) assert.ok(threeX.includes(phrase),'Missing 3X concept: '+phrase);
@@ -71,10 +76,17 @@ console.log('3X Studio checks passed: authenticated route, five apartment tasks,
 
 assert.match(studio,/import ApartmentPlanner/,'Apartment planner must be integrated');
 assert.match(studio,/<ApartmentPlanner lang=\{lang\} userId=\{user\.id\} projectId=\{active\.id\} supabase=\{supabase\} \/>/,'Planner must be scoped to the signed-in member, project, and cloud client');
+assert.match(studio,/if\(demo\)return[\s\S]*<ApartmentPlanner/,'Guests must be able to try the planner locally');
+assert.match(studio,/projectId="demo-preview" supabase=\{null\}/,'Guest planner must use a local-only preview with no cloud client');
 for (const phrase of ['Array(100)','localStorage.setItem','localStorage.getItem','10 × 10','m²']) assert.ok(planner.includes(phrase),'Missing planner capability: '+phrase);
 for (const locale of ['ar','en','zh']) assert.ok(planner.includes(locale+':{'),'Apartment planner must support '+locale);
 for (const zone of ['bed','living','kitchen','bath','entry','corridor']) assert.ok(planner.includes("'"+zone+"'"),'Missing apartment zone: '+zone);
 assert.match(plannerStyles,/@media\(max-width:650px\)/,'Apartment planner must support mobile');
+for(const phrase of ['starterLayout','sampleOne','sampleTwo','challengeGoals','goalCount','all 100 m²']) assert.ok(planner.includes(phrase),'Missing apartment design game feature: '+phrase);
+assert.match(planner,/counts\.corridor>=4&&design\.doors\.length>=2/,'Design challenge must prompt room circulation and doorways');
+assert.match(planner,/design\.cells\.every\(Boolean\)/,'Design challenge must account for the full 100 m²');
+assert.match(plannerStyles,/\.ap-design-challenge/,'Apartment design missions must have a dedicated visual treatment');
+console.log('Apartment design game checks passed: editable starter layouts, four progress goals, three locales, mobile layout, and safe planning guidance.');
 for (const feature of ['apartment_designs','design_json','furniture','doors','rotated','itemCost','cloudSaved']) assert.ok(planner.includes(feature),'Missing apartment studio capability: '+feature);
 assert.match(studio,/words\[lang\]\|\|words\.en/,'Challenge studio must resolve all three locales');
 assert.match(designMigration,/enable row level security/i,'Apartment design table must enable RLS');
@@ -99,8 +111,23 @@ for(let index=1;index<=11;index++){
   const asset='public/assets/characters/family-world-character-'+String(index).padStart(2,'0')+'.svg';
   assert.ok(fs.existsSync(asset),'Missing standalone character portrait: '+asset);
 }
-assert.match(app,/<CharacterStudio lang=\{lang\} points=\{/,'Character Studio must receive member FWP progress');
+assert.match(app,/<CharacterStudio lang=\{lang\}[^>]*points=\{/,'Character Studio must receive member FWP progress');
 assert.doesNotMatch(component,/wh-characters/,'Home screen must not render character cards');
+assert.match(app,/import MyFamilyHome from ['"]\.\/src\/components\/MyFamilyHome\.jsx['"]/,'My Family Home must have its own app route');
+assert.match(app,/tab === 'family-home'/,'My Family Home navigation must render the experience');
+assert.match(familyHome,/rpc\('family_circle_dashboard'\)/,'Family Home must use the existing protected Family Circle dashboard');
+assert.match(familyHome,/active_character_id/,'Family Home must load the persistent active character');
+assert.match(familyHome,/FAMILY_WORLD_CHARACTERS/,'Family Home must render the existing character collection');
+assert.match(familyHome,/family_circle_dashboard/,'Family Home must be linked to Family Circle data');
+for(const locale of ['ar','en','zh']) assert.match(familyHome,new RegExp('\\n\\s*'+locale+': \\{'),`Family Home must include ${locale} copy`);
+assert.match(familyHomeStyles,/@media\(max-width:550px\)/,'Family Home must be responsive');
+assert.match(app,/import OSMAROrbitCity from ['"]\.\/src\/components\/OSMAROrbitCity\.jsx['"]/,'Orbit City must have its own app route');
+assert.match(app,/tab === 'orbit-city'/,'Orbit City navigation must render the experience');
+assert.match(orbitCity,/OSMAR Orbit City/,'City experience must use the OSMAR Orbit City name');
+assert.match(orbitCity,/osmar-orbit-city\.svg/,'City experience must use existing Orbit City artwork');
+for(const locale of ['ar','en','zh']) assert.match(orbitCity,new RegExp('\\n\\s*'+locale+': \\{'),`Orbit City must include ${locale} copy`);
+assert.match(orbitCityStyles,/@media\(max-width:520px\)/,'Orbit City must be responsive');
+console.log('Family Home and OSMAR Orbit City checks passed: private circle integration, persistent member character, 3 locales, artwork, and responsive routes.');
 
 const ludo=fs.readFileSync('src/components/LudoGame.jsx','utf8');
 assert.match(ludo,/onBack,onResult/,'Ludo must expose a completed-match result callback');
