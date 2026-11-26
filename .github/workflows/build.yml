@@ -37,6 +37,8 @@ jobs:
         run: npm run test:home
       - name: Verify membership and admin workflows
         run: npm run test:membership
+      - name: Verify shared family circle and garden
+        run: npm run test:family-circle
       - name: Verify installable PWA output
         run: npm run test:pwa
       - uses: actions/upload-artifact@v4
