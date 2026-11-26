@@ -7,11 +7,16 @@ const schema=fs.readFileSync('supabase/migrations/20261126064204_family_circle_s
 const hardening=fs.readFileSync('supabase/migrations/20261126064218_family_circle_private_rpc_hardening.sql','utf8');
 const rotation=fs.readFileSync('supabase/migrations/20261126064405_family_circle_invite_rotation.sql','utf8');
 const activeDashboard=fs.readFileSync('supabase/migrations/20261126065233_family_circle_active_member_dashboard.sql','utf8');
+const activeCharacter=fs.readFileSync('supabase/migrations/20261126065551_member_active_character_selection.sql','utf8');
 
 assert.match(activeDashboard,/join public\.profiles caller_profile[\s\S]*membership_status = 'active'/,'Dashboard access must require an active member profile');
 assert.match(activeDashboard,/join public\.profiles p on p\.id = cm\.user_id and p\.membership_status = 'active'/,'Inactive members must not appear in the shared family directory');
 assert.match(activeDashboard,/active_profile\.membership_status = 'active'/,'Family achievement totals must exclude inactive members');
+assert.match(activeCharacter,/add column if not exists active_character_id text/,'Member profiles must store the active character');
+assert.match(activeCharacter,/grant update \(display_name, nickname, avatar_url, active_character_id\)/,'Only approved profile fields may be updated by members');
+assert.match(activeCharacter,/profiles_active_character_id_format/,'Active character IDs must be validated');
 
+assert.match(app,/<CharacterStudio lang=\{lang\} supabase=\{configured \? supabase : null\} userId=\{session\.user\.id\}/,'Character studio must receive the signed-in member context');
 assert.match(app,/<ThimarGarden lang=\{lang\} userId=\{session\.user\.id\} supabase=\{configured \? supabase : null\} \/>/,'Garden must receive only the configured Supabase client and authenticated user ID');
 for (const rpc of ['family_circle_dashboard','create_family_circle','join_family_circle','complete_family_mission']) {
   assert.ok(garden.includes("rpc('"+rpc+"'"),'Garden must call '+rpc);
@@ -31,4 +36,7 @@ for (const locale of ['ar','en','zh']) assert.ok(garden.includes(locale+': {') |
 assert.match(garden,/circle\.invite_code/,'Family owner must receive an invitation code');
 assert.match(garden,/circle\.members/,'Shared family member list must render');
 assert.match(garden,/localStorage/,'Demo mode should retain local-only fallback');
+const studio=fs.readFileSync('src/components/CharacterStudio.jsx','utf8');
+assert.match(studio,/active_character_id/,'Character studio must load and persist the member active character');
+assert.match(studio,/chooseCharacter/,'Character studio must let members choose an active character');
 console.log('Family Circle checks passed: three locales, authenticated family circle, private invitation, shared daily missions, idempotent progress, RLS and private RPC hardening.');
