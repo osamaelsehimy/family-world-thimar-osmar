@@ -3,6 +3,7 @@ import DominoGame from './src/components/DominoGame.jsx';
 import DominoOnlineLobby from './src/components/DominoOnlineLobby.jsx';
 import Number1024Game from './src/components/Number1024Game.jsx';
 import LudoGame from './src/components/LudoGame.jsx';
+import CandyThimar from './src/components/CandyThimar.jsx';
 import MemberDashboard from './src/components/MemberDashboard.jsx';
 import MemberProfile from './src/components/MemberProfile.jsx';
 import WorldHub from './src/components/WorldHub.jsx';
@@ -25,6 +26,7 @@ const worlds = [
 ];
 const games = [
   { id: 'domino', status: 'ready', icon: '🁣', ar: 'الدومينو', en: 'Dominoes', zh: '多米诺骨牌', desc: 'العب الدومينو الحقيقي ضد الكمبيوتر.', enDesc: 'Play a real domino round against the computer.', zhDesc: '与电脑进行真正的多米诺对局。', points: 0 },
+  { id: 'candy-thimar', status: 'ready', icon: '🍬', ar: 'كاندي ثمار', en: 'Candy Thimar', zh: 'Thimar 糖果乐园', desc: 'بدّل الثمار واجمع المتشابه منها واجتز مراحل الحصاد.', enDesc: 'Swap fruits, make matches, and complete harvest levels.', zhDesc: '交换水果，消除相同水果，完成丰收关卡。', points: 0, available: true },
   { id: 'treasure', status: 'development', icon: '🗝️', ar: 'صيد الكنز العائلي', en: 'Family Treasure Hunt', zh: '家庭寻宝', desc: 'اخفوا غرضًا آمنًا واكتبوا ثلاث تلميحات.', enDesc: 'Hide a safe object and write three clues.', zhDesc: '藏好安全的小物件，写下三个提示。', points: 0, available: false },
   { id: 'guess', status: 'development', icon: '🤔', ar: 'مين أنا؟', en: 'Who Am I?', zh: '我是谁？', desc: 'خمنوا شخصية أو حيوانًا بأسئلة نعم أو لا.', enDesc: 'Guess a person or animal with yes-or-no questions.', zhDesc: '用是非题猜人物或动物。', points: 0, available: false },
   { id: 'story', status: 'development', icon: '📖', ar: 'حكاية على الدور', en: 'A Story in Turns', zh: '接龙故事', desc: 'كل واحد يضيف جملة ونبني حكاية معًا.', enDesc: 'Each person adds a line to a shared story.', zhDesc: '每个人接着讲一句，共同编故事。', points: 0, available: false },
@@ -228,7 +230,7 @@ export default function App() {
     });
     if (error && error.code !== '23505') setNotice(lang === 'ar' ? 'تعذر حفظ نتيجة المباراة: ' + error.message : 'Could not save game result: ' + error.message);
   }
-  function completeGame(game) { if (game.status === 'development' || game.available === false) return; if (game.id === 'threex') { setTab('threex'); setNotice(''); return; } if (game.id === 'apartment-100') { setTab('threex'); setNotice(''); window.setTimeout(() => document.getElementById('threex-studio')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120); return; } if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } if (game.id === 'ludo') { setTab('ludo'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
+  function completeGame(game) { if (game.status === 'development' || game.available === false) return; if (game.id === 'threex') { setTab('threex'); setNotice(''); return; } if (game.id === 'apartment-100') { setTab('threex'); setNotice(''); window.setTimeout(() => document.getElementById('threex-studio')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120); return; } if (game.id === 'domino') { setTab('domino'); setNotice(''); return; } if (game.id === 'candy-thimar') { setTab('candy-thimar'); setNotice(''); return; } if (game.id === '1024') { setTab('1024'); setNotice(''); return; } if (game.id === 'ludo') { setTab('ludo'); setNotice(''); return; } setPoints(value => value + game.points); setDone(value => [...value, game.id]); setNotice(t.completed); }
   const nav = useMemo(() => [['home', t.home, Home], ['dashboard', t.dashboard, BarChart3], ['profile', t.profile, UserRound], ['worlds', t.worlds, Globe2], ['threex', t.threex, MapIcon], ['play', t.play, Gamepad2], ['entertainment', t.entertainment, Clapperboard], ['characters', t.characters, Users], ['guide', t.guide, BookOpen], ...(isAdmin ? [['admin', t.admin, ClipboardList]] : [])], [t, isAdmin]);
   if (!authReady) return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><p className="auth-card" role="status">…</p></div>;
   if (mode === 'recovery') return <div className="auth-page"><header className="auth-head"><Brand /><Language lang={lang} setLang={setLang} /></header><form className="auth-card" onSubmit={saveRecoveredPassword}><span className="mark">🔐</span><p className="eyebrow">THIMAR OSMAR</p><h1>{t.resetTitle}</h1><label>{t.newPassword}<input type="password" autoComplete="new-password" minLength="8" required value={newPassword} onChange={e=>setNewPassword(e.target.value)} /></label><label>{t.confirmPassword}<input type="password" autoComplete="new-password" minLength="8" required value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} /></label><button className="primary wide" disabled={busy}>{busy?'…':t.savePassword}</button>{notice&&<p className="notice" role="status">{notice}</p>}</form><footer>{t.name} © 2026</footer></div>;
@@ -258,6 +260,7 @@ export default function App() {
       {tab === 'dashboard' && <MemberDashboard supabase={supabase} userId={session.user.id} lang={lang} />}
       {tab === 'profile' && <MemberProfile supabase={supabase} user={session.user} lang={lang} />}
        {tab === 'domino' && <DominoGame lang={lang} onBack={() => setTab('play')} onOnline={() => setTab('domino-online')} onResult={recordGameResult} />}
+      {tab === 'candy-thimar' && <CandyThimar lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === '1024' && <Number1024Game lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === 'ludo' && <LudoGame lang={lang} onBack={() => setTab('play')} onResult={recordGameResult} />}
       {tab === 'domino-online' && <DominoOnlineLobby supabase={supabase} userId={session.user.id} lang={lang} onBack={() => setTab('domino')} />}
