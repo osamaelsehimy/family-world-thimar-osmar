@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const FRUITS = ['🍓','🍋','🍇','🍊','🍏','🫐'];
 const SIZE = 8;
@@ -52,6 +52,17 @@ function resolveBoard(source){
   return {board,cleared};
 }
 function adjacent(a,b){return Math.abs(a.r-b.r)+Math.abs(a.c-b.c)===1;}
+function hasPossibleMove(board){
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
+    for(const [dr,dc] of [[0,1],[1,0]]){
+      const nr=r+dr,nc=c+dc;if(nr>=SIZE||nc>=SIZE) continue;
+      const candidate=board.map(row=>[...row]);
+      [candidate[r][c],candidate[nr][nc]]=[candidate[nr][nc],candidate[r][c]];
+      if(findMatches(candidate).length) return true;
+    }
+  }
+  return false;
+}
 export default function CandyThimar({lang='ar',onBack=()=>{},onResult=()=>{}}){
   const t=TEXT[lang]||TEXT.ar;
   const [level,setLevel]=useState(0);
@@ -85,7 +96,7 @@ export default function CandyThimar({lang='ar',onBack=()=>{},onResult=()=>{}}){
     const nextHarvest=harvest+result.cleared;
     const nextMoves=moves-1;
     const nextScore=score+gained;
-    setBoard(result.board);setSelected(null);setMoves(nextMoves);setScore(nextScore);setHarvest(nextHarvest);
+    setBoard(playableBoard);setSelected(null);setMoves(nextMoves);setScore(nextScore);setHarvest(nextHarvest);\n    setNotice(playableBoard===result.board?'':t.noMove);
     if(nextHarvest>=config.target){
       setPhase('won');
       if(level===LEVELS.length-1) finish('won',nextScore);
@@ -93,7 +104,7 @@ export default function CandyThimar({lang='ar',onBack=()=>{},onResult=()=>{}}){
       setPhase('lost');
       finish('lost',nextScore);
     }
-  },[phase,selected,board,harvest,moves,score,config.target,level,finish]);
+  },[phase,selected,board,harvest,moves,score,config.target,level,finish,t.noMove]);
   const next=()=>{
     if(level<LEVELS.length-1) reset(level+1);
     else reset(0);
