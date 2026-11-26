@@ -6,6 +6,7 @@ const garden=fs.readFileSync('src/components/ThimarGarden.jsx','utf8');
 const schema=fs.readFileSync('supabase/migrations/20261126064204_family_circle_shared_garden.sql','utf8');
 const hardening=fs.readFileSync('supabase/migrations/20261126064218_family_circle_private_rpc_hardening.sql','utf8');
 const rotation=fs.readFileSync('supabase/migrations/20261126064405_family_circle_invite_rotation.sql','utf8');
+const activeDashboard=fs.readFileSync('supabase/migrations/20261126065233_family_circle_active_member_dashboard.sql','utf8');
 
 assert.match(app,/<ThimarGarden lang=\{lang\} userId=\{session\.user\.id\} supabase=\{configured \? supabase : null\} \/>/,'Garden must receive only the configured Supabase client and authenticated user ID');
 for (const rpc of ['family_circle_dashboard','create_family_circle','join_family_circle','complete_family_mission']) {
