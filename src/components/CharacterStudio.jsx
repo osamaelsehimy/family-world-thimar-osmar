@@ -65,17 +65,23 @@ export default function CharacterStudio({lang='ar',level=1,points=0,supabase=nul
    try{setEquippedCharacter(localStorage.getItem('family-world-active-character-v1')||'');}catch{setEquippedCharacter('');}
   }
   return()=>{alive=false;};
- },[supabase,userId]);
+ },[supabase,userId,lang]);
  async function chooseCharacter(id){
   if(!/^(starter|fw)-[a-z0-9-]{1,72}$/.test(id))return;
   setCharacterSaving(true);setCharacterMessage('');
-  if(supabase && userId && userId!=='demo'){
-   const {data,error}=await supabase.from('profiles').update({active_character_id:id}).eq('id',userId).select('active_character_id').maybeSingle();
-   if(error||!data){setCharacterMessage(t.characterSaveFailed);setCharacterSaving(false);return;}
-  } else {
-   try{localStorage.setItem('family-world-active-character-v1',id);}catch{setCharacterMessage(t.characterSaveFailed);setCharacterSaving(false);return;}
+  try{
+   if(supabase && userId && userId!=='demo'){
+    const {data,error}=await supabase.from('profiles').update({active_character_id:id}).eq('id',userId).select('active_character_id').maybeSingle();
+    if(error||!data){setCharacterMessage(t.characterSaveFailed);return;}
+   } else {
+    localStorage.setItem('family-world-active-character-v1',id);
+   }
+   setEquippedCharacter(id);
+  }catch{
+   setCharacterMessage(t.characterSaveFailed);
+  }finally{
+   setCharacterSaving(false);
   }
-  setEquippedCharacter(id);setCharacterSaving(false);
  }
  useEffect(()=>{ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));}catch{setError(lang==='ar'?'مساحة التخزين المحلية ممتلئة؛ جرّب صورة أصغر.':'Local storage is full; try a smaller image.');} },[saved,lang]);
  useEffect(()=>{try{localStorage.setItem('family-world-character-progression-v1',JSON.stringify(characterProgress));}catch{}},[characterProgress]);
