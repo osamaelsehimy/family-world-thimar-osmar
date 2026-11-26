@@ -9,7 +9,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "test:pwa": "node scripts/verify-pwa.mjs",
     "test:home": "node scripts/verify-home-experience.mjs",
-    "test:membership": "node scripts/verify-membership-admin.mjs"
+    "test:membership": "node scripts/verify-membership-admin.mjs",
+    "test:family-circle": "node scripts/verify-family-circle.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
