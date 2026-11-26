@@ -8,9 +8,9 @@ const hardening=fs.readFileSync('supabase/migrations/20261126064218_family_circl
 const rotation=fs.readFileSync('supabase/migrations/20261126064405_family_circle_invite_rotation.sql','utf8');
 const activeDashboard=fs.readFileSync('supabase/migrations/20261126065233_family_circle_active_member_dashboard.sql','utf8');
 
-assert.match(activeDashboard,/join public\.profiles caller_profile[\\s\\S]*membership_status = 'active'/,'Dashboard access must require an active member profile');
-assert.match(activeDashboard,/join public\.profiles p on p\\.id = cm\\.user_id and p\\.membership_status = 'active'/,'Inactive members must not appear in the shared family directory');
-assert.match(activeDashboard,/active_profile\\.membership_status = 'active'/,'Family achievement totals must exclude inactive members');
+assert.match(activeDashboard,/join public\.profiles caller_profile[\s\S]*membership_status = 'active'/,'Dashboard access must require an active member profile');
+assert.match(activeDashboard,/join public\.profiles p on p\.id = cm\.user_id and p\.membership_status = 'active'/,'Inactive members must not appear in the shared family directory');
+assert.match(activeDashboard,/active_profile\.membership_status = 'active'/,'Family achievement totals must exclude inactive members');
 
 assert.match(app,/<ThimarGarden lang=\{lang\} userId=\{session\.user\.id\} supabase=\{configured \? supabase : null\} \/>/,'Garden must receive only the configured Supabase client and authenticated user ID');
 for (const rpc of ['family_circle_dashboard','create_family_circle','join_family_circle','complete_family_mission']) {
