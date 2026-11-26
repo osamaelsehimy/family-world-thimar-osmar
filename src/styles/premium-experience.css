@@ -168,3 +168,16 @@
 .recent-registrations .member-row{align-content:start}
 .recent-registrations .member-contact{grid-column:1/-1}
 @media(max-width:720px){.recent-registrations .member-list{grid-template-columns:1fr}}
+
+
+/* Persistent active character selection */
+.cs-active-character{display:flex;align-items:center;gap:14px;margin:16px 0;padding:12px 16px;border:1px solid #d9e6d9;border-radius:16px;background:linear-gradient(120deg,#f7fbf5,#fff)}
+.cs-active-character img{width:62px;height:72px;object-fit:cover;object-position:top center;border-radius:11px;background:#edf2e9}
+.cs-active-character>div{display:flex;flex-direction:column;gap:3px}
+.cs-active-character small{color:#9b783d;font-size:10px;font-weight:800}
+.cs-active-character b{color:#244d3c;font-size:15px}
+.cs-active-character span,.cs-character-message{color:#718278;font-size:11px}
+.cs-character-message{margin:8px 0;padding:8px 12px;border-radius:10px;background:#fff8e9}
+.cs-customize.cs-equip{background:#f6f8f3;border-color:#d8e3d5;color:#315c43}
+.cs-customize.cs-equip.is-equipped{background:#e8f3e8;border-color:#9fc5a7;color:#245c37}
+.cs-customize:disabled{opacity:.65;cursor:wait}
