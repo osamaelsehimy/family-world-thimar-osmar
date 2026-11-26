@@ -19,10 +19,10 @@ const words = {
       {name:'بستان الثمار',need:10,icon:'🍎',desc:'ثمرة الاستمرار والتعاون'},
     ],
     done:'تم الإنجاز',mark:'أنجزت المهمة',locked:'تحتاج',more:'إنجازات إضافية لفتحها',
-    note:'النقاط والشتلات رمزية داخل اللعبة وليست أموالًا أو مكافآت مادية. إنجازات الأسرة مشتركة، وكل عضو يحتفظ بسجل إنجازاته اليومية.',
+    note:'المهام اختيارية وتُسجّل كتقرير ذاتي من العضو. النقاط والشتلات رمزية داخل اللعبة وليست أموالًا أو مكافآت مادية. إنجازات الأسرة مشتركة، وكل عضو يحتفظ بسجل إنجازاته اليومية.',
     reset:'إعادة ضبط بيانات هذا الجهاز',resetConfirm:'هل تريد مسح تقدم الحديقة المحفوظ على هذا الجهاز؟',
     resetDone:'تمت إعادة ضبط الحديقة على هذا الجهاز.',verse:'﴿ وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَى ﴾',reference:'المائدة: ٢',
-    family:'دائرتكم العائلية',members:'أفراد الأسرة',invite:'كود دعوة الأسرة',copy:'نسخ الكود',copied:'تم نسخ الكود',shareHint:'شارك الكود مع أفراد أسرتك الموثوقين فقط.',
+    family:'دائرتكم العائلية',members:'أفراد الأسرة',invite:'كود دعوة الأسرة',copy:'نسخ الكود',copied:'تم نسخ الكود',rotate:'تجديد الكود',rotated:'تم تجديد كود الدعوة. الكود القديم لم يعد صالحًا.',shareHint:'شارك الكود مع أفراد أسرتك الموثوقين فقط.',
     createTitle:'ابدأوا حديقتكم العائلية',createHint:'أنشئ دائرة خاصة لأسرتك، وبعدها شارك كود الدعوة مع أفرادها.',
     familyName:'اسم الأسرة أو الدائرة',create:'إنشاء دائرة الأسرة',joinTitle:'عندك كود دعوة؟',joinHint:'اكتب الكود اللي وصلك من أحد أفراد الأسرة.',invitePlaceholder:'مثال: A1B2C3D4E5',join:'انضم للأسرة',
     owner:'منشئ الدائرة',member:'عضو',loading:'بنجهز حديقتكم…',refresh:'تحديث',cloudNote:'تقدم الأسرة محفوظ على الحساب ومتاح لأعضائها من أجهزتهم بعد تسجيل الدخول.',
@@ -44,10 +44,10 @@ const words = {
       {name:'Thimar Orchard',need:10,icon:'🍎',desc:'The fruit of consistency and teamwork'},
     ],
     done:'Completed',mark:'Mark complete',locked:'Need',more:'more achievements to unlock',
-    note:'Seeds and plants are symbolic game progress, not money or material rewards. Family achievements are shared, while each member keeps their own daily activity record.',
+    note:'Missions are optional and recorded as member self-reports. Seeds and plants are symbolic game progress, not money or material rewards. Family achievements are shared, while each member keeps their own daily activity record.',
     reset:'Reset this device’s garden',resetConfirm:'Clear the garden progress saved on this device?',
     resetDone:'Garden progress on this device has been reset.',verse:'“Cooperate in goodness and mindfulness.”',reference:'Qur’an 5:2',
-    family:'Your family circle',members:'Family members',invite:'Family invitation code',copy:'Copy code',copied:'Code copied',shareHint:'Share this code only with trusted family members.',
+    family:'Your family circle',members:'Family members',invite:'Family invitation code',copy:'Copy code',copied:'Code copied',rotate:'Refresh code',rotated:'Invitation code refreshed. The previous code no longer works.',shareHint:'Share this code only with trusted family members.',
     createTitle:'Start your family garden',createHint:'Create a private family circle, then share its invitation code with your family.',
     familyName:'Family or circle name',create:'Create family circle',joinTitle:'Have an invitation code?',joinHint:'Enter the code shared by a family member.',invitePlaceholder:'Example: A1B2C3D4E5',join:'Join family',
     owner:'Circle owner',member:'Member',loading:'Preparing your garden…',refresh:'Refresh',cloudNote:'Family progress is saved to your account and available to members on their own devices after sign-in.',
@@ -69,10 +69,10 @@ const words = {
       {name:'Thimar 果园',need:10,icon:'🍎',desc:'坚持与合作结出的果实'},
     ],
     done:'已完成',mark:'标记完成',locked:'还需',more:'项成就即可解锁',
-    note:'种子和植物是游戏中的象征性进度，不是金钱或物质奖励。家庭成就共享，每位成员保留自己的每日活动记录。',
+    note:'任务为自愿参与，由成员自行申报。种子和植物是游戏中的象征性进度，不是金钱或物质奖励。家庭成就共享，每位成员保留自己的每日活动记录。',
     reset:'重置本设备花园',resetConfirm:'确定清除此设备上保存的花园进度吗？',
     resetDone:'此设备上的花园进度已重置。',verse:'“你们当以善行和敬畏互相帮助。”',reference:'古兰经 5:2',
-    family:'你的家庭圈',members:'家庭成员',invite:'家庭邀请码',copy:'复制代码',copied:'代码已复制',shareHint:'请只与可信赖的家庭成员分享此代码。',
+    family:'你的家庭圈',members:'家庭成员',invite:'家庭邀请码',copy:'复制代码',copied:'代码已复制',rotate:'更新代码',rotated:'邀请码已更新，旧代码不再有效。',shareHint:'请只与可信赖的家庭成员分享此代码。',
     createTitle:'创建家庭花园',createHint:'创建一个私密家庭圈，然后与家人分享邀请码。',
     familyName:'家庭或圈子名称',create:'创建家庭圈',joinTitle:'已有邀请码？',joinHint:'输入家庭成员分享给你的代码。',invitePlaceholder:'例如：A1B2C3D4E5',join:'加入家庭',
     owner:'圈子创建者',member:'成员',loading:'正在准备花园…',refresh:'刷新',cloudNote:'家庭进度保存在账户中，成员登录后可在自己的设备上查看。',
@@ -188,6 +188,18 @@ export default function ThimarGarden({ lang='ar', userId='guest', supabase=null 
     } catch { setError(t.error + 'Clipboard is not available on this device.'); }
   };
 
+  const rotateCode = async () => {
+    if (busy || !circle?.invite_code) return;
+    setBusy(true); setError(''); setNotice('');
+    try {
+      const { error: rpcError } = await supabase.rpc('rotate_family_circle_invite');
+      if (rpcError) throw rpcError;
+      await refresh();
+      setNotice(t.rotated);
+    } catch (e) { setError(t.error + (e?.message || 'Unable to refresh invitation code')); }
+    finally { setBusy(false); }
+  };
+
   return <section className="thimar-garden" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
     <style>{`
       .thimar-garden{max-width:1100px;margin:10px auto 36px;padding:clamp(14px,3vw,28px);color:#214536}
@@ -201,7 +213,7 @@ export default function ThimarGarden({ lang='ar', userId='guest', supabase=null 
       .tg-verse{display:flex;gap:12px;align-items:center;margin-top:17px;padding:17px;border-radius:16px;background:#f4f7ed;color:#41644b}.tg-verse span{font-size:25px}.tg-verse b{display:block;font-size:14px}.tg-verse small{display:block;margin-top:4px;color:#829184}
       .tg-note{margin-top:13px;padding:12px 14px;border:1px solid #eee8d5;border-radius:13px;background:#fffdf6;color:#7d755e;font-size:11px;line-height:1.7}.tg-message{color:#286347;font-size:12px;margin-top:8px}.tg-error{color:#9d3939;font-size:12px;margin:10px 0;padding:10px;border-radius:10px;background:#fff2f0}
       .tg-family-panel{margin-top:16px;padding:16px;border:1px solid #e3eadf;border-radius:18px;background:#fff}.tg-family-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.tg-family-head h2{margin:0;font-size:18px}.tg-family-head button,.tg-copy{display:inline-flex;align-items:center;gap:6px;border:1px solid #dce8dc;border-radius:10px;background:#fff;color:#286047;padding:9px 11px;font-size:11px;font-weight:800}
-      .tg-code{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;padding:13px;border-radius:12px;background:#f4f7ed}.tg-code code{font-size:18px;font-weight:900;letter-spacing:2px;color:#245c43}.tg-family-members{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;margin-top:13px}.tg-person{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #e8eee5;border-radius:12px}.tg-person img,.tg-person-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#edf4e8;display:grid;place-items:center}.tg-person b{display:block;font-size:12px}.tg-person small{display:block;color:#839084;font-size:10px;margin-top:3px}
+      .tg-code{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;padding:13px;border-radius:12px;background:#f4f7ed}.tg-code code{font-size:18px;font-weight:900;letter-spacing:2px;color:#245c43}.tg-code-actions{display:flex;gap:7px;flex-wrap:wrap}.tg-copy:disabled{opacity:.5}.tg-family-members{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;margin-top:13px}.tg-person{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #e8eee5;border-radius:12px}.tg-person img,.tg-person-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#edf4e8;display:grid;place-items:center}.tg-person b{display:block;font-size:12px}.tg-person small{display:block;color:#839084;font-size:10px;margin-top:3px}
       .tg-entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:17px}.tg-entry{padding:17px;border:1px solid #e3eadf;border-radius:17px;background:#fff}.tg-entry h2{font-size:17px;margin:0 0 7px}.tg-entry p{font-size:11px;line-height:1.6;color:#839084;margin:0 0 12px}.tg-entry label{display:block;font-size:11px;color:#506c59;margin:8px 0}.tg-entry input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dfe8dc;border-radius:10px;background:#fbfdf9;color:#244b38}.tg-entry form button{width:100%;margin-top:8px;border:0;border-radius:10px;background:#286347;color:#fff;padding:11px;font-weight:800}.tg-entry form button:disabled{opacity:.55}
       .tg-reset{margin-top:12px;border:1px solid #e1e8df;border-radius:10px;background:#fff;color:#778579;padding:9px 12px;font-size:11px}
       @media(max-width:680px){.tg-task-grid,.tg-entry-grid{grid-template-columns:1fr}.tg-plant-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tg-task{padding:12px}.tg-task button{padding:9px}.tg-hero{border-radius:20px}.tg-family-head{align-items:flex-start}}
@@ -211,7 +223,7 @@ export default function ThimarGarden({ lang='ar', userId='guest', supabase=null 
 
     {localMode ? <div className="tg-family-panel"><b>{t.local}</b><p className="tg-note">{t.note}</p></div> : loading ? <div className="tg-family-panel" role="status">{t.loading}</div> : circle ? <div className="tg-family-panel">
       <div className="tg-family-head"><h2><Users size={18} style={{verticalAlign:'middle'}} /> {t.family}: {circle.name}</h2><button type="button" onClick={refresh} disabled={loading}><RefreshCw size={13}/>{t.refresh}</button></div>
-      {circle.invite_code && <div className="tg-code"><div><small>{t.invite}</small><br/><code>{circle.invite_code}</code></div><button className="tg-copy" type="button" onClick={copyCode}><Copy size={13}/>{t.copy}</button></div>}
+      {circle.invite_code && <div className="tg-code"><div><small>{t.invite}</small><br/><code>{circle.invite_code}</code></div><div className="tg-code-actions"><button className="tg-copy" type="button" onClick={copyCode}><Copy size={13}/>{t.copy}</button><button className="tg-copy" type="button" onClick={rotateCode} disabled={busy}><RefreshCw size={13}/>{t.rotate}</button></div></div>}
       {circle.invite_code && <small>{t.shareHint}</small>}
       <div className="tg-section-title"><h2>{t.members}</h2><span>{(circle.members||[]).length}</span></div>
       <div className="tg-family-members">{(circle.members||[]).map(person=><article className="tg-person" key={person.user_id}>{person.avatar_url?<img src={person.avatar_url} alt=""/>:<span className="tg-person-avatar"><Users size={17}/></span>}<div><b>{person.display_name}</b><small>{person.role==='owner'?t.owner:t.member}</small></div></article>)}</div>
