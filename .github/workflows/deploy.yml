@@ -35,6 +35,8 @@ jobs:
           test -s public/OG01-Game-Guide-AR-EN.pdf
       - name: Build application
         run: npm run build
+      - name: Verify shared family circle and garden
+        run: npm run test:family-circle
       - name: Verify installable PWA output
         run: npm run test:pwa
       - name: Configure GitHub Pages
