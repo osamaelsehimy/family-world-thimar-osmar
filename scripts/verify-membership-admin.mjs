@@ -49,7 +49,8 @@ const expectedMigrationFiles = [
   "20261126064204_family_circle_shared_garden.sql",
   "20261126064218_family_circle_private_rpc_hardening.sql",
   "20261126064405_family_circle_invite_rotation.sql",
-  "20261126065233_family_circle_active_member_dashboard.sql"
+  "20261126065233_family_circle_active_member_dashboard.sql",
+  "20261126065551_member_active_character_selection.sql"
 ];
 assert.equal(migrationFiles.length, expectedMigrationFiles.length, 'Migration inventory must match the recorded Supabase migrations');
 for (const file of expectedMigrationFiles) {
