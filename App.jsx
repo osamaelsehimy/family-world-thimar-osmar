@@ -256,7 +256,7 @@ export default function App() {
       {tab === 'worlds' && <>{activeWorld ? <><button className="back" onClick={() => setActiveWorld(null)}>‹ {t.worlds}</button><WorldDetail lang={lang} world={worlds.find(w => w.id === activeWorld)} onPlay={() => setTab('play')} /></> : <><section className="section"><small>OUR FAMILY JOURNEY</small><h2>{t.worlds}</h2></section><figure className="concept-map"><img src={`${import.meta.env.BASE_URL}assets/ideas/world-map.jpg`} alt={t.mapCaption} /><figcaption>{t.mapCaption}</figcaption></figure><WorldGrid lang={lang} worlds={worlds} onSelect={setActiveWorld} /></>}</>}
       {tab === 'play' && <><section className="section"><small>FAMILY FUN</small><h2>{t.play}</h2></section><p className="muted">{t.privacy}</p><GameGrid lang={lang} items={games} done={done} onPlay={completeGame} /></>}
       {tab === 'garden' && <ThimarGarden lang={lang} userId={session.user.id} />}
-      {tab === 'entertainment' && <EntertainmentHub lang={lang} />
+      {tab === 'entertainment' && <EntertainmentHub lang={lang} />}
       {tab === 'threex' && <><ThreeXExperience lang={lang} onGuide={() => setTab('threex-guide')} onStart={() => document.getElementById('threex-studio')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} /><div id="threex-studio"><ThreeXChallengeStudio supabase={supabase} user={session.user} lang={lang} isAdmin={isOwner || can('rewards.review')} /></div></>}
       {tab === 'threex-guide' && <><button className="back" onClick={() => setTab('threex')}>‹ {lang === 'ar' ? 'العودة إلى ثلاثي الأثر' : lang === 'zh' ? '返回 3X' : 'Back to Thimar 3X'}</button><ThreeXGuide lang={lang} /></>}
       {tab === 'dashboard' && <MemberDashboard supabase={supabase} userId={session.user.id} lang={lang} />}
