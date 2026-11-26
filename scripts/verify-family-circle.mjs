@@ -16,7 +16,7 @@ for (const table of ['family_circles','family_circle_members','family_mission_co
   assert.match(schema,new RegExp('create table if not exists public\\.'+table),'Missing table '+table);
   assert.match(schema,new RegExp('alter table public\\.'+table+' enable row level security'),'RLS must be enabled for '+table);
 }
-assert.match(schema,/membership_status = 'active'/,'Creating circles must require active membership');
+assert.match(schema,/membership_status='active'/,'Creating circles must require active membership');
 assert.match(schema,/membership_status='active'/,'Joining and completing missions must require active membership');
 assert.match(schema,/unique \(circle_id,user_id,task_key,completed_on\)/,'Daily mission completions must be idempotent');
 assert.match(hardening,/alter function public\.create_family_circle\(text\) set schema private/,'Privileged implementation must move into private schema');
